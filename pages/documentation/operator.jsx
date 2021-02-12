@@ -12,7 +12,7 @@ import { DocumentationMenu } from './index';
 function Operator() {
   return (
     <>
-      <Typography variant="h4">Introduction</Typography>
+      <Typography variant="h4">Documentation applicatif chauffeur</Typography>
 
       <p>
         Cette page est destinée aux opérateurs qui souhaitent s'intégrer à l'API le.taxi. En suivant

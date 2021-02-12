@@ -16,7 +16,7 @@ import { DocumentationMenu } from './index';
 function SearchProvider() {
   return (
     <>
-      <Typography variant="h4">Introduction</Typography>
+      <Typography variant="h4">Documentation applicatif client</Typography>
       <p>
         Cette page est destinée aux moteurs de recherche qui souhaitent
         s'intégrer à l'API le.taxi. En suivant cette documentation, vous saurez
