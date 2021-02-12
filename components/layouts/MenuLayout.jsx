@@ -4,12 +4,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Box from '@material-ui/core/Box';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+
 import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-import { makeStyles } from '@material-ui/core/styles';
+import { fade, makeStyles } from '@material-ui/core/styles';
+
+import { ButtonLink } from '../LinksRef';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -17,84 +19,73 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(3),
     padding: theme.spacing(2),
 
-    display: 'flex',
-    [theme.breakpoints.down('sm')]: {
-      display: 'block',
+    minHeight: '80vh',
+
+    [theme.breakpoints.up('md')]: {
+      display: 'flex',
     },
   },
 
-  tabs: {
+  menu: {
     borderRight: `1px solid ${theme.palette.divider}`,
-    width: '200px',
-    minWidth: '200px',
+    width: '250px',
+    minWidth: '250px',
+    marginBottom: theme.spacing(3),
+  },
+
+  activeMenuItem: {
+    border: `1px solid ${theme.palette.divider}`,
+    backgroundColor: fade(theme.palette.info.light, 0.15),
+  },
+
+  content: {
+    paddingLeft: theme.spacing(3),
+    paddingRight: theme.spacing(3),
   },
 }));
 
-export function MenuPanel({ index, selectedTabIndex, children }) {
+export function Menu({ children }) {
+  const classes = useStyles();
+  return <div className={classes.menu}>{children}</div>;
+}
+
+Menu.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
+export function MenuItem({ title, href }) {
+  const classes = useStyles();
+  const router = useRouter();
+
   return (
-    <div
-      role="tabpanel"
-      hidden={index !== selectedTabIndex}
-      id={`vertical-tabpanel-${index}`}
-      aria-labelledby={`vertical-tab-${index}`}
-    >
-      {index === selectedTabIndex && (
-        <Box p={3}>
-          {children}
-        </Box>
-      )}
-    </div>
+    <Link href={href} passHref>
+      <ButtonLink className={router.pathname === href ? classes.activeMenuItem : null}>
+        {title}
+      </ButtonLink>
+    </Link>
   );
 }
 
-MenuPanel.defaultProps = {
-  index: 0,
-  selectedTabIndex: 0,
-  children: null,
+MenuItem.propTypes = {
+  title: PropTypes.string.isRequired,
+  href: PropTypes.string.isRequired,
 };
 
-MenuPanel.propTypes = {
-  index: PropTypes.number,
-  selectedTabIndex: PropTypes.number,
-  children: PropTypes.node,
+export function Content({ children }) {
+  const classes = useStyles();
+  return <div className={classes.content}>{ children }</div>;
+}
+
+Content.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export function MenuLayout({ children }) {
   const classes = useStyles();
-  const [selectedTabIndex, setSelectedTabIndex] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setSelectedTabIndex(newValue);
-  };
-
   return (
     <Container maxWidth="lg">
       <Paper className={classes.paper} elevation={10}>
-        <Tabs
-          orientation="vertical"
-          value={selectedTabIndex}
-          onChange={handleChange}
-          aria-label="Vertical tabs example"
-          className={classes.tabs}
-        >
-          {
-            React.Children.toArray(children).map((panel) => (
-              <Tab key={panel.props.title} label={panel.props.title} />
-            ))
-          }
-        </Tabs>
-
-        {
-          React.Children.toArray(children).map((panel, index) => (
-            <MenuPanel
-              key={panel.props.title}
-              index={index}
-              selectedTabIndex={selectedTabIndex}
-            >
-              {panel.props.children}
-            </MenuPanel>
-          ))
-        }
+        { children }
       </Paper>
     </Container>
   );
