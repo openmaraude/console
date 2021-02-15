@@ -4,7 +4,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Head from 'next/head';
-import App from 'next/app';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -17,7 +16,7 @@ import "@fontsource/roboto/700.css";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { login, logout as doLogout, getCurrentUser } from '../src/auth';
+import { login, logout as doLogout } from '../src/auth';
 import LoginForm from '../components/Login';
 import Menu from '../components/Menu';
 import theme from '../components/theme';
