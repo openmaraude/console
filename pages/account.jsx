@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 
 import { toast } from 'react-toastify';
 
-import { hasRole } from '../src/auth';
+import { getCurrentUser, hasRole } from '../src/auth';
 import { getUserAccount, updateUserAccount } from '../src/account';
 import APIErrorAlert from '../components/APIErrorAlert';
 
@@ -50,6 +50,8 @@ export default function AccountPage({ user }) {
   const classes = useStyles();
   const [account, setAccount] = React.useState();
   const [apiError, setApiError] = React.useState();
+
+  console.log('user ==', user);
 
   // Passwords are valid only if both are unset, or if both are set and equal.
   const passwordConfirmIsValid = (
@@ -319,3 +321,9 @@ AccountPage.propTypes = {
     id: PropTypes.number.isRequired,
   }).isRequired,
 };
+
+AccountPage.getInitialProps = async (ctx) => ({
+  props: {
+    user: getCurrentUser(ctx),
+  },
+});

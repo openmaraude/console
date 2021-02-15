@@ -66,12 +66,6 @@ export default function ConsoleApp({ Component, pageProps }) {
   );
 }
 
-ConsoleApp.getInitialProps = async (appContext) => {
-  const appProps = await App.getInitialProps(appContext);
-  appProps.pageProps.user = getCurrentUser(appContext.ctx);
-  return { ...appProps };
-};
-
 ConsoleApp.propTypes = {
   Component: PropTypes.elementType.isRequired,
   pageProps: PropTypes.object.isRequired,
