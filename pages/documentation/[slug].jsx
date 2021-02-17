@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import gfm from 'remark-gfm';
 import ReactMarkdown from 'react-markdown';
 import SyntaxHighlighter from 'react-syntax-highlighter';
+import { dark } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -56,7 +57,7 @@ export default function Documentation({ menu, content }) {
         );
       }
       return (
-        <SyntaxHighlighter language={language}>
+        <SyntaxHighlighter style={dark} language={language} wrapLongLines>
           {value}
         </SyntaxHighlighter>
       );
