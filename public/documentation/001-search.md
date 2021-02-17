@@ -88,14 +88,14 @@ rendu obligatoire dans une future version de l'API.
 Le suivi d'une course se fait par des appels successifs à l'endpoint *GET /hails/:hail_id*. Le schéma ci-dessous montre les
 différents statuts d'une course, et leurs enchainements possibles.
 
-![status de la course](/doc/trip-status.png)
+![status de la course](/images/doc/trip-status.png)
 
 
 Il est nécessaire de faire des requêtes régulièrement sur l'endpoint *GET /hails/:hail_id* afin d'informer votre client de
 l'évolution de la course, de lui permettre de passer au statut suivant lorsque c'est nécessaire, ou de l'informer d'une
 erreur. Faisons un zoom sur les actions que vous devez exécuter :
 
-![status de la course pour applicatif client](/doc/trip-status-search.png)
+![status de la course pour applicatif client](/images/doc/trip-status-search.png)
 
 Lorsque l'API reçoit une demande de course, celle-ci est transmise à l'opérateur du taxi. Dans le cas où le taxi accepte
 la course, vous avez une vingtaine de secondes pour demander à votre client de confirmer une dernière fois la course.

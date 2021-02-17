@@ -270,7 +270,7 @@ Ce schéma présente les différents statuts que peut prendre une course.
 Les mises à jour effectuables par un opérateur sont matérialisées par des flèches vertes. Faisons un zoom sur cette
 partie.
 
-![status de la course](/doc/trip-status.png)
+![status de la course](/images/doc/trip-status.png)
 
 Voici textuellement le déroulé de la course :
 
@@ -334,7 +334,7 @@ se diriger vers le client.
 Pour un déroulé normal de course, vous devez déclarer le client à bord en changeant le statut à *customer_on_board*, puis
 la course terminée avec le statut *finished*.
 
-![status de la course pour applicatif chauffeur](/doc/trip-status-operator.png)
+![status de la course pour applicatif chauffeur](/images/doc/trip-status-operator.png)
 
 ##### Signalement de client
 
