@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
 
+import Link from 'next/link';
+
 import gfm from 'remark-gfm';
 import ReactMarkdown from 'react-markdown';
 import SyntaxHighlighter from 'react-syntax-highlighter';
@@ -20,6 +22,7 @@ import {
 } from '../../components/layouts/MenuLayout';
 import InfoBox from '../../components/InfoBox';
 import { getAllPages, getMenu } from '../../src/documentation';
+import { TextLink } from '../../components/LinksRef';
 
 export function DocumentationMenu({ menu }) {
   return (
@@ -70,6 +73,8 @@ export default function Documentation({ menu, content }) {
     tableBody: TableBody,
     tableRow: TableRow,
     tableCell: ({ children }) => <TableCell>{children}</TableCell>,
+
+    link: (link) => <Link href={link.href} passHref><TextLink>{link.children}</TextLink></Link>,
   };
   /* eslint-enable react/prop-types */
 
