@@ -34,13 +34,11 @@ const useStyles = makeStyles((theme) => ({
   },
 
   menuItem: {
-    display: 'block',
   },
 
   activeMenuItem: {
     border: `1px solid ${theme.palette.divider}`,
     backgroundColor: fade(theme.palette.info.light, 0.15),
-    display: 'block',
   },
 
   content: {
@@ -63,11 +61,13 @@ export function MenuItem({ title, href }) {
   const router = useRouter();
 
   return (
-    <Link href={href} passHref>
-      <ButtonLink className={router.pathname === href ? classes.activeMenuItem : classes.menuItem}>
-        {title}
-      </ButtonLink>
-    </Link>
+    <div>
+      <Link href={href} passHref>
+        <ButtonLink className={router.asPath === href ? classes.activeMenuItem : classes.menuItem}>
+          {title}
+        </ButtonLink>
+      </Link>
+    </div>
   );
 }
 
