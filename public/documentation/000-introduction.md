@@ -1,0 +1,56 @@
+---
+title: Introduction
+slug: introduction
+---
+
+#### Introduction
+
+Cette documentation technique détaille le fonctionnement de l'API le.taxi. Elle est destinée aux opérateurs ainsi qu'aux
+moteurs de recherche souhaitant se connecter sur l'API.
+
+```def:Définitions
+
+* **Opérateur** : acteur fournissant les informations de taxis et leurs géolocalisation en temps réel à l'API.
+* **Moteur de recherche** : acteur proposant une application de mise en relation entre des utilisateurs et les taxis représentés sur l'API.
+```
+
+Nous mettons à disposition un environnement de développement pour permettre de tester l'intégration de votre solution
+avec l'API. Cet environnement, disponible sur dev.api.taxi, nécessite d'être authentifié. La demande de création de
+compte se fait par email à equipe@le.taxi où vous devrez préciser votre statut, et si vous souhaitez créer un opérateur
+ou un moteur de recherche.
+
+##### Requêtes
+
+Tous les appels à l'API doivent se faire avec les headers HTTP suivants :
+
+
+| Nom du header | Valeur                                       |
+|---------------|----------------------------------------------|
+| X-Api-Key     | Clé d'API, disponible sur la page Mon Compte |
+
+
+Les requêtes de modifications (POST, PUT, PATCH) nécessite de fournir le header suivant :
+
+| Nom du header | Valeur             |
+|---------------|--------------------|
+| Content-Type  | *application/json* |
+
+
+Toutes les réponses de l'API sont contenus dans le champ data. Par exemple :
+
+
+```shell
+
+$> curl 'https://dev.api.taxi/taxis/?lon=2.3500013351440434&lat=48.85999989664685' \
+      -H 'X-Api-Key: XXX' | jq .
+{
+  "data": [
+    {
+      "id": "..."
+    },
+    ...
+  ]
+}
+```
+
+La section "documentation de référence" vous permet de lister et tester simplement tous les endpoints de l'API.

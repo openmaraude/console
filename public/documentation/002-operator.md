@@ -1,0 +1,349 @@
+---
+title: Opérateur
+slug: operator
+---
+
+#### Documentation applicatif chauffeur
+
+Cette page est destinée aux opérateurs qui souhaitent s'intégrer à l'API le.taxi. En suivant cette documentation, vous saurez créer un taxi, mettre à jour sa géolocalisation, mettre à jour son statut et recevoir une course.
+
+```def:Prérequis
+
+* Prendre connaissance de la documentation d'introduction.
+* Avoir un compte sur la console.
+```
+
+##### Création d'un taxi
+
+Pour l'API, un taxi est constitué de trois objets : un conducteur (driver), un véhicule (vehicle) et une autorisation de
+stationnement (ads). Ces objets doivent être créés afin de créer un nouveau taxi.
+
+Il est à votre charge de demander et vérifier les pièces justificatives permettant au taxi d'exercer :
+
+* Permis de conduire et carte d'identité ou passeport.
+* Carte professionnelle du chauffeur.
+* Carte grise du véhicule.
+* Autorisation de stationnement.
+
+###### Création du conducteur
+
+L'endpoint *POST /drivers* est utilisé pour créer un nouveau conducteur.
+
+Exemple d'appel :
+
+```shell
+$> curl 'https://dev.api.taxi/drivers/' \
+      -X POST \
+      -H 'Content-Type: application/json' \
+      -H 'X-API-KEY: XXX' \
+      -d '
+{
+  "data": [{
+    "birth_date": "2020-03-05",
+    "departement": {
+      "nom": "string",
+      "numero": "string"
+    },
+    "first_name": "string",
+    "last_name": "string",
+    "professional_licence": "string"
+  }]
+}'
+```
+
+* *birth_date* : date de naissance du conducteur, vous devez pouvoir la vérifier sur le justificatif fournit par le chauffeur de taxi.
+* *first_name* : prénom du chauffeur.
+* *last_nam* : nom de famille du chauffeur.
+* *departement* : département de délivrance de la carte professionnelle du chauffeur. Vous pouvez renseigner le nom ou le numéro du département.
+* *professional_licence* : numéro de la carte professionnelle du chauffeur.
+
+###### Création du véhicule
+
+L'endpoint *POST /vehicles* permet de créer un nouveau véhicule.
+
+Exemple d'appel :
+
+```shell
+$> curl 'https://dev.api.taxi/vehicles/' \
+      -X POST \
+      -H 'Content-Type: application/json' \
+      -H 'X-API-KEY: XXX' \
+      -d '
+{
+  "data": [
+    {
+      "color": "string",
+      "pet_accepted": true,
+      "special_need_vehicle": true,
+      "cpam_conventionne": true,
+      "licence_plate": "string",
+      "model_year": 0,
+      "type_": "sedan",
+      "nb_seats": 0,
+      "constructor": "string",
+      "model": "string"
+    }
+  ]
+}'
+```
+
+Le seul paramètre requis est *licence_plate*. Les autres sont optionnels mais permettent au client de retrouver plus facilement le taxi.
+
+###### Création de l'ADS
+
+L'endpoint *POST /ads* permet de créer une nouvelle autorisation de stationnement.
+
+```shell
+$> curl 'https://dev.api.taxi/ads/' \
+      -X POST \
+      -H 'Content-Type: application/json' \
+      -H 'X-API-KEY: XXX' \
+      -d '
+{
+  "data": [
+    {
+      "category": "string",
+      "vehicle_id": 0,
+      "insee": "string",
+      "numero": "string",
+      "owner_name": "string",
+      "owner_type": "company",
+      "doublage": true
+    }
+  ]
+}'
+```
+
+Paramètres :
+
+* *category* : catégorie de l'ADS (perpétuité, cessible, incessible, annuelle).
+* *insee* : code insee de la commune de l'ADS. Vous pouvez trouver ce code sur le site de l'INSEE.
+* *numero* : numéro de l'ADS.
+* *owner_name* : nom du propriétaire de l'ADS. S'il s'agit d'une entreprise, le nom de l'entreprise.
+* *owner_type* : individual s'il s'agit d'une autorisation donnée à une personne, company s'il s'agit d'une autorisation donnée à une entreprise.
+* *doublage* : booléen à true si l'ADS est doublée.
+* *vehicle_id* : l'identifiant donnée lors du POST */vehicles/*.
+
+###### Création du taxi
+
+Il est possible de créer un taxi en faisant un *POST /taxis* en fournissant les informations sur le chauffeur, le véhicule
+et l'autorisation de stationnement.
+
+Exemple d'appel :
+
+```shell
+$> curl 'https://dev.api.taxi/taxis/' \
+      -X POST \
+      -H 'Content-Type: application/json' \
+      -H 'X-API-KEY: XXX'       -d '
+{
+  "data": [
+    {
+      "ads": {
+        "insee": "string",
+        "numero": "string"
+      },
+      "driver": {
+        "departement": "string",
+        "professional_licence": "string"
+      },
+      "vehicle": {
+        "licence_plate": "string"
+      }
+    }
+  ]
+}'
+```
+
+L'identifiant retourné doit être conservé afin de mettre à jour la position et le statut du taxi.
+
+#### Géolocalisation
+
+Lorsqu'un taxi est en maraude, vous devez envoyer sa géolocalisation toutes les 5 secondes sur le serveur
+*geoloc.dev.api.taxi* en UDP sur le port *80*.
+
+La requête de mise à jour de la géolocalisation doit contenir un hash d'identification. Ce hash est un SHA1 de la
+concaténation des champs suivants, dans l'ordre, et sans séparateur : *timestamp, operator, taxi, lat, lon, device,status,
+version, api_key*.
+
+Ci-dessous un exemple en python d'une fonction envoyant au serveur de geolocalisation la position d'un taxi.
+
+
+```python
+from hashlib import sha1
+from time import time
+import socket
+import json
+
+
+GEOTAXI_HOST = 'geoloc.dev.api.taxi'
+GEOTAXI_PORT = 80
+
+
+def send_position(lon, lat, taxi_id, operator, apikey):
+    payload = {
+        "timestamp": int(time()),
+        "operator": operator,
+        "taxi": taxi_id,
+        "lat": lat,
+        "lon": lon,
+        "device": "phone",
+        "status": "free",
+        "version":"2",
+    }
+    h = ''.join(
+        str(payload[k]) for k in [
+          'timestamp',
+          'operator',
+          'taxi',
+          'lat',
+          'lon',
+          'device',
+          'status',
+          'version'
+        ]
+    )
+    h += apikey
+    payload['hash'] = sha1(
+      h.encode('utf-8')
+    ).hexdigest()
+
+    sock = socket.socket(
+      socket.AF_INET,
+      socket.SOCK_DGRAM
+    )
+    sock.sendto(
+      json.dumps(payload).encode(),
+      (GEOTAXI_HOST, GEOTAXI_PORT)
+    )
+```
+
+##### Statut du taxi
+
+Le taxi doit avoir le statut free pour être vu par les clients. La mise à jour de ce statut se fait avec
+l'endpoint *PUT /taxis/:taxi_id*.
+
+Exemple d'appel :
+
+```shell
+$> curl 'https://dev.api.taxi/taxis/:taxi_id/' \
+      -X PUT \
+      -H 'Content-Type: application/json' \
+      -H 'X-API-KEY: XXX' \
+      -d '
+{
+  "data": [
+    {
+      "status": "free"
+    }
+  ]
+}'
+```
+
+Les statuts possibles sont:
+
+* *free*
+* *occupied*
+* *off*
+* *oncoming*: ce statut est aussi automatiquement donné au taxi lorsque celui-ci a reçu une course avec le statut accepted_by_customer. Référez-vous à la documentation des moteurs de recherche pour plus d'informations.
+
+##### Recevoir une course
+
+Vous devez mettre en place une API REST acceptant les requêtes POST de la part de nos serveurs. Cette API recevra les
+demandes de courses au format JSON, et devra les faire parvenir au taxi concerné.
+
+Il y a deux méthodes pour faire parvenir la demande au taxi :
+
+* envoyer une notification push : votre serveur envoie une notification à l'application chauffeur.
+* faire du polling : l'application chauffeur demande à votre serveur si il a reçu une course, à interval régulier, par exemple toutes les secondes.
+
+Quelle que soit la méthode que vous choisissez, vous aurez un maximum de 10 secondes pour nous indiquer que le chauffeur
+a bien reçu la notification. Il aura alors 30 secondes pour accepter ou refuser la course. Référez-vous à la section
+statut de la course pour plus d'informations.
+
+Un serveur d'exemple est disponible sur [Github](https://github.com/openmaraude/minimal_operateur_server).
+
+##### Statut de la course
+
+Ce schéma présente les différents statuts que peut prendre une course.
+
+Les mises à jour effectuables par un opérateur sont matérialisées par des flèches vertes. Faisons un zoom sur cette
+partie.
+
+![status de la course](/doc/trip-status.png)
+
+Voici textuellement le déroulé de la course :
+
+* Un moteur de recherche fait parvenir une demande de course à l'API le.taxi.
+* Nous envoyons sur le serveur de l'opérateur — le votre — la demande de course. Si nous ne parvenons pas à joindre votre serveur, le statut de la course devient *failure*. Sinon, la course est au statut *received_by_operator*.
+* Vous envoyez la notification au taxi. Si au bout de 10 secondes la course n'est pas passée au statut *received_by_taxi*, nous la mettons au statut *failure*. Attention ! Ne mettez le statut *received_by_taxi* que lorsque vous êtes certain que le taxi a reçu la notification.
+
+Une fois que la course a le statut *received_by_taxi*, trois mises à jour sont possibles :
+
+* *accepted_by_taxi* : la course est acceptée par le chauffeur. Il faut informer le chauffeur de l'évolution de la course. Le client doit valider sa demande.
+* *declined_by_taxi* : le chauffeur ne peut pas prendre la course, il décline.
+* *incident_taxi* : le chauffeur a un empêchement (accident, trafic…). Il peut annuler la course même après l'avoir acceptée, ou que le client l'ait acceptée.
+
+Dans le cas où aucune mise à jour n'est effectuée en 30 secondes, la course passe au statut *timeout_taxi*.
+
+L'endpoint *PUT /hails/:hail_id* permet de mettre à jour le statut d'une course.
+
+Exemple d'appel :
+
+```shell
+$> curl 'https://dev.api.taxi/hails/:hail_id/' \
+      -X POST \
+      -H 'Content-Type: application/json' \
+      -H 'X-API-KEY: XXX' \
+      -d '
+{
+  "data": [
+    {
+      "status": "received_by_taxi"
+    }
+  ]
+}'
+```
+
+###### Cas particulier pour le statut *accepted_by_taxi*
+
+Lorsque le taxi accepte la course et que le statut est changé à *accepted_by_taxi*, il est nécessaire de fournir un
+numéro de téléphone sur lequel le taxi est joignable dans le champ *taxi_phone_number*.
+
+```shell
+$> curl 'https://dev.api.taxi/hails/:hail_id/' \
+      -X POST \
+      -H 'Content-Type: application/json' \
+      -H 'X-API-KEY: XXX' \
+      -d '
+      {
+  "data": [
+    {
+      "status": "accepted_by_taxi",
+      "taxi_phone_number": "+33422521010"
+    }
+  ]
+}'
+```
+
+##### Déroulé de la course
+
+Une fois la course acceptée par le taxi, le moteur change le statut de la course en *accepted_by_customer* et le taxi peut
+se diriger vers le client.
+
+Pour un déroulé normal de course, vous devez déclarer le client à bord en changeant le statut à *customer_on_board*, puis
+la course terminée avec le statut *finished*.
+
+![status de la course pour applicatif chauffeur](/doc/trip-status-operator.png)
+
+##### Signalement de client
+
+Un problème lors de la course peut être signalé en utilisant l'endpoint *PUT /hails/hail_id*, en fournissant le paramètre
+*reporting_customer* à *true* et le champ *reporting_customer_reason* à une des valeurs suivantes :
+
+* *payment* : il y a eu un problème avec le paiement.
+* *courtesy* : le client n'était pas courtois.
+* *cleanliness* : le client n'était pas propre.
+* *late* : le client était en retard.
+* *aggressive* : le client était agressif.
+* *no_show* : le client ne s'est pas présenté.

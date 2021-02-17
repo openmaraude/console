@@ -33,9 +33,14 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(3),
   },
 
+  menuItem: {
+    display: 'block',
+  },
+
   activeMenuItem: {
     border: `1px solid ${theme.palette.divider}`,
     backgroundColor: fade(theme.palette.info.light, 0.15),
+    display: 'block',
   },
 
   content: {
@@ -59,7 +64,7 @@ export function MenuItem({ title, href }) {
 
   return (
     <Link href={href} passHref>
-      <ButtonLink className={router.pathname === href ? classes.activeMenuItem : null}>
+      <ButtonLink className={router.pathname === href ? classes.activeMenuItem : classes.menuItem}>
         {title}
       </ButtonLink>
     </Link>

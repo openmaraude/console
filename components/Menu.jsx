@@ -99,7 +99,7 @@ export default function Menu({ user, logout }) {
             </>
           )}
 
-          <Link href="/documentation" passHref>
+          <Link href="/documentation/introduction" passHref>
             <ButtonLink color="inherit">Documentation</ButtonLink>
           </Link>
 
