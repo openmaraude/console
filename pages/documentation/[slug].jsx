@@ -68,10 +68,10 @@ export default function Documentation({ menu, content }) {
 
     heading: ({ level, children }) => <Typography variant={`h${level}`}>{ children }</Typography>,
 
-    table: Table,
-    tableHead: TableHead,
-    tableBody: TableBody,
-    tableRow: TableRow,
+    table: ({ children }) => <Table>{children}</Table>,
+    tableHead: ({ children }) => <TableHead>{children}</TableHead>,
+    tableBody: ({ children }) => <TableBody>{children}</TableBody>,
+    tableRow: ({ children }) => <TableRow>{children}</TableRow>,
     tableCell: ({ children }) => <TableCell>{children}</TableCell>,
 
     link: (link) => <Link href={link.href} passHref><TextLink>{link.children}</TextLink></Link>,
