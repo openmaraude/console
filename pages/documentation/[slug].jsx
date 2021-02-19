@@ -1,4 +1,6 @@
-import dynamic from 'next/dynamic'
+import PropTypes from 'prop-types';
+
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
 import SyntaxHighlighter from 'react-syntax-highlighter';
@@ -21,6 +23,7 @@ import {
 } from '../../components/layouts/MenuLayout';
 import { TextLink } from '../../components/LinksRef';
 
+/* eslint-disable react/prop-types */
 const components = {
   h1: ({ children }) => <Typography variant="h1">{children}</Typography>,
   h2: ({ children }) => <Typography variant="h2">{children}</Typography>,
@@ -46,10 +49,10 @@ const components = {
   td: ({ children }) => <TableCell>{children}</TableCell>,
   a: ({ href, children }) => <Link href={href} passHref><TextLink>{children}</TextLink></Link>,
 };
-
+/* eslint-enable react/prop-types */
 
 export default function Introduction({ slug }) {
-  const MDXDocument = dynamic(() => import('../../public/documentation/' + slug + '.mdx'));
+  const MDXDocument = dynamic(() => import(`../../public/documentation/${slug}.mdx`));
 
   return (
     <MenuLayout>
@@ -68,6 +71,9 @@ export default function Introduction({ slug }) {
     </MenuLayout>
   );
 }
+Introduction.propTypes = {
+  slug: PropTypes.string.isRequired,
+};
 
 export async function getStaticProps({ params }) {
   return {
