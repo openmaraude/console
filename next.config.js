@@ -1,4 +1,8 @@
-module.exports = {
+const withMDX = require('@next/mdx')({
+  extension: /\.mdx?$/
+})
+
+module.exports = withMDX({
   env: {
     API_TAXI_PUBLIC_URL: 'http://localhost:5000',
   },
@@ -11,4 +15,6 @@ module.exports = {
       },
     ]
   },
-}
+
+  pageExtensions: ['js', 'jsx', 'md', 'mdx'],
+});

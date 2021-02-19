@@ -1,11 +1,10 @@
-import PropTypes from 'prop-types';
-
+import dynamic from 'next/dynamic'
 import Link from 'next/link';
 
-import gfm from 'remark-gfm';
-import ReactMarkdown from 'react-markdown';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { dark } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
+
+import { MDXProvider } from '@mdx-js/react';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -20,105 +19,74 @@ import {
   Menu,
   MenuItem,
 } from '../../components/layouts/MenuLayout';
-import InfoBox from '../../components/InfoBox';
-import { getAllPages, getMenu } from '../../src/documentation';
 import { TextLink } from '../../components/LinksRef';
 
-export function DocumentationMenu({ menu }) {
-  return (
-    <Menu>
-      {
-        menu.map((item) => <MenuItem key={item.slug} title={item.title} href={`/documentation/${item.slug}`} />)
-      }
-    </Menu>
-  );
-}
+const components = {
+  h1: ({ children }) => <Typography variant="h1">{children}</Typography>,
+  h2: ({ children }) => <Typography variant="h2">{children}</Typography>,
+  h3: ({ children }) => <Typography variant="h3">{children}</Typography>,
+  h4: ({ children }) => <Typography variant="h4">{children}</Typography>,
+  h5: ({ children }) => <Typography variant="h5">{children}</Typography>,
+  h6: ({ children }) => <Typography variant="h6">{children}</Typography>,
 
-const menuPropType = PropTypes.arrayOf(
-  PropTypes.shape({
-    slug: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-  }),
-);
+  code: ({ className, children }) => {
+    const language = className.replace(/language-/, '');
+    return (
+      <SyntaxHighlighter style={dark} language={language} wrapLongLines>
+        {children}
+      </SyntaxHighlighter>
+    );
+  },
 
-DocumentationMenu.propTypes = {
-  menu: menuPropType.isRequired,
+  table: ({ children }) => <Table>{children}</Table>,
+  thead: ({ children }) => <TableHead>{children}</TableHead>,
+  tbody: ({ children }) => <TableBody>{children}</TableBody>,
+  tr: ({ children }) => <TableRow>{children}</TableRow>,
+  th: ({ children }) => <TableCell>{children}</TableCell>,
+  td: ({ children }) => <TableCell>{children}</TableCell>,
+  a: ({ href, children }) => <Link href={href} passHref><TextLink>{children}</TextLink></Link>,
 };
 
-export default function Documentation({ menu, content }) {
-  /* eslint-disable react/prop-types */
-  const renderers = {
-    code: ({ language, value }) => {
-      if (language?.startsWith('def')) {
-        const title = language.slice('def:'.length);
-        return (
-          <InfoBox title={title}>
-            <ReactMarkdown renderers={renderers} plugins={[gfm]}>
-              {value}
-            </ReactMarkdown>
-          </InfoBox>
-        );
-      }
-      return (
-        <SyntaxHighlighter style={dark} language={language} wrapLongLines>
-          {value}
-        </SyntaxHighlighter>
-      );
-    },
 
-    heading: ({ level, children }) => <Typography variant={`h${level}`}>{ children }</Typography>,
-
-    table: ({ children }) => <Table>{children}</Table>,
-    tableHead: ({ children }) => <TableHead>{children}</TableHead>,
-    tableBody: ({ children }) => <TableBody>{children}</TableBody>,
-    tableRow: ({ children }) => <TableRow>{children}</TableRow>,
-    tableCell: ({ children }) => <TableCell>{children}</TableCell>,
-
-    link: (link) => <Link href={link.href} passHref><TextLink>{link.children}</TextLink></Link>,
-  };
-  /* eslint-enable react/prop-types */
+export default function Introduction({ slug }) {
+  const MDXDocument = dynamic(() => import('../../public/documentation/' + slug + '.mdx'));
 
   return (
     <MenuLayout>
-      <DocumentationMenu menu={menu} />
-
+      <Menu>
+        <MenuItem title="Introduction" href="/documentation/introduction" />
+        <MenuItem title="Moteur de recherche" href="/documentation/search" />
+        <MenuItem title="Opérateur" href="/documentation/operator" />
+        <MenuItem title="Documentation de référence" href="/documentation/reference" />
+        <MenuItem title="Exemples" href="/documentation/examples" />
+      </Menu>
       <Content>
-        <ReactMarkdown renderers={renderers} plugins={[gfm]}>
-          { content }
-        </ReactMarkdown>
+        <MDXProvider components={components}>
+          <MDXDocument />
+        </MDXProvider>
       </Content>
     </MenuLayout>
   );
 }
 
-Documentation.propTypes = {
-  menu: menuPropType.isRequired,
-  metadata: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    slug: PropTypes.string.isRequired,
-  }).isRequired,
-  content: PropTypes.string.isRequired,
-};
-
 export async function getStaticProps({ params }) {
-  const pages = await getAllPages();
-  const page = pages.find((p) => p.metadata.slug === params.slug);
-
   return {
     props: {
       optionalAuth: true,
-      menu: getMenu(pages),
-      metadata: page.metadata,
-      content: page.content,
+      slug: params.slug,
     },
   };
 }
 
 export async function getStaticPaths() {
-  const pages = await getAllPages();
-
   return {
-    paths: pages.map((page) => ({ params: { slug: page.metadata.slug } })),
+    paths: [
+      { params: { slug: 'introduction' } },
+      { params: { slug: 'search' } },
+      { params: { slug: 'operator' } },
+      { params: { slug: 'reference' } },
+      { params: { slug: 'examples' } },
+    ],
     fallback: false,
   };
 }
