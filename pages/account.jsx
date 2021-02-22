@@ -51,8 +51,6 @@ export default function AccountPage({ user }) {
   const [account, setAccount] = React.useState();
   const [apiError, setApiError] = React.useState();
 
-  console.log('user ==', user);
-
   // Passwords are valid only if both are unset, or if both are set and equal.
   const passwordConfirmIsValid = (
     !account
