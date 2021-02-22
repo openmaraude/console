@@ -1,4 +1,5 @@
 import { createMuiTheme } from '@material-ui/core/styles';
+import { frFR } from '@material-ui/core/locale';
 import { red } from '@material-ui/core/colors';
 
 // Create a theme instance.
@@ -17,6 +18,6 @@ const theme = createMuiTheme({
       default: '#fff',
     },
   },
-});
+}, frFR);
 
 export default theme;
