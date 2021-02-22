@@ -7,7 +7,5 @@ export default function DashboardsPage() {
 }
 
 DashboardsPage.getInitialProps = async (ctx) => ({
-  props: {
-    user: getCurrentUser(ctx),
-  },
+  user: getCurrentUser(ctx),
 });

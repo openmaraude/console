@@ -321,7 +321,5 @@ AccountPage.propTypes = {
 };
 
 AccountPage.getInitialProps = async (ctx) => ({
-  props: {
-    user: getCurrentUser(ctx),
-  },
+  user: getCurrentUser(ctx),
 });

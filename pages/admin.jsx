@@ -7,7 +7,5 @@ export default function AdminPage() {
 }
 
 AdminPage.getInitialProps = async (ctx) => ({
-  props: {
-    user: getCurrentUser(ctx),
-  },
+  user: getCurrentUser(ctx),
 });
