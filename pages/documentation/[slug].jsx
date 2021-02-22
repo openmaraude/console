@@ -15,6 +15,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 
+import { getCurrentUser } from '../../src/auth';
 import {
   MenuLayout,
   Content,
@@ -52,7 +53,9 @@ const components = {
 /* eslint-enable react/prop-types */
 
 export default function Introduction({ slug }) {
-  const MDXDocument = dynamic(() => import(`../../public/documentation/${slug}.mdx`));
+  const ALL_PAGES = ['introduction', 'search', 'operator', 'reference', 'examples'];
+  const validSlug = ALL_PAGES.indexOf(slug) >= 0 ? slug : 'introduction';
+  const MDXDocument = dynamic(() => import(`../../public/documentation/${validSlug}.mdx`));
 
   return (
     <MenuLayout>
@@ -71,28 +74,15 @@ export default function Introduction({ slug }) {
     </MenuLayout>
   );
 }
+
 Introduction.propTypes = {
   slug: PropTypes.string.isRequired,
 };
 
-export async function getStaticProps({ params }) {
+Introduction.getInitialProps = async (ctx) => {
   return {
-    props: {
-      optionalAuth: true,
-      slug: params.slug,
-    },
+    slug: ctx.query.slug,
+    optionalAuth: true,
+    user: getCurrentUser(ctx),
   };
-}
-
-export async function getStaticPaths() {
-  return {
-    paths: [
-      { params: { slug: 'introduction' } },
-      { params: { slug: 'search' } },
-      { params: { slug: 'operator' } },
-      { params: { slug: 'reference' } },
-      { params: { slug: 'examples' } },
-    ],
-    fallback: false,
-  };
-}
+};
