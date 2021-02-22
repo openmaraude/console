@@ -50,7 +50,7 @@ export default function LoginForm(props) {
 
   function onSubmit(event) {
     props.authenticate({
-      username: event.target.username.value,
+      email: event.target.email.value,
       password: event.target.password.value,
     }).catch((apiError) => setAuthenticationError(apiError));
     event.preventDefault();
@@ -73,9 +73,9 @@ export default function LoginForm(props) {
               margin="normal"
               required
               fullWidth
-              id="username"
+              id="email"
               label="Identifiant"
-              name="username"
+              name="email"
               autoComplete="username"
               autoFocus
               error={!!authenticationError}

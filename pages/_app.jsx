@@ -57,7 +57,7 @@ export default function ConsoleApp({ Component, pageProps }) {
         <Menu user={user} logout={logout} />
         {
           user || pageProps.optionalAuth
-            ? <Component {...pageProps} user={user} />
+            ? <Component {...pageProps} authenticate={authenticate} user={user} />
             : <LoginForm authenticate={authenticate} />
         }
       </ThemeProvider>

@@ -11,7 +11,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 
 import { ButtonLink } from './LinksRef';
-import { hasRole } from '../src/auth';
+import { getAuthenticatedUsers, hasRole } from '../src/auth';
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {
@@ -58,11 +58,25 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 
+  loggedAs: {
+    backgroundColor: theme.palette.warning.main,
+    padding: theme.spacing(1),
+    marginLeft: theme.spacing(2),
+    fontWeight: 'bold',
+  },
+
 }));
+
+function AuthenticatedUser({ user }) {
+  const classes = useStyles();
+
+  return <div className={classes.loggedAs}>Connecté en tant que {user.name}</div>;
+}
 
 export default function Menu({ user, logout }) {
   const classes = useStyles();
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const authenticatedUsers = getAuthenticatedUsers();
 
   const handleMenuToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -80,6 +94,10 @@ export default function Menu({ user, logout }) {
           <Link href="/dashboards" passHref>
             <ButtonLink color="inherit" className={classes.consoleButton}>Console</ButtonLink>
           </Link>
+
+          {
+            authenticatedUsers.length > 1 && <AuthenticatedUser user={authenticatedUsers[0]} />
+          }
         </Box>
 
         <Box display="flex" className={mobileOpen ? classes.menuItemsExpanded : classes.menuItems}>
