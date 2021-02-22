@@ -79,10 +79,8 @@ Introduction.propTypes = {
   slug: PropTypes.string.isRequired,
 };
 
-Introduction.getInitialProps = async (ctx) => {
-  return {
-    slug: ctx.query.slug,
-    optionalAuth: true,
-    user: getCurrentUser(ctx),
-  };
-};
+Introduction.getInitialProps = async (ctx) => ({
+  slug: ctx.query.slug,
+  optionalAuth: true,
+  user: getCurrentUser(ctx),
+});
