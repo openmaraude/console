@@ -65,7 +65,7 @@ export default function AccountPage({ user }) {
     } catch (err) {
       setApiError(err);
     }
-  }, []);
+  }, [user]);
 
   function updateField(e) {
     setAccount({ ...account, [e.target.name]: e.target.value });
