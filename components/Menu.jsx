@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
 function AuthenticatedUser({ user }) {
   const classes = useStyles();
 
-  return <div className={classes.loggedAs}>Connecté en tant que {user.name}</div>;
+  return <div className={classes.loggedAs}>Connecté en tant que {user.name || user.email}</div>;
 }
 
 AuthenticatedUser.propTypes = {
