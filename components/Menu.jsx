@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Link from 'next/link';
 
@@ -73,6 +74,13 @@ function AuthenticatedUser({ user }) {
   return <div className={classes.loggedAs}>Connecté en tant que {user.name}</div>;
 }
 
+AuthenticatedUser.propTypes = {
+  user: PropTypes.shape({
+    name: PropTypes.string,
+    email: PropTypes.string,
+  }).isRequired,
+};
+
 export default function Menu({ user, logout }) {
   const classes = useStyles();
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -135,3 +143,12 @@ export default function Menu({ user, logout }) {
     </AppBar>
   );
 }
+
+Menu.defaultProps = {
+  user: null,
+};
+
+Menu.propTypes = {
+  user: PropTypes.shape({}),
+  logout: PropTypes.func.isRequired,
+};
