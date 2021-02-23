@@ -84,7 +84,12 @@ AuthenticatedUser.propTypes = {
 export default function Menu({ user, logout }) {
   const classes = useStyles();
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const authenticatedUsers = getAuthenticatedUsers();
+  const [authenticatedUsers, setAuthenticatedUsers] = React.useState([]);
+
+  React.useEffect(
+    async () => setAuthenticatedUsers(getAuthenticatedUsers()),
+    [user],
+  );
 
   const handleMenuToggle = () => {
     setMobileOpen(!mobileOpen);
