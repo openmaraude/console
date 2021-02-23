@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
@@ -95,18 +96,29 @@ export default function AccountPage({ user }) {
           <div className={classes.formSection}>
             <Typography variant="h4" className={classes.formSectionTitle}>Votre compte</Typography>
 
-            <div className={classes.formEntry}>
-              <div>
-                <strong>Votre clé d'API :</strong> <small>{account?.apikey}</small>
+            <Box marginBottom={5}>
+              <div className={classes.formEntry}>
+                <div>
+                  <strong>Votre clé d'API :</strong> <small>{account?.apikey}</small>
+                </div>
+                <div className={classes.helpText}>
+                  Cette clé est un identifiant unique qui permet à vos applications
+                  de se connecter à nos APIs. Cette information est confidentielle :
+                  ne la transmettez jamais à des tiers. Si vous pensez que cette clé
+                  a été divulguée par erreur à des tiers, contactez nos équipes
+                  techniques pour la changer.
+                </div>
               </div>
-              <div className={classes.helpText}>
-                Cette clé est un identifiant unique qui permet à vos applications
-                de se connecter à nos APIs. Cette information est confidentielle :
-                ne la transmettez jamais à des tiers. Si vous pensez que cette clé
-                a été divulguée par erreur à des tiers, contactez nos équipes
-                techniques pour la changer.
+
+              <div className={classes.formEntry}>
+                <div>
+                  <strong>Votre identifiant :</strong> <small>{account?.email}</small>
+                </div>
+                <div className={classes.helpText}>
+                  Identifiant utilisé pour vous connecter. Vous ne pouvez pas en changer.
+                </div>
               </div>
-            </div>
+            </Box>
 
             <div className={classes.formEntry}>
               <div>
