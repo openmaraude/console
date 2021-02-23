@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import { makeStyles } from '@material-ui/core/styles';
+import { fade, makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 
@@ -66,6 +67,9 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 'bold',
   },
 
+  currentMenu: {
+    borderBottom: `3px solid ${theme.palette.info.main}`,
+  },
 }));
 
 function AuthenticatedUser({ user }) {
@@ -79,6 +83,28 @@ AuthenticatedUser.propTypes = {
     name: PropTypes.string,
     email: PropTypes.string,
   }).isRequired,
+};
+
+function HighlightedLink({ href, ...props }) {
+  const router = useRouter();
+  const classes = useStyles();
+
+  // Only get the first part of the URL, until the first slash.
+  //
+  // /account returns /account
+  // /documentation/search returns /documentation
+  const firstLevelHref = href.match(/^\/[^/]+/)[0];
+  const firstLevelRouter = router.asPath.match(/^\/[^/]+/)[0];
+
+  return (
+    <div className={firstLevelHref === firstLevelRouter ? classes.currentMenu : null}>
+      <Link href={href} {...props} />
+    </div>
+  );
+}
+
+HighlightedLink.propTypes = {
+  href: PropTypes.string.isRequired,
 };
 
 export default function Menu({ user, logout }) {
@@ -119,26 +145,26 @@ export default function Menu({ user, logout }) {
               {
                 hasRole(user, 'admin')
                 && (
-                  <Link href="/admin" passHref>
+                  <HighlightedLink href="/admin" passHref>
                     <ButtonLink color="inherit">Administration</ButtonLink>
-                  </Link>
+                  </HighlightedLink>
                 )
               }
-              <Link href="/dashboards" passHref>
+              <HighlightedLink href="/dashboards" passHref>
                 <ButtonLink color="inherit">Tableaux de bord</ButtonLink>
-              </Link>
+              </HighlightedLink>
             </>
           )}
 
-          <Link href="/documentation/introduction" passHref>
+          <HighlightedLink href="/documentation/introduction" passHref>
             <ButtonLink color="inherit">Documentation</ButtonLink>
-          </Link>
+          </HighlightedLink>
 
           {user && (
             <>
-              <Link href="/account" passHref>
+              <HighlightedLink href="/account" passHref>
                 <ButtonLink color="inherit">Mon compte</ButtonLink>
-              </Link>
+              </HighlightedLink>
 
               <Button onClick={logout} color="inherit">Déconnexion</Button>
             </>
