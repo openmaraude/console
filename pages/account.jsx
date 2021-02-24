@@ -307,7 +307,7 @@ export default function AccountPage() {
 
           {apiError && <APIErrorAlert className={classes.error} error={apiError} />}
 
-          <Button type="submit" variant="contained" color="primary" disabled={!passwordConfirmIsValid} onClick={onSubmit}>
+          <Button type="submit" variant="contained" color="primary" disabled={!passwordConfirmIsValid || !account} onClick={onSubmit}>
             Mettre à jour
           </Button>
         </form>
