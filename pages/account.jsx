@@ -315,7 +315,3 @@ export default function AccountPage() {
     </Container>
   );
 }
-
-AccountPage.getInitialProps = async (ctx) => ({
-  user: getCurrentUser(ctx),
-});

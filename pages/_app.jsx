@@ -3,6 +3,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import App from 'next/app';
 import Head from 'next/head';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -16,12 +17,12 @@ import "@fontsource/roboto/700.css";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { login, logout as doLogout, UserContext } from '../src/auth';
+import { getCurrentUser, login, logout as doLogout, UserContext } from '../src/auth';
 import LoginForm from '../components/Login';
 import Menu from '../components/Menu';
 import theme from '../components/theme';
 
-export default function ConsoleApp({ Component, pageProps }) {
+export default function ConsoleApp({ Component, pageProps, initialUser }) {
   React.useEffect(() => {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side');
@@ -30,7 +31,7 @@ export default function ConsoleApp({ Component, pageProps }) {
     }
   }, []);
 
-  const [user, setUser] = React.useState(pageProps.user);
+  const [user, setUser] = React.useState(initialUser);
 
   const authenticate = async (form) => setUser(await login(form));
   const logout = () => setUser(doLogout());
@@ -65,6 +66,13 @@ export default function ConsoleApp({ Component, pageProps }) {
       </ThemeProvider>
     </>
   );
+}
+
+ConsoleApp.getInitialProps = async (appContext) => {
+  const user = getCurrentUser(appContext.ctx);
+  const appProps = await App.getInitialProps(appContext);
+
+  return { initialUser: user, ...appProps }
 }
 
 ConsoleApp.propTypes = {

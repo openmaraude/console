@@ -15,7 +15,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 
-import { getCurrentUser } from '../../src/auth';
 import {
   MenuLayout,
   Content,
@@ -81,6 +80,4 @@ Introduction.propTypes = {
 
 Introduction.getInitialProps = async (ctx) => ({
   slug: ctx.query.slug,
-  optionalAuth: true,
-  user: getCurrentUser(ctx),
 });

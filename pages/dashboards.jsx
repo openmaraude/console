@@ -5,7 +5,3 @@ export default function DashboardsPage() {
     <div>Dashboards page</div>
   );
 }
-
-DashboardsPage.getInitialProps = async (ctx) => ({
-  user: getCurrentUser(ctx),
-});

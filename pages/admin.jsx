@@ -165,13 +165,5 @@ export default function AdminPage({ authenticate }) {
 }
 
 AdminPage.propTypes = {
-  user: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    apikey: PropTypes.string.isRequired,
-  }).isRequired,
   authenticate: PropTypes.func.isRequired,
 };
-
-AdminPage.getInitialProps = async (ctx) => ({
-  user: getCurrentUser(ctx),
-});
