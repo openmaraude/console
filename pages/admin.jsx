@@ -72,7 +72,7 @@ export default function AdminPage({ authenticate, user }) {
       setApiError(err);
       setApiResponse(null);
     }
-  }, [user, page]);
+  }, [page]);
 
   if (apiError) {
     return (
@@ -127,10 +127,10 @@ export default function AdminPage({ authenticate, user }) {
         const onClick = async () => {
           try {
             await authenticate(cell.row);
+            router.push('/dashboards');
           } catch (exc) {
             setApiError(exc);
           }
-          router.push('/dashboards');
         };
 
         return (
