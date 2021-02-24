@@ -39,36 +39,36 @@ export default function AdminPage({ authenticate, user }) {
   const classes = useStyles();
   const [apiResponse, setApiResponse] = React.useState();
   const [apiError, setApiError] = React.useState();
+  const [errorRetry, setErrorRetry] = React.useState(0);
   const [page, setPage] = React.useState(0);
   const [isLoading, setLoading] = React.useState(true);
   const router = useRouter();
 
-  /*
-   * rajouter les filtres
-   */
-
-  React.useEffect(async () => {
+  const refreshUsers = React.useCallback(async () => {
     try {
       const resp = await listUsers(user.apikey, page);
       setApiError(null);
       setApiResponse(resp);
+      setLoading(false);
     } catch (err) {
       setApiError(err);
       setApiResponse(null);
-    } finally {
-      setLoading(false);
+      throw err;
     }
   }, [page]);
 
-  if (apiError) {
-    return (
-      <Container maxWidth="md">
-        <Paper className={classes.paper} elevation={10}>
-          <APIErrorAlert className={classes.error} error={apiError} />
-        </Paper>
-      </Container>
-    );
-  }
+  React.useEffect(() => {
+    let timeoutRetry;
+
+    refreshUsers().catch(() => {
+      timeoutRetry = setTimeout(
+        () => setErrorRetry(errorRetry + 1),
+        Math.min(errorRetry + 1, 60) * 1000,
+      );
+    });
+
+    return () => clearTimeout(timeoutRetry);
+  }, [errorRetry, refreshUsers]);
 
   const columns = [
     {
@@ -116,7 +116,6 @@ export default function AdminPage({ authenticate, user }) {
             setApiError(exc);
           }
         };
-
         return (
           <Button disabled={cell.row.id === user.id} variant="contained" color="primary" onClick={onClick}>
             Connexion
@@ -127,6 +126,7 @@ export default function AdminPage({ authenticate, user }) {
   ];
 
   const handlePageChange = (param) => {
+    setLoading(true);
     setPage(param.page);
   };
 
@@ -138,6 +138,8 @@ export default function AdminPage({ authenticate, user }) {
           que n'importe quel utilisateur. Une fois connecté, déconnectez-vous
           pour revenir sur votre compte d'administration.
         </p>
+
+        { apiError && <APIErrorAlert className={classes.error} error={apiError} /> }
 
         <DataGrid
           autoHeight

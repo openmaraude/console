@@ -4,6 +4,7 @@
 
 import PropTypes from 'prop-types';
 
+import Box from '@material-ui/core/Box';
 import { Alert } from '@material-ui/lab';
 
 import SyntaxHighlighter from 'react-syntax-highlighter';
@@ -51,9 +52,11 @@ export default function APIErrorAlert({ error, ...alertParams }) {
   }
 
   return (
-    <Alert severity="error" {...alertParams} >
-      {display}
-    </Alert>
+    <Box marginTop={2} marginBottom={2}>
+      <Alert severity="error" {...alertParams} >
+        {display}
+      </Alert>
+    </Box>
   );
 }
 
