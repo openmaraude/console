@@ -32,6 +32,7 @@ function setAuthenticatedUsers(users) {
     nookies.set(null, COOKIE_NAME, newCookieValue, {
       maxAge: 60 * 60 * 24 * 365, // 1 year
       sameSite: 'strict',
+      path: '/',
     });
     return users[0];
   }
