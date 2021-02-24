@@ -11,7 +11,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 
 import APIErrorAlert from '../components/APIErrorAlert';
-import { getCurrentUser } from '../src/auth';
+import { getCurrentUser, UserContext } from '../src/auth';
 import { listUsers } from '../src/users';
 
 const useStyles = makeStyles((theme) => ({
@@ -35,7 +35,8 @@ function LoadingOverlay() {
   );
 }
 
-export default function AdminPage({ authenticate, user }) {
+export default function AdminPage({ authenticate }) {
+  const user = React.useContext(UserContext);
   const classes = useStyles();
   const [apiResponse, setApiResponse] = React.useState();
   const [apiError, setApiError] = React.useState();

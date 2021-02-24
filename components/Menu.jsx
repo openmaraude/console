@@ -13,7 +13,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 
 import { ButtonLink } from './LinksRef';
-import { getAuthenticatedUsers, hasRole } from '../src/auth';
+import { getAuthenticatedUsers, hasRole, UserContext } from '../src/auth';
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {
@@ -72,18 +72,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function AuthenticatedUser({ user }) {
+function AuthenticatedUser() {
+  const user = React.useContext(UserContext);
   const classes = useStyles();
 
   return <div className={classes.loggedAs}>Connecté en tant que {user.name || user.email}</div>;
 }
-
-AuthenticatedUser.propTypes = {
-  user: PropTypes.shape({
-    name: PropTypes.string,
-    email: PropTypes.string,
-  }).isRequired,
-};
 
 function HighlightedLink({ href, ...props }) {
   const router = useRouter();
@@ -107,7 +101,8 @@ HighlightedLink.propTypes = {
   href: PropTypes.string.isRequired,
 };
 
-export default function Menu({ user, logout }) {
+export default function Menu({ logout }) {
+  const user = React.useContext(UserContext);
   const classes = useStyles();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [authenticatedUsers, setAuthenticatedUsers] = React.useState([]);
@@ -135,7 +130,7 @@ export default function Menu({ user, logout }) {
           </Link>
 
           {
-            authenticatedUsers.length > 1 && <AuthenticatedUser user={authenticatedUsers[0]} />
+            authenticatedUsers.length > 1 && <AuthenticatedUser />
           }
         </Box>
 
@@ -175,11 +170,6 @@ export default function Menu({ user, logout }) {
   );
 }
 
-Menu.defaultProps = {
-  user: null,
-};
-
 Menu.propTypes = {
-  user: PropTypes.shape({}),
   logout: PropTypes.func.isRequired,
 };

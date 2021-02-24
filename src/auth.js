@@ -1,8 +1,12 @@
+import React from 'react';
+
 import nookies from 'nookies';
 
 import { request } from './api';
 
 const COOKIE_NAME = 'remember-users';
+
+export const UserContext = React.createContext();
 
 /*
  * Retrieve the list of users stored in cookie by setAuthenticatedUsers().

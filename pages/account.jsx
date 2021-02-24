@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 
 import { toast } from 'react-toastify';
 
-import { getCurrentUser, hasRole } from '../src/auth';
+import { getCurrentUser, hasRole, UserContext } from '../src/auth';
 import { getUserAccount, updateUserAccount } from '../src/account';
 import APIErrorAlert from '../components/APIErrorAlert';
 
@@ -47,10 +47,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AccountPage({ user }) {
+export default function AccountPage() {
   const classes = useStyles();
   const [account, setAccount] = React.useState();
   const [apiError, setApiError] = React.useState();
+  const user = React.useContext(UserContext);
 
   // Passwords are valid only if both are unset, or if both are set and equal.
   const passwordConfirmIsValid = (
@@ -126,7 +127,6 @@ export default function AccountPage({ user }) {
                   label="Nom commercial"
                   name="name"
                   fullWidth
-                  disabled={!account}
                   value={account?.name || ""}
                   onChange={updateField}
                   InputLabelProps={{ shrink: true }}
@@ -144,7 +144,6 @@ export default function AccountPage({ user }) {
                   name="password"
                   type="password"
                   fullWidth
-                  disabled={!account}
                   value={account?.password || ""}
                   onChange={updateField}
                   InputLabelProps={{ shrink: true }}
@@ -163,7 +162,6 @@ export default function AccountPage({ user }) {
                   type="password"
                   error={!passwordConfirmIsValid}
                   fullWidth
-                  disabled={!account}
                   value={account?.passwordConfirm || ""}
                   onChange={updateField}
                   InputLabelProps={{ shrink: true }}
@@ -185,7 +183,6 @@ export default function AccountPage({ user }) {
                     label="URL de votre API"
                     name="hail_endpoint_production"
                     fullWidth
-                    disabled={!account}
                     value={account?.hail_endpoint_production || ""}
                     onChange={updateField}
                     InputLabelProps={{ shrink: true }}
@@ -205,7 +202,6 @@ export default function AccountPage({ user }) {
                     label="Header"
                     name="operator_header_name"
                     fullWidth
-                    disabled={!account}
                     value={account?.operator_header_name || ""}
                     onChange={updateField}
                     InputLabelProps={{ shrink: true }}
@@ -225,7 +221,6 @@ export default function AccountPage({ user }) {
                     label="Valeur header"
                     name="operator_api_key"
                     fullWidth
-                    disabled={!account}
                     value={account?.operator_api_key || ""}
                     onChange={updateField}
                     InputLabelProps={{ shrink: true }}
@@ -247,7 +242,6 @@ export default function AccountPage({ user }) {
                   label="Tél. technique"
                   name="phone_number_technical"
                   fullWidth
-                  disabled={!account}
                   value={account?.phone_number_technical || ""}
                   onChange={updateField}
                   InputLabelProps={{ shrink: true }}
@@ -264,7 +258,6 @@ export default function AccountPage({ user }) {
                   label="Email technique"
                   name="email_technical"
                   fullWidth
-                  disabled={!account}
                   value={account?.email_technical || ""}
                   onChange={updateField}
                   InputLabelProps={{ shrink: true }}
@@ -285,7 +278,6 @@ export default function AccountPage({ user }) {
                   label="Tél. service client"
                   name="phone_number_customer"
                   fullWidth
-                  disabled={!account}
                   value={account?.phone_number_customer || ""}
                   onChange={updateField}
                   InputLabelProps={{ shrink: true }}
@@ -302,7 +294,6 @@ export default function AccountPage({ user }) {
                   label="Email service client"
                   name="email_customer"
                   fullWidth
-                  disabled={!account}
                   value={account?.email_customer || ""}
                   onChange={updateField}
                   InputLabelProps={{ shrink: true }}
@@ -324,13 +315,6 @@ export default function AccountPage({ user }) {
     </Container>
   );
 }
-
-AccountPage.propTypes = {
-  user: PropTypes.shape({
-    apikey: PropTypes.string.isRequired,
-    id: PropTypes.number.isRequired,
-  }).isRequired,
-};
 
 AccountPage.getInitialProps = async (ctx) => ({
   user: getCurrentUser(ctx),
