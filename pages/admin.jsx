@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
 
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid, GridOverlay } from '@material-ui/data-grid';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 
@@ -25,41 +25,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function PageLayout({ isLoading, children }) {
-  const classes = useStyles();
+function LoadingOverlay() {
   return (
-    <Container maxWidth="md">
-      <Paper className={classes.paper} elevation={10}>
-        {isLoading
-          ? <div className={classes.loading}><CircularProgress /></div>
-          : children}
-      </Paper>
-    </Container>
+    <GridOverlay>
+      <div style={{ position: 'absolute', top: 0, width: '100%' }}>
+        <LinearProgress />
+      </div>
+    </GridOverlay>
   );
 }
-
-PageLayout.defaultProps = {
-  isLoading: false,
-  children: null,
-};
-
-PageLayout.propTypes = {
-  isLoading: PropTypes.bool,
-  children: PropTypes.node,
-};
 
 export default function AdminPage({ authenticate, user }) {
   const classes = useStyles();
   const [apiResponse, setApiResponse] = React.useState();
   const [apiError, setApiError] = React.useState();
   const [page, setPage] = React.useState(0);
-  const isLoading = !apiResponse;
+  const [isLoading, setLoading] = React.useState(true);
   const router = useRouter();
 
   /*
-   * XXX: fix isLoading afin d'utiliser la feature de loading de datagrid et
-   * virer le code custom
-   *
    * rajouter les filtres
    */
 
@@ -71,19 +55,19 @@ export default function AdminPage({ authenticate, user }) {
     } catch (err) {
       setApiError(err);
       setApiResponse(null);
+    } finally {
+      setLoading(false);
     }
   }, [page]);
 
   if (apiError) {
     return (
-      <PageLayout>
-        <APIErrorAlert className={classes.error} error={apiError} />
-      </PageLayout>
+      <Container maxWidth="md">
+        <Paper className={classes.paper} elevation={10}>
+          <APIErrorAlert className={classes.error} error={apiError} />
+        </Paper>
+      </Container>
     );
-  }
-
-  if (isLoading) {
-    return <PageLayout isLoading />;
   }
 
   const columns = [
@@ -147,28 +131,33 @@ export default function AdminPage({ authenticate, user }) {
   };
 
   return (
-    <PageLayout>
-      <p>
-        Cette fonctionnalité permet aux administrateurs de se connecter en tant
-        que n'importe quel utilisateur. Une fois connecté, déconnectez-vous
-        pour revenir sur votre compte d'administration.
-      </p>
+    <Container maxWidth="md">
+      <Paper className={classes.paper} elevation={10}>
+        <p>
+          Cette fonctionnalité permet aux administrateurs de se connecter en tant
+          que n'importe quel utilisateur. Une fois connecté, déconnectez-vous
+          pour revenir sur votre compte d'administration.
+        </p>
 
-      <DataGrid
-        autoHeight
-        disableColumnMenu
-        rowsPerPageOptions={[]}
-        hideFooterSelectedRowCount
-        hideFooterRowCount
-        columns={columns}
-        rows={apiResponse.users}
-        pageSize={apiResponse.meta.per_page}
-        rowCount={apiResponse.meta.total}
-        onPageChange={handlePageChange}
-        paginationMode="server"
-      />
-
-    </PageLayout>
+        <DataGrid
+          autoHeight
+          disableColumnMenu
+          rowsPerPageOptions={[]}
+          hideFooterSelectedRowCount
+          hideFooterRowCount
+          columns={columns}
+          rows={apiResponse?.users || []}
+          pageSize={apiResponse?.meta.per_page}
+          rowCount={apiResponse?.meta.total}
+          onPageChange={handlePageChange}
+          paginationMode="server"
+          components={{
+            LoadingOverlay,
+          }}
+          loading={isLoading}
+        />
+      </Paper>
+    </Container>
   );
 }
 
