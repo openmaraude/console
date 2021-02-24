@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   currentMenu: {
-    borderBottom: `3px solid ${theme.palette.info.main}`,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
   },
 }));
 
