@@ -72,8 +72,8 @@ ConsoleApp.getInitialProps = async (appContext) => {
   const user = getCurrentUser(appContext.ctx);
   const appProps = await App.getInitialProps(appContext);
 
-  return { initialUser: user, ...appProps }
-}
+  return { initialUser: user, ...appProps };
+};
 
 ConsoleApp.propTypes = {
   Component: PropTypes.elementType.isRequired,
