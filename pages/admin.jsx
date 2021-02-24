@@ -166,6 +166,7 @@ AdminPage.propTypes = {
     id: PropTypes.number.isRequired,
     apikey: PropTypes.string.isRequired,
   }).isRequired,
+  authenticate: PropTypes.func.isRequired,
 };
 
 AdminPage.getInitialProps = async (ctx) => ({
