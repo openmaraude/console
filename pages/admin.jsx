@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import App from 'next/app';
 
 import { useRouter } from 'next/router';
 
@@ -12,7 +11,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 
 import APIErrorAlert from '../components/APIErrorAlert';
-import { getCurrentUser, UserContext } from '../src/auth';
+import { UserContext } from '../src/auth';
 import { listUsers } from '../src/users';
 
 const useStyles = makeStyles((theme) => ({

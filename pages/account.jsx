@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 
 import { toast } from 'react-toastify';
 
-import { getCurrentUser, hasRole, UserContext } from '../src/auth';
+import { hasRole, UserContext } from '../src/auth';
 import { getUserAccount, updateUserAccount } from '../src/account';
 import APIErrorAlert from '../components/APIErrorAlert';
 
