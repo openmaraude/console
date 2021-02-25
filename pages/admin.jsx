@@ -13,6 +13,7 @@ import Paper from '@material-ui/core/Paper';
 import APIErrorAlert from '../components/APIErrorAlert';
 import { UserContext } from '../src/auth';
 import { listUsers } from '../src/users';
+import { safeUseEffect } from '../src/hooks';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -45,43 +46,35 @@ export default function AdminPage({ authenticate }) {
   const [isLoading, setLoading] = React.useState(true);
   const router = useRouter();
 
-  // On logas, we call router.push(). If the API call we await in
-  // refreshUsers() is not finished before thie view is unmounted, React raises
-  // the warning "Can't perform a React state update on an unmounted
-  // component" when we set states.
-  // Keep track of the component mount status to avoid the warning.
-  const thisView = React.useRef({ mounted: true });
-
-  const refreshUsers = React.useCallback(async () => {
+  const refreshUsers = React.useCallback(async (ref) => {
     try {
       const resp = await listUsers(user.apikey, page);
-      if (!thisView.current.mounted) {
-        return;
+      if (ref.mounted) {
+        setApiError(null);
+        setApiResponse(resp);
+        setLoading(false);
       }
-      setApiError(null);
-      setApiResponse(resp);
-      setLoading(false);
     } catch (err) {
-      if (!thisView.current.mounted) {
-        return;
+      if (ref.mounted) {
+        setApiError(err);
+        setApiResponse(null);
       }
-      setApiError(err);
-      setApiResponse(null);
       throw err;
     }
   }, [user, page]);
 
-  React.useEffect(() => {
+  safeUseEffect((ref) => {
     let timeoutRetry;
 
-    refreshUsers().catch(() => {
+    refreshUsers(ref).catch(() => {
       timeoutRetry = setTimeout(
         () => setErrorRetry(errorRetry + 1),
         Math.min(errorRetry + 1, 60) * 1000,
       );
     });
-
-    return () => clearTimeout(timeoutRetry);
+    return () => {
+      clearTimeout(timeoutRetry);
+    };
   }, [errorRetry, refreshUsers]);
 
   const columns = [
@@ -125,7 +118,6 @@ export default function AdminPage({ authenticate }) {
         const onClick = async () => {
           try {
             await authenticate(cell.row);
-            thisView.current.mounted = false;
             router.push('/dashboards');
           } catch (exc) {
             setApiError(exc);

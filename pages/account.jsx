@@ -14,6 +14,7 @@ import { toast } from 'react-toastify';
 import { hasRole, UserContext } from '../src/auth';
 import { getUserAccount, updateUserAccount } from '../src/account';
 import APIErrorAlert from '../components/APIErrorAlert';
+import { safeUseEffect } from '../src/hooks';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -60,12 +61,17 @@ export default function AccountPage() {
     || account.password === account.passwordConfirm
   );
 
-  React.useEffect(async () => {
+  safeUseEffect(async (ref) => {
     try {
       const obj = await getUserAccount(user.apikey, user.id);
-      setAccount(obj);
+
+      if (ref.mounted) {
+        setAccount(obj);
+      }
     } catch (err) {
-      setApiError(err);
+      if (ref.mounted) {
+        setApiError(err);
+      }
     }
   }, [user]);
 
