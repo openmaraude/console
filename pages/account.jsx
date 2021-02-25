@@ -52,6 +52,7 @@ export default function AccountPage() {
   const classes = useStyles();
   const [account, setAccount] = React.useState();
   const [apiError, setApiError] = React.useState();
+  const [disabled, setDisabled] = React.useState(false);
   const user = React.useContext(UserContext);
 
   // Passwords are valid only if both are unset, or if both are set and equal.
@@ -74,6 +75,11 @@ export default function AccountPage() {
       }
     }
   }, [user]);
+
+  React.useEffect(
+    () => setDisabled(!account || !passwordConfirmIsValid),
+    [account, passwordConfirmIsValid],
+  );
 
   function updateField(e) {
     setAccount({ ...account, [e.target.name]: e.target.value });
@@ -132,6 +138,7 @@ export default function AccountPage() {
                 <TextField
                   label="Nom commercial"
                   name="name"
+                  disabled={disabled}
                   fullWidth
                   value={account?.name || ""}
                   onChange={updateField}
@@ -148,6 +155,7 @@ export default function AccountPage() {
                 <TextField
                   label="Mot de passe"
                   name="password"
+                  disabled={disabled}
                   type="password"
                   fullWidth
                   value={account?.password || ""}
@@ -165,6 +173,7 @@ export default function AccountPage() {
                 <TextField
                   label="Confirmation"
                   name="passwordConfirm"
+                  disabled={disabled}
                   type="password"
                   error={!passwordConfirmIsValid}
                   fullWidth
@@ -188,6 +197,7 @@ export default function AccountPage() {
                   <TextField
                     label="URL de votre API"
                     name="hail_endpoint_production"
+                    disabled={disabled}
                     fullWidth
                     value={account?.hail_endpoint_production || ""}
                     onChange={updateField}
@@ -207,6 +217,7 @@ export default function AccountPage() {
                   <TextField
                     label="Header"
                     name="operator_header_name"
+                    disabled={disabled}
                     fullWidth
                     value={account?.operator_header_name || ""}
                     onChange={updateField}
@@ -226,6 +237,7 @@ export default function AccountPage() {
                   <TextField
                     label="Valeur header"
                     name="operator_api_key"
+                    disabled={disabled}
                     fullWidth
                     value={account?.operator_api_key || ""}
                     onChange={updateField}
@@ -247,6 +259,7 @@ export default function AccountPage() {
                 <TextField
                   label="Tél. technique"
                   name="phone_number_technical"
+                  disabled={disabled}
                   fullWidth
                   value={account?.phone_number_technical || ""}
                   onChange={updateField}
@@ -263,6 +276,7 @@ export default function AccountPage() {
                 <TextField
                   label="Email technique"
                   name="email_technical"
+                  disabled={disabled}
                   fullWidth
                   value={account?.email_technical || ""}
                   onChange={updateField}
@@ -283,6 +297,7 @@ export default function AccountPage() {
                 <TextField
                   label="Tél. service client"
                   name="phone_number_customer"
+                  disabled={disabled}
                   fullWidth
                   value={account?.phone_number_customer || ""}
                   onChange={updateField}
@@ -299,6 +314,7 @@ export default function AccountPage() {
                 <TextField
                   label="Email service client"
                   name="email_customer"
+                  disabled={disabled}
                   fullWidth
                   value={account?.email_customer || ""}
                   onChange={updateField}
@@ -313,7 +329,7 @@ export default function AccountPage() {
 
           {apiError && <APIErrorAlert className={classes.error} error={apiError} />}
 
-          <Button type="submit" variant="contained" color="primary" disabled={!passwordConfirmIsValid || !account} onClick={onSubmit}>
+          <Button type="submit" variant="contained" color="primary" disabled={disabled} onClick={onSubmit}>
             Mettre à jour
           </Button>
         </form>
