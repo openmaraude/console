@@ -49,6 +49,7 @@ export default function AdminPage({ authenticate }) {
   const refreshUsers = React.useCallback(async (ref) => {
     try {
       const resp = await listUsers(user.apikey, page);
+
       if (ref.mounted) {
         setApiError(null);
         setApiResponse(resp);
@@ -72,9 +73,7 @@ export default function AdminPage({ authenticate }) {
         Math.min(errorRetry + 1, 60) * 1000,
       );
     });
-    return () => {
-      clearTimeout(timeoutRetry);
-    };
+    return () => clearTimeout(timeoutRetry);
   }, [errorRetry, refreshUsers]);
 
   const columns = [

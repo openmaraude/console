@@ -23,6 +23,8 @@ export function safeUseEffect(callback, deps) {
   const ref = React.useRef({ mounted: true });
 
   React.useEffect(() => {
+    ref.current.mounted = true;
+
     const ret = callback(ref.current);
 
     return () => {
