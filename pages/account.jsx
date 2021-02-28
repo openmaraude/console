@@ -104,7 +104,7 @@ export default function AccountPage() {
   return (
     <Container maxWidth="md">
       <Paper className={classes.paper} elevation={10}>
-        <form>
+        <form onSubmit={onSubmit}>
           <div className={classes.formSection}>
             <Typography variant="h4" className={classes.formSectionTitle}>Votre compte</Typography>
 
@@ -328,7 +328,7 @@ export default function AccountPage() {
 
           {apiError && <APIErrorAlert className={classes.error} error={apiError} />}
 
-          <Button type="submit" variant="contained" color="primary" disabled={disabled} onClick={onSubmit}>
+          <Button type="submit" variant="contained" color="primary" disabled={disabled}>
             Mettre à jour
           </Button>
         </form>

@@ -3,17 +3,20 @@ import PropTypes from 'prop-types';
 
 import { useRouter } from 'next/router';
 
+import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import { DataGrid, GridOverlay } from '@material-ui/data-grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 
 import APIErrorAlert from '../components/APIErrorAlert';
 import { UserContext } from '../src/auth';
 import { listUsers } from '../src/users';
 import { safeUseEffect } from '../src/hooks';
+import { TimeoutGroup, TimeoutTextField } from '../components/TimeoutForm';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -23,6 +26,19 @@ const useStyles = makeStyles((theme) => ({
   },
   loading: {
     textAlign: 'center',
+  },
+  filters: {
+    display: 'flex',
+    alignItems: 'center',
+
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
+      alignItems: 'stretch',
+    },
+
+    '& > *': {
+      marginRight: theme.spacing(2),
+    },
   },
 }));
 
@@ -44,11 +60,14 @@ export default function AdminPage({ authenticate }) {
   const [errorRetry, setErrorRetry] = React.useState(0);
   const [page, setPage] = React.useState(0);
   const [isLoading, setLoading] = React.useState(true);
+  const [filters, setFilters] = React.useState();
   const router = useRouter();
 
   const refreshUsers = React.useCallback(async (ref) => {
     try {
-      const resp = await listUsers(user.apikey, page);
+      setLoading(true);
+
+      const resp = await listUsers(user.apikey, page, filters);
 
       if (ref.mounted) {
         setApiError(null);
@@ -62,7 +81,7 @@ export default function AdminPage({ authenticate }) {
       }
       throw err;
     }
-  }, [user, page]);
+  }, [user, page, filters]);
 
   safeUseEffect((ref) => {
     let timeoutRetry;
@@ -131,8 +150,8 @@ export default function AdminPage({ authenticate }) {
     },
   ];
 
+  // Navigation to a different page.
   const handlePageChange = (param) => {
-    setLoading(true);
     setPage(param.page);
   };
 
@@ -146,6 +165,28 @@ export default function AdminPage({ authenticate }) {
         </p>
 
         { apiError && <APIErrorAlert className={classes.error} error={apiError} /> }
+
+        <Typography variant="h6">Filtres</Typography>
+
+        <Box marginTop={2} marginBottom={2} className={classes.filters}>
+          <TimeoutGroup onSubmit={setFilters}>
+            <TimeoutTextField
+              label="Email"
+              variant="outlined"
+              margin="dense"
+              name="email"
+              InputLabelProps={{ shrink: true }}
+            />
+
+            <TimeoutTextField
+              label="Nom commercial"
+              variant="outlined"
+              margin="dense"
+              name="name"
+              InputLabelProps={{ shrink: true }}
+            />
+          </TimeoutGroup>
+        </Box>
 
         <DataGrid
           autoHeight
