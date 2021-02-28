@@ -95,6 +95,16 @@ export default function AdminPage({ authenticate }) {
     return () => clearTimeout(timeoutRetry);
   }, [errorRetry, refreshUsers]);
 
+  // Logas a new user
+  const logas = async(newUser) => {
+    try {
+      await authenticate(newUser);
+      router.push('/dashboards');
+    } catch (exc) {
+      setApiError(exc);
+    }
+  };
+
   const columns = [
     {
       field: 'id',
@@ -132,21 +142,16 @@ export default function AdminPage({ authenticate }) {
       field: 'actions',
       headerName: 'Actions',
       flex: 1,
-      renderCell: (cell) => {
-        const onClick = async () => {
-          try {
-            await authenticate(cell.row);
-            router.push('/dashboards');
-          } catch (exc) {
-            setApiError(exc);
-          }
-        };
-        return (
-          <Button disabled={cell.row.id === user.id} variant="contained" color="primary" onClick={onClick}>
-            {">>"}
-          </Button>
-        );
-      },
+      renderCell: (cell) => (
+        <Button
+          disabled={cell.row.id === user.id}
+          variant="contained"
+          color="primary"
+          onClick={() => logas(cell.row)}
+        >
+          {">>"}
+        </Button>
+      ),
     },
   ];
 
