@@ -112,7 +112,7 @@ export default function AdminPage({ authenticate }) {
     {
       field: 'actions',
       headerName: 'Actions',
-      flex: 2,
+      flex: 1,
       renderCell: (cell) => {
         const onClick = async () => {
           try {
@@ -124,7 +124,7 @@ export default function AdminPage({ authenticate }) {
         };
         return (
           <Button disabled={cell.row.id === user.id} variant="contained" color="primary" onClick={onClick}>
-            Connexion
+            {">>"}
           </Button>
         );
       },
