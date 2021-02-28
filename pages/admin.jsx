@@ -19,6 +19,9 @@ import { safeUseEffect } from '../src/hooks';
 import { TimeoutGroup, TimeoutTextField } from '../components/TimeoutForm';
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    minWidth: theme.breakpoints.width('md'),
+  },
   paper: {
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(3),
@@ -33,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
     [theme.breakpoints.down('xs')]: {
       flexDirection: 'column',
-      alignItems: 'stretch',
+      alignItems: 'start',
     },
 
     '& > *': {
@@ -161,7 +164,7 @@ export default function AdminPage({ authenticate }) {
   };
 
   return (
-    <Container maxWidth="md">
+    <Container className={classes.root} maxWidth="md">
       <Paper className={classes.paper} elevation={10}>
         <p>
           Cette fonctionnalité permet aux administrateurs de se connecter en tant
