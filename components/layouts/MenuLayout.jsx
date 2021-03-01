@@ -7,20 +7,13 @@ import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import Container from '@material-ui/core/Container';
-import Paper from '@material-ui/core/Paper';
 import { fade, makeStyles } from '@material-ui/core/styles';
 
+import BaseLayout from './BaseLayout';
 import { ButtonLink } from '../LinksRef';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(3),
-    padding: theme.spacing(2),
-
-    minHeight: '80vh',
-
     [theme.breakpoints.up('md')]: {
       display: 'flex',
     },
@@ -88,11 +81,9 @@ Content.propTypes = {
 export function MenuLayout({ children }) {
   const classes = useStyles();
   return (
-    <Container maxWidth="lg">
-      <Paper className={classes.paper} elevation={10}>
-        { children }
-      </Paper>
-    </Container>
+    <BaseLayout maxWidth="lg" paperClassName={classes.paper}>
+      { children }
+    </BaseLayout>
   );
 }
 

@@ -5,14 +5,13 @@ import { useRouter } from 'next/router';
 
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import Container from '@material-ui/core/Container';
 import { DataGrid, GridOverlay } from '@material-ui/data-grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
 import APIErrorAlert from '../components/APIErrorAlert';
+import BaseLayout from '../components/layouts/BaseLayout';
 import { UserContext } from '../src/auth';
 import { listUsers } from '../src/users';
 import { safeUseEffect } from '../src/hooks';
@@ -164,57 +163,55 @@ export default function AdminPage({ authenticate }) {
   };
 
   return (
-    <Container className={classes.root} maxWidth="md">
-      <Paper className={classes.paper} elevation={10}>
-        <p>
-          Cette fonctionnalité permet aux administrateurs de se connecter en tant
-          que n'importe quel utilisateur. Une fois connecté, déconnectez-vous
-          pour revenir sur votre compte d'administration.
-        </p>
+    <BaseLayout className={classes.root}>
+      <p>
+        Cette fonctionnalité permet aux administrateurs de se connecter en tant
+        que n'importe quel utilisateur. Une fois connecté, déconnectez-vous
+        pour revenir sur votre compte d'administration.
+      </p>
 
-        { apiError && <APIErrorAlert className={classes.error} error={apiError} /> }
+      { apiError && <APIErrorAlert className={classes.error} error={apiError} /> }
 
-        <Typography variant="h6">Filtres</Typography>
+      <Typography variant="h6">Filtres</Typography>
 
-        <Box marginTop={2} marginBottom={2} className={classes.filters}>
-          <TimeoutGroup onSubmit={setFilters}>
-            <TimeoutTextField
-              label="Email"
-              variant="outlined"
-              margin="dense"
-              name="email"
-              InputLabelProps={{ shrink: true }}
-            />
+      <Box marginTop={2} marginBottom={2} className={classes.filters}>
+        <TimeoutGroup onSubmit={setFilters}>
+          <TimeoutTextField
+            label="Email"
+            variant="outlined"
+            margin="dense"
+            name="email"
+            InputLabelProps={{ shrink: true }}
+          />
 
-            <TimeoutTextField
-              label="Nom commercial"
-              variant="outlined"
-              margin="dense"
-              name="name"
-              InputLabelProps={{ shrink: true }}
-            />
-          </TimeoutGroup>
-        </Box>
+          <TimeoutTextField
+            label="Nom commercial"
+            variant="outlined"
+            margin="dense"
+            name="name"
+            InputLabelProps={{ shrink: true }}
+          />
+        </TimeoutGroup>
+      </Box>
 
-        <DataGrid
-          autoHeight
-          disableColumnMenu
-          rowsPerPageOptions={[]}
-          hideFooterSelectedRowCount
-          hideFooterRowCount
-          columns={columns}
-          rows={apiResponse?.users || []}
-          pageSize={apiResponse?.meta.per_page}
-          rowCount={apiResponse?.meta.total}
-          onPageChange={handlePageChange}
-          paginationMode="server"
-          components={{
-            LoadingOverlay,
-          }}
-          loading={isLoading}
-        />
-      </Paper>
-    </Container>
+      <DataGrid
+        autoHeight
+        disableColumnMenu
+        rowsPerPageOptions={[]}
+        hideFooterSelectedRowCount
+        hideFooterRowCount
+        columns={columns}
+        rows={apiResponse?.users || []}
+        pageSize={apiResponse?.meta.per_page}
+        rowCount={apiResponse?.meta.total}
+        onPageChange={handlePageChange}
+        paginationMode="server"
+        components={{
+          LoadingOverlay,
+        }}
+        loading={isLoading}
+      />
+    </BaseLayout>
   );
 }
 

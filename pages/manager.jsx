@@ -1,5 +1,9 @@
+import BaseLayout from '../components/layouts/BaseLayout';
+
 export default function ManagerPage() {
   return (
-    <div>manager page</div>
+    <BaseLayout>
+      <div>manager page</div>
+    </BaseLayout>
   );
 }
