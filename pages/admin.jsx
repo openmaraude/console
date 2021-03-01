@@ -81,8 +81,8 @@ export default function AdminPage({ authenticate }) {
       if (ref.mounted) {
         setApiError(err);
         setApiResponse(null);
+        throw err;
       }
-      throw err;
     }
   }, [user, page, filters]);
 
