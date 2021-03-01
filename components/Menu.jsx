@@ -8,69 +8,72 @@ import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import { fade, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 
 import { ButtonLink } from './LinksRef';
 import { getAuthenticatedUsers, hasRole, UserContext } from '../src/auth';
 
-const useStyles = makeStyles((theme) => ({
-  menuButton: {
-    marginRight: theme.spacing(2),
+const useStyles = makeStyles((theme) => {
+  const mobileMediaQuery = `@media (max-width:${theme.breakpoints.width('md') + theme.spacing(2)}px)`;
+  return {
+    menuButton: {
+      marginRight: theme.spacing(2),
 
-    // Hide by default.
-    display: 'none',
-
-    // Only display menu button on mobile
-    [theme.breakpoints.down('sm')]: {
-      display: 'block',
-    },
-  },
-
-  consoleButton: {
-    fontWeight: 'bold',
-    fontSize: '1.3em',
-  },
-
-  titleBox: {
-    flexGrow: 1,
-  },
-
-  toolbar: {
-    [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-    },
-  },
-
-  menuItems: {
-    // Hide on mobile
-    [theme.breakpoints.down('sm')]: {
+      // Hide by default.
       display: 'none',
+
+      // Only display menu button on mobile
+      [mobileMediaQuery]: {
+        display: 'block',
+      },
     },
-  },
 
-  menuItemsExpanded: {
-    // Expanded menu on mobile
-    [theme.breakpoints.down('sm')]: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'flex-start',
+    consoleButton: {
+      fontWeight: 'bold',
+      fontSize: '1.3em',
     },
-  },
 
-  loggedAs: {
-    backgroundColor: theme.palette.warning.main,
-    padding: theme.spacing(1),
-    marginLeft: theme.spacing(2),
-    fontWeight: 'bold',
-  },
+    titleBox: {
+      flexGrow: 1,
+    },
 
-  currentMenu: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-  },
-}));
+    toolbar: {
+      [mobileMediaQuery]: {
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+      },
+    },
+
+    menuItems: {
+      // Hide on mobile
+      [mobileMediaQuery]: {
+        display: 'none',
+      },
+    },
+
+    menuItemsExpanded: {
+      // Expanded menu on mobile
+      [mobileMediaQuery]: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+      },
+    },
+
+    loggedAs: {
+      backgroundColor: theme.palette.warning.main,
+      padding: theme.spacing(1),
+      marginLeft: theme.spacing(2),
+      fontWeight: 'bold',
+    },
+
+    currentMenu: {
+      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    },
+  };
+});
 
 function AuthenticatedUser() {
   const user = React.useContext(UserContext);
@@ -150,6 +153,15 @@ export default function Menu({ logout }) {
               </HighlightedLink>
             </>
           )}
+
+          {
+            user.managed.length > 0
+            && (
+              <HighlightedLink href="/manager" passHref>
+                <ButtonLink color="inherit">Comptes en gestion</ButtonLink>
+              </HighlightedLink>
+            )
+          }
 
           <HighlightedLink href="/documentation/introduction" passHref>
             <ButtonLink color="inherit">Documentation</ButtonLink>
