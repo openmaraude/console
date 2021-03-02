@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { useRouter } from 'next/router';
 
@@ -44,7 +45,7 @@ function LoadingOverlay() {
 /*
  * Call /users and display a table to log as users.
  */
-export default function LogasTable() {
+export default function LogasTable({ displayColumns }) {
   const userContext = React.useContext(UserContext);
   const classes = useStyles();
   const [request, setRequest] = React.useState({});
@@ -90,55 +91,66 @@ export default function LogasTable() {
     }
   };
 
-  const columns = [
-    {
+  const columns = [];
+
+  if (!displayColumns || displayColumns.indexOf('id') > -1) {
+    columns.push({
       field: 'id',
       headerName: 'Id',
       flex: 1,
       sortable: false,
-    },
-    {
+    });
+  }
+  if (!displayColumns || displayColumns.indexOf('email') > -1) {
+    columns.push({
       field: 'email',
       headerName: 'Email',
       flex: 2,
       sortable: false,
-    },
-    {
+    });
+  }
+  if (!displayColumns || displayColumns.indexOf('commercial_name') > -1) {
+    columns.push({
       field: 'name',
       headerName: 'Nom commercial',
       flex: 2,
       sortable: false,
-    },
-    {
+    });
+  }
+  if (!displayColumns || displayColumns.indexOf('roles') > -1) {
+    columns.push({
       field: 'roles',
       headerName: 'Roles',
       flex: 2,
       valueFormatter: (cell) => cell.value.map((role) => role.name).join(', '),
       sortable: false,
-    },
-    {
+    });
+  }
+  if (!displayColumns || displayColumns.indexOf('manager') > -1) {
+    columns.push({
       field: 'manager',
       headerName: 'Manager',
       flex: 2,
       valueFormatter: (cell) => (cell.value ? (cell.value.name || cell.value.email) : ''),
       sortable: false,
-    },
-    {
-      field: 'actions',
-      headerName: 'Actions',
-      flex: 1,
-      renderCell: (cell) => (
-        <Button
-          disabled={cell.row.id === userContext.user.id}
-          variant="contained"
-          color="primary"
-          onClick={() => logas(cell.row)}
-        >
-          {">>"}
-        </Button>
-      ),
-    },
-  ];
+    });
+  }
+
+  columns.push({
+    field: 'actions',
+    headerName: 'Actions',
+    flex: 1,
+    renderCell: (cell) => (
+      <Button
+        disabled={cell.row.id === userContext.user.id}
+        variant="contained"
+        color="primary"
+        onClick={() => logas(cell.row)}
+      >
+        {">>"}
+      </Button>
+    ),
+  });
 
   // Navigation to a different page.
   const handlePageChange = (param) => {
@@ -196,3 +208,11 @@ export default function LogasTable() {
     </>
   );
 }
+
+LogasTable.defaultProps = {
+  displayColumns: null,
+};
+
+LogasTable.propTypes = {
+  displayColumns: PropTypes.arrayOf(String),
+};
