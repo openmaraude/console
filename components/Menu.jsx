@@ -76,10 +76,10 @@ const useStyles = makeStyles((theme) => {
 });
 
 function AuthenticatedUser() {
-  const user = React.useContext(UserContext);
+  const userContext = React.useContext(UserContext);
   const classes = useStyles();
 
-  return <div className={classes.loggedAs}>Connecté en tant que {user.name || user.email}</div>;
+  return <div className={classes.loggedAs}>Connecté en tant que {userContext.user.name || userContext.user.email}</div>;
 }
 
 function HighlightedLink({ href, ...props }) {
@@ -104,15 +104,15 @@ HighlightedLink.propTypes = {
   href: PropTypes.string.isRequired,
 };
 
-export default function Menu({ logout }) {
-  const user = React.useContext(UserContext);
+export default function Menu() {
+  const userContext = React.useContext(UserContext);
   const classes = useStyles();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [authenticatedUsers, setAuthenticatedUsers] = React.useState([]);
 
   React.useEffect(
     async () => setAuthenticatedUsers(getAuthenticatedUsers()),
-    [user],
+    [userContext.user],
   );
 
   const handleMenuToggle = () => {
@@ -138,10 +138,10 @@ export default function Menu({ logout }) {
         </Box>
 
         <Box display="flex" className={mobileOpen ? classes.menuItemsExpanded : classes.menuItems}>
-          {user && (
+          {userContext.user && (
             <>
               {
-                hasRole(user, 'admin')
+                hasRole(userContext.user, 'admin')
                 && (
                   <HighlightedLink href="/admin" passHref>
                     <ButtonLink color="inherit">Administration</ButtonLink>
@@ -155,7 +155,7 @@ export default function Menu({ logout }) {
           )}
 
           {
-            (user?.managed.length > 0 && !hasRole(user, 'admin'))
+            (userContext.user?.managed.length > 0 && !hasRole(userContext.user, 'admin'))
             && (
               <HighlightedLink href="/manager" passHref>
                 <ButtonLink color="inherit">Comptes en gestion</ButtonLink>
@@ -167,13 +167,13 @@ export default function Menu({ logout }) {
             <ButtonLink color="inherit">Documentation</ButtonLink>
           </HighlightedLink>
 
-          {user && (
+          {userContext.user && (
             <>
               <HighlightedLink href="/account" passHref>
                 <ButtonLink color="inherit">Mon compte</ButtonLink>
               </HighlightedLink>
 
-              <Button onClick={logout} color="inherit">Déconnexion</Button>
+              <Button onClick={userContext.logout} color="inherit">Déconnexion</Button>
             </>
           )}
         </Box>
@@ -181,7 +181,3 @@ export default function Menu({ logout }) {
     </AppBar>
   );
 }
-
-Menu.propTypes = {
-  logout: PropTypes.func.isRequired,
-};

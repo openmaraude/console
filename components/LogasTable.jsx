@@ -45,8 +45,8 @@ function LoadingOverlay() {
 /*
  * Call /users and display a table to log as users.
  */
-export default function LogasTable({ authenticate }) {
-  const user = React.useContext(UserContext);
+export default function LogasTable() {
+  const userContext = React.useContext(UserContext);
   const classes = useStyles();
   const [request, setRequest] = React.useState({});
   const [response, setResponse] = React.useState({});
@@ -56,7 +56,7 @@ export default function LogasTable({ authenticate }) {
     try {
       setResponse({ loading: true });
 
-      const resp = await listUsers(user.apikey, request?.page, request?.filters);
+      const resp = await listUsers(userContext.user.apikey, request?.page, request?.filters);
 
       if (ref.mounted) {
         setResponse({ resp });
@@ -67,7 +67,7 @@ export default function LogasTable({ authenticate }) {
         throw err;
       }
     }
-  }, [user, request]);
+  }, [userContext.user, request]);
 
   safeUseEffect((ref) => {
     let timeoutRetry;
@@ -84,7 +84,7 @@ export default function LogasTable({ authenticate }) {
   // Logas a new user
   const logas = async (newUser) => {
     try {
-      await authenticate(newUser);
+      await userContext.authenticate(newUser);
       router.push('/dashboards');
     } catch (err) {
       setResponse({ err });
@@ -130,7 +130,7 @@ export default function LogasTable({ authenticate }) {
       flex: 1,
       renderCell: (cell) => (
         <Button
-          disabled={cell.row.id === user.id}
+          disabled={cell.row.id === userContext.user.id}
           variant="contained"
           color="primary"
           onClick={() => logas(cell.row)}
@@ -197,7 +197,3 @@ export default function LogasTable({ authenticate }) {
     </>
   );
 }
-
-LogasTable.propTypes = {
-  authenticate: PropTypes.func.isRequired,
-};

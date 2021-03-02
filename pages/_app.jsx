@@ -17,7 +17,12 @@ import "@fontsource/roboto/700.css";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { getCurrentUser, login, logout as doLogout, UserContext } from '../src/auth';
+import {
+  getCurrentUser,
+  login,
+  logout as doLogout,
+  UserContext,
+} from '../src/auth';
 import LoginForm from '../components/Login';
 import Menu from '../components/Menu';
 import theme from '../components/theme';
@@ -55,12 +60,12 @@ export default function ConsoleApp({ Component, pageProps, initialUser }) {
           pauseOnHover
         />
 
-        <UserContext.Provider value={user}>
-          <Menu logout={logout} />
+        <UserContext.Provider value={{ user, authenticate, logout }}>
+          <Menu />
           {
             user || pageProps.optionalAuth
-              ? <Component authenticate={authenticate} {...pageProps} />
-              : <LoginForm authenticate={authenticate} />
+              ? <Component {...pageProps} />
+              : <LoginForm />
           }
         </UserContext.Provider>
       </ThemeProvider>

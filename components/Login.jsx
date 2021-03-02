@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 
 import { TextLink } from './LinksRef';
 import APIErrorAlert from './APIErrorAlert';
+import { UserContext } from '../src/auth';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,9 +48,10 @@ const useStyles = makeStyles((theme) => ({
 export default function LoginForm(props) {
   const classes = useStyles();
   const [authenticationError, setAuthenticationError] = React.useState();
+  const userContext = React.useContext(UserContext);
 
   function onSubmit(event) {
-    props.authenticate({
+    userContext.authenticate({
       email: event.target.email.value,
       password: event.target.password.value,
     }).catch((apiError) => setAuthenticationError(apiError));
@@ -111,7 +113,3 @@ export default function LoginForm(props) {
     </Grid>
   );
 }
-
-LoginForm.propTypes = {
-  authenticate: PropTypes.func.isRequired,
-};

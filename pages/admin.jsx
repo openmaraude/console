@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -12,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AdminPage({ authenticate }) {
+export default function AdminPage() {
   const classes = useStyles();
 
   return (
@@ -23,12 +22,8 @@ export default function AdminPage({ authenticate }) {
         pour revenir sur votre compte d'administration.
       </p>
 
-      <LogasTable authenticate={authenticate} />
+      <LogasTable />
 
     </BaseLayout>
   );
 }
-
-AdminPage.propTypes = {
-  authenticate: PropTypes.func.isRequired,
-};

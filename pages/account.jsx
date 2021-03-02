@@ -46,7 +46,7 @@ export default function AccountPage() {
   const [account, setAccount] = React.useState();
   const [apiError, setApiError] = React.useState();
   const [disabled, setDisabled] = React.useState(false);
-  const user = React.useContext(UserContext);
+  const userContext = React.useContext(UserContext);
 
   // Passwords are valid only if both are unset, or if both are set and equal.
   const passwordConfirmIsValid = (
@@ -57,7 +57,7 @@ export default function AccountPage() {
 
   safeUseEffect(async (ref) => {
     try {
-      const obj = await getUserAccount(user.apikey, user.id);
+      const obj = await getUserAccount(userContext.user.apikey, userContext.user.id);
 
       if (ref.mounted) {
         setAccount(obj);
@@ -67,7 +67,7 @@ export default function AccountPage() {
         setApiError(err);
       }
     }
-  }, [user]);
+  }, [userContext.user]);
 
   React.useEffect(
     () => setDisabled(!account || !passwordConfirmIsValid),
@@ -85,7 +85,7 @@ export default function AccountPage() {
     const { passwordConfirm, ...params } = account;
     e.preventDefault();
     try {
-      const updatedAccount = await updateUserAccount(user.apikey, user.id, params);
+      const updatedAccount = await updateUserAccount(userContext.user.apikey, userContext.user.id, params);
       toast.success('Mise à jour effectuée.');
       setAccount(updatedAccount);
       setApiError(null);
@@ -180,7 +180,7 @@ export default function AccountPage() {
           </div>
         </div>
 
-        {hasRole(user, 'operateur') && (
+        {hasRole(userContext.user, 'operateur') && (
           <div className={classes.formSection}>
             <Typography variant="h4" className={classes.formSectionTitle}>API</Typography>
 
