@@ -39,7 +39,8 @@ function setAuthenticatedUsers(users) {
 
   // No authenticated users, delete cookie.
   nookies.destroy(null, COOKIE_NAME, {
-    sameSite: true,
+    sameSite: 'strict',
+    path: '/',
   });
   return null;
 }
