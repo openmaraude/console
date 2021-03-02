@@ -80,4 +80,5 @@ Introduction.propTypes = {
 
 Introduction.getInitialProps = async (ctx) => ({
   slug: ctx.query.slug,
+  optionalAuth: true,
 });
