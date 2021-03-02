@@ -15,65 +15,61 @@ import Toolbar from '@material-ui/core/Toolbar';
 import { ButtonLink } from './LinksRef';
 import { getAuthenticatedUsers, hasRole, UserContext } from '../src/auth';
 
-const useStyles = makeStyles((theme) => {
-  const mobileMediaQuery = `@media (max-width:${theme.breakpoints.width('md') + theme.spacing(2)}px)`;
-  return {
-    menuButton: {
-      marginRight: theme.spacing(2),
+const useStyles = makeStyles((theme) => ({
+  menuButton: {
+    marginRight: theme.spacing(2),
 
-      // Hide by default.
+    // Hide by default.
+    display: 'none',
+
+    // Only display menu button on mobile
+    [theme.breakpoints.down('sm')]: {
+      display: 'block',
+    },
+  },
+
+  consoleButton: {
+    fontWeight: 'bold',
+    fontSize: '1.3em',
+  },
+
+  titleBox: {
+    flexGrow: 1,
+  },
+
+  toolbar: {
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+    },
+  },
+
+  menuItems: {
+    // Hide on mobile
+    [theme.breakpoints.down('sm')]: {
       display: 'none',
-
-      // Only display menu button on mobile
-      [mobileMediaQuery]: {
-        display: 'block',
-      },
     },
+  },
 
-    consoleButton: {
-      fontWeight: 'bold',
-      fontSize: '1.3em',
+  menuItemsExpanded: {
+    // Expanded menu on mobile
+    [theme.breakpoints.down('sm')]: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'flex-start',
     },
+  },
 
-    titleBox: {
-      flexGrow: 1,
-    },
+  loggedAs: {
+    backgroundColor: theme.palette.warning.main,
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
 
-    toolbar: {
-      [mobileMediaQuery]: {
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-      },
-    },
-
-    menuItems: {
-      // Hide on mobile
-      [mobileMediaQuery]: {
-        display: 'none',
-      },
-    },
-
-    menuItemsExpanded: {
-      // Expanded menu on mobile
-      [mobileMediaQuery]: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-      },
-    },
-
-    loggedAs: {
-      backgroundColor: theme.palette.warning.main,
-      padding: theme.spacing(1),
-      marginLeft: theme.spacing(2),
-      fontWeight: 'bold',
-    },
-
-    currentMenu: {
-      backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    },
-  };
-});
+  currentMenu: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+  },
+}));
 
 function AuthenticatedUser() {
   const userContext = React.useContext(UserContext);
@@ -135,10 +131,6 @@ export default function Menu() {
           <Link href="/dashboards" passHref>
             <ButtonLink color="inherit" className={classes.consoleButton}>Console</ButtonLink>
           </Link>
-
-          {
-            authenticatedUsers.length > 1 && <AuthenticatedUser />
-          }
         </Box>
 
         <Box display="flex" className={mobileOpen ? classes.menuItemsExpanded : classes.menuItems}>
@@ -182,6 +174,10 @@ export default function Menu() {
           )}
         </Box>
       </Toolbar>
+
+      {
+        authenticatedUsers.length > 1 && <AuthenticatedUser />
+      }
     </AppBar>
   );
 }
