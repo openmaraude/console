@@ -85,7 +85,11 @@ export default function AccountPage() {
     const { passwordConfirm, ...params } = account;
     e.preventDefault();
     try {
-      const updatedAccount = await updateUserAccount(userContext.user.apikey, userContext.user.id, params);
+      const updatedAccount = await updateUserAccount(
+        userContext.user.apikey,
+        userContext.user.id,
+        params,
+      );
       toast.success('Mise à jour effectuée.');
       setAccount(updatedAccount);
       setApiError(null);

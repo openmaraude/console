@@ -1,7 +1,7 @@
 import BaseLayout from '../components/layouts/BaseLayout';
 import LogasTable from '../components/LogasTable';
 
-export default function ManagerPage({ authenticate }) {
+export default function ManagerPage() {
   return (
     <BaseLayout>
       <p>
@@ -10,7 +10,7 @@ export default function ManagerPage({ authenticate }) {
         compte.
       </p>
 
-      <LogasTable authenticate={authenticate} />
+      <LogasTable />
     </BaseLayout>
   );
 }

@@ -5,7 +5,7 @@ export async function listUsers(token, page, filters) {
   const querystring = [];
 
   if (page) {
-    querystring.push(`p=${page+1}`);
+    querystring.push(`p=${page + 1}`);
   }
   if (filters?.name) {
     querystring.push(`name=${filters.name}`);

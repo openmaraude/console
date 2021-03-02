@@ -79,7 +79,11 @@ function AuthenticatedUser() {
   const userContext = React.useContext(UserContext);
   const classes = useStyles();
 
-  return <div className={classes.loggedAs}>Connecté en tant que {userContext.user.name || userContext.user.email}</div>;
+  return (
+    <div className={classes.loggedAs}>
+      Connecté en tant que {userContext.user.name || userContext.user.email}
+    </div>
+  );
 }
 
 function HighlightedLink({ href, ...props }) {

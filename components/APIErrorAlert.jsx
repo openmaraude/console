@@ -53,7 +53,7 @@ export default function APIErrorAlert({ error, ...alertParams }) {
 
   return (
     <Box marginTop={2} marginBottom={2}>
-      <Alert severity="error" {...alertParams} >
+      <Alert severity="error" {...alertParams}>
         {display}
       </Alert>
     </Box>

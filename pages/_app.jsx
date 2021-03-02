@@ -80,7 +80,12 @@ ConsoleApp.getInitialProps = async (appContext) => {
   return { initialUser: user, ...appProps };
 };
 
+ConsoleApp.defaultProps = {
+  initialUser: null,
+};
+
 ConsoleApp.propTypes = {
   Component: PropTypes.elementType.isRequired,
   pageProps: PropTypes.object.isRequired,
+  initialUser: PropTypes.object,
 };
