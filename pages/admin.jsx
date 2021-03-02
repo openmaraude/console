@@ -57,53 +57,46 @@ function LoadingOverlay() {
 export default function AdminPage({ authenticate }) {
   const user = React.useContext(UserContext);
   const classes = useStyles();
-  const [apiResponse, setApiResponse] = React.useState();
-  const [apiError, setApiError] = React.useState();
-  const [errorRetry, setErrorRetry] = React.useState(0);
-  const [page, setPage] = React.useState(0);
-  const [isLoading, setLoading] = React.useState(true);
-  const [filters, setFilters] = React.useState();
+  const [request, setRequest] = React.useState({});
+  const [response, setResponse] = React.useState({});
   const router = useRouter();
 
   const refreshUsers = React.useCallback(async (ref) => {
     try {
-      setLoading(true);
+      setResponse({ loading: true });
 
-      const resp = await listUsers(user.apikey, page, filters);
+      const resp = await listUsers(user.apikey, request?.page, request?.filters);
 
       if (ref.mounted) {
-        setApiError(null);
-        setApiResponse(resp);
-        setLoading(false);
+        setResponse({ resp });
       }
     } catch (err) {
       if (ref.mounted) {
-        setApiError(err);
-        setApiResponse(null);
+        setResponse({ loading: true, err });
         throw err;
       }
     }
-  }, [user, page, filters]);
+  }, [user, request]);
 
   safeUseEffect((ref) => {
     let timeoutRetry;
 
     refreshUsers(ref).catch(() => {
       timeoutRetry = setTimeout(
-        () => setErrorRetry(errorRetry + 1),
-        Math.min(errorRetry + 1, 60) * 1000,
+        () => setRequest({ ...request, retry: (request.retry || 0) + 1 }),
+        2000,
       );
     });
     return () => clearTimeout(timeoutRetry);
-  }, [errorRetry, refreshUsers]);
+  }, [request.retry, refreshUsers]);
 
   // Logas a new user
-  const logas = async(newUser) => {
+  const logas = async (newUser) => {
     try {
       await authenticate(newUser);
       router.push('/dashboards');
-    } catch (exc) {
-      setApiError(exc);
+    } catch (err) {
+      setResponse({ err });
     }
   };
 
@@ -159,12 +152,11 @@ export default function AdminPage({ authenticate }) {
 
   // Navigation to a different page.
   const handlePageChange = (param) => {
-    setPage(param.page);
+    setRequest({ ...request, page: param.page });
   };
 
   const updateFilters = (newFilters) => {
-    setPage(0);
-    setFilters(newFilters);
+    setRequest({ ...request, page: 0, filters: newFilters });
   };
 
   return (
@@ -175,7 +167,7 @@ export default function AdminPage({ authenticate }) {
         pour revenir sur votre compte d'administration.
       </p>
 
-      { apiError && <APIErrorAlert className={classes.error} error={apiError} /> }
+      { response.err && <APIErrorAlert className={classes.error} error={response.err} /> }
 
       <Typography variant="h6">Filtres</Typography>
 
@@ -206,16 +198,16 @@ export default function AdminPage({ authenticate }) {
         hideFooterSelectedRowCount
         hideFooterRowCount
         columns={columns}
-        rows={apiResponse?.users || []}
-        pageSize={apiResponse?.meta.per_page}
-        rowCount={apiResponse?.meta.total}
-        page={page}
+        rows={response.resp?.users || []}
+        pageSize={response.resp?.meta.per_page}
+        rowCount={response.resp?.meta.total}
+        page={request.page}
         onPageChange={handlePageChange}
         paginationMode="server"
         components={{
           LoadingOverlay,
         }}
-        loading={isLoading}
+        loading={response.loading}
       />
     </BaseLayout>
   );
