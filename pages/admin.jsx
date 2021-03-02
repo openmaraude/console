@@ -162,6 +162,11 @@ export default function AdminPage({ authenticate }) {
     setPage(param.page);
   };
 
+  const updateFilters = (newFilters) => {
+    setPage(0);
+    setFilters(newFilters);
+  };
+
   return (
     <BaseLayout className={classes.root}>
       <p>
@@ -175,7 +180,7 @@ export default function AdminPage({ authenticate }) {
       <Typography variant="h6">Filtres</Typography>
 
       <Box marginTop={2} marginBottom={2} className={classes.filters}>
-        <TimeoutGroup onSubmit={setFilters}>
+        <TimeoutGroup onSubmit={updateFilters}>
           <TimeoutTextField
             label="Email"
             variant="outlined"
@@ -204,6 +209,7 @@ export default function AdminPage({ authenticate }) {
         rows={apiResponse?.users || []}
         pageSize={apiResponse?.meta.per_page}
         rowCount={apiResponse?.meta.total}
+        page={page}
         onPageChange={handlePageChange}
         paginationMode="server"
         components={{

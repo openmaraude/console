@@ -1,3 +1,5 @@
+import React from 'react';
+
 /*
  * A lot of components need to make a HTTP query and use the result to set a
  * state, with:
@@ -17,8 +19,6 @@
  *
  * See: https://reactjs.org/blog/2015/12/16/ismounted-antipattern.html
  */
-import React from 'react';
-
 export function safeUseEffect(callback, deps) {
   const ref = React.useRef({ mounted: true });
 
@@ -36,4 +36,20 @@ export function safeUseEffect(callback, deps) {
       }
     };
   }, deps);
+}
+
+/*
+ * Store the previous value of a state.
+ *
+ * To use:
+ *
+ * const [myState, setMyState] = React.useState();
+ * const previousValue = usePrevious(myState);
+ */
+export function usePrevious(value) {
+  const ref = React.useRef();
+  React.useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
 }

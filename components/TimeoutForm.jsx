@@ -1,7 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import _ from 'lodash';
+
 import TextField from '@material-ui/core/TextField';
+
+import { usePrevious } from '../src/hooks';
 
 export const TimeoutContext = React.createContext();
 
@@ -25,10 +29,12 @@ export function TimeoutTextField({ ...props }) {
  */
 export function TimeoutGroup({ onSubmit, children }) {
   const [values, setValues] = React.useState();
+  const prevValues = usePrevious(values);
 
   React.useEffect(() => {
     const timeout = setTimeout(() => {
-      if (typeof values !== 'undefined') {
+      // Do not call the callback if filters didn't change.
+      if (!_.isEqual(prevValues, values)) {
         onSubmit(values);
       }
     }, 200);

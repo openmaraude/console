@@ -12,6 +12,7 @@
     "@mdx-js/react": "^1.6.22",
     "@next/mdx": "^10.0.7",
     "clsx": "^1.1.1",
+    "lodash": "^4.17.20",
     "next": "latest",
     "nookies": "^2.5.1",
     "prop-types": "latest",
