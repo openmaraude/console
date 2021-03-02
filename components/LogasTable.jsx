@@ -104,7 +104,7 @@ export default function LogasTable({ displayColumns }) {
   if (!displayColumns || displayColumns.indexOf('email') > -1) {
     columns.push({
       field: 'email',
-      headerName: 'Email',
+      headerName: 'Identifiant',
       flex: 2,
       sortable: false,
     });
