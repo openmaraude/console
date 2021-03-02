@@ -33,7 +33,7 @@ export class HttpError extends APIError {
 export async function request(url, opts = {}) {
   const {
     token,
-    query,
+    args,
     baseUrl = process.env.API_TAXI_PUBLIC_URL,
     ...options
   } = opts;
@@ -45,8 +45,8 @@ export async function request(url, opts = {}) {
     };
   }
 
-  if (query) {
-    url += `?${new URLSearchParams(query).toString()}`;
+  if (args) {
+    url += `?${Object.entries(args).map(([k, v]) => `${k}=${v}`).join('&')}`;
   }
 
   let resp;

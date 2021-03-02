@@ -2,20 +2,21 @@ import { request } from './api';
 
 export async function listUsers(token, page, filters) {
   const url = '/users';
-  const querystring = [];
+  const args = {};
 
   if (page) {
-    querystring.push(`p=${page + 1}`);
+    args.p = page + 1;
   }
   if (filters?.name) {
-    querystring.push(`name=${filters.name}`);
+    args.name = filters.name;
   }
   if (filters?.email) {
-    querystring.push(`email=${filters.email}`);
+    args.email = filters.email;
   }
 
-  const resp = await request(`${url}?${querystring.join('&')}`, {
+  const resp = await request(url, {
     token,
+    args,
   });
   return { users: resp.data, meta: resp.meta };
 }
