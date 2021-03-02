@@ -155,7 +155,7 @@ export default function Menu({ logout }) {
           )}
 
           {
-            user.managed.length > 0
+            (user?.managed.length > 0 && !hasRole(user, 'admin'))
             && (
               <HighlightedLink href="/manager" passHref>
                 <ButtonLink color="inherit">Comptes en gestion</ButtonLink>
