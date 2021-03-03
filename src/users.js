@@ -18,5 +18,5 @@ export async function listUsers(token, page, filters) {
     token,
     args,
   });
-  return { users: resp.data, meta: resp.meta };
+  return { data: resp.data, meta: resp.meta };
 }

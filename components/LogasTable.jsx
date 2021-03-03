@@ -3,85 +3,38 @@ import PropTypes from 'prop-types';
 
 import { useRouter } from 'next/router';
 
-import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import { DataGrid, GridOverlay } from '@material-ui/data-grid';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 
-import APIErrorAlert from './APIErrorAlert';
-import { UserContext } from '../src/auth';
+import { toast } from 'react-toastify';
+
+import APIListTable from './APIListTable';
 import { listUsers } from '../src/users';
-import { safeUseEffect } from '../src/hooks';
-import { TimeoutGroup, TimeoutTextField } from './TimeoutForm';
+import { TimeoutTextField } from './TimeoutForm';
+import { UserContext } from '../src/auth';
 
-const useStyles = makeStyles((theme) => ({
-  filters: {
-    display: 'flex',
-    alignItems: 'center',
-
-    [theme.breakpoints.down('xs')]: {
-      flexDirection: 'column',
-      alignItems: 'start',
-    },
-
-    '& > *': {
-      marginRight: theme.spacing(2),
-    },
-  },
-}));
-
-function LoadingOverlay() {
-  return (
-    <GridOverlay>
-      <div style={{ position: 'absolute', top: 0, width: '100%' }}>
-        <LinearProgress />
-      </div>
-    </GridOverlay>
-  );
-}
-
-/*
- * Call /users and display a table to log as users.
- *
- * If minimal is true, only display a few columns.
- */
 export default function LogasTable({ minimal }) {
   const userContext = React.useContext(UserContext);
-  const classes = useStyles();
-  const [request, setRequest] = React.useState({});
-  const [response, setResponse] = React.useState({});
   const router = useRouter();
 
-  const refreshUsers = React.useCallback(async (ref) => {
-    try {
-      setResponse({ loading: true });
+  const filters = (
+    <>
+      <TimeoutTextField
+        label="Email"
+        variant="outlined"
+        margin="dense"
+        name="email"
+        InputLabelProps={{ shrink: true }}
+      />
 
-      const resp = await listUsers(userContext.user.apikey, request?.page, request?.filters);
-
-      if (ref.mounted) {
-        setResponse({ resp });
-      }
-    } catch (err) {
-      if (ref.mounted) {
-        setResponse({ loading: true, err });
-        throw err;
-      }
-    }
-  }, [userContext.user, request]);
-
-  safeUseEffect((ref) => {
-    let timeoutRetry;
-
-    refreshUsers(ref).catch(() => {
-      timeoutRetry = setTimeout(
-        () => setRequest({ ...request, retry: (request.retry || 0) + 1 }),
-        2000,
-      );
-    });
-    return () => clearTimeout(timeoutRetry);
-  }, [request.retry, refreshUsers]);
+      <TimeoutTextField
+        label="Nom commercial"
+        variant="outlined"
+        margin="dense"
+        name="name"
+        InputLabelProps={{ shrink: true }}
+      />
+    </>
+  );
 
   // Logas a new user
   const logas = async (newUser) => {
@@ -89,7 +42,7 @@ export default function LogasTable({ minimal }) {
       await userContext.authenticate(newUser);
       router.push('/dashboards');
     } catch (err) {
-      setResponse({ err });
+      toast.error(`Erreur de connexion : ${err.toString()}`);
     }
   };
 
@@ -110,7 +63,6 @@ export default function LogasTable({ minimal }) {
     flex: 2,
     sortable: false,
   });
-
   columns.push({
     field: 'name',
     headerName: 'Nom commercial',
@@ -126,7 +78,6 @@ export default function LogasTable({ minimal }) {
       valueFormatter: (cell) => cell.value.map((role) => role.name).join(', '),
       sortable: false,
     });
-
     columns.push({
       field: 'manager',
       headerName: 'Manager',
@@ -152,60 +103,12 @@ export default function LogasTable({ minimal }) {
     ),
   });
 
-  // Navigation to a different page.
-  const handlePageChange = (param) => {
-    setRequest({ ...request, page: param.page });
-  };
-
-  const updateFilters = (newFilters) => {
-    setRequest({ ...request, page: 0, filters: newFilters });
-  };
-
   return (
-    <>
-      { response.err && <APIErrorAlert className={classes.error} error={response.err} /> }
-
-      <Typography variant="h6">Filtres</Typography>
-
-      <Box marginTop={2} marginBottom={2} className={classes.filters}>
-        <TimeoutGroup onSubmit={updateFilters}>
-          <TimeoutTextField
-            label="Email"
-            variant="outlined"
-            margin="dense"
-            name="email"
-            InputLabelProps={{ shrink: true }}
-          />
-
-          <TimeoutTextField
-            label="Nom commercial"
-            variant="outlined"
-            margin="dense"
-            name="name"
-            InputLabelProps={{ shrink: true }}
-          />
-        </TimeoutGroup>
-      </Box>
-
-      <DataGrid
-        autoHeight
-        disableColumnMenu
-        rowsPerPageOptions={[]}
-        hideFooterSelectedRowCount
-        hideFooterRowCount
-        columns={columns}
-        rows={response.resp?.users || []}
-        pageSize={response.resp?.meta.per_page}
-        rowCount={response.resp?.meta.total}
-        page={request.page}
-        onPageChange={handlePageChange}
-        paginationMode="server"
-        components={{
-          LoadingOverlay,
-        }}
-        loading={response.loading}
-      />
-    </>
+    <APIListTable
+      apiFunc={listUsers}
+      filters={filters}
+      columns={columns}
+    />
   );
 }
 

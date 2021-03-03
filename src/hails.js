@@ -18,5 +18,5 @@ export async function listHails(token, page, filters) {
     token,
     args,
   });
-  return { hails: resp.data, meta: resp.meta };
+  return { data: resp.data, meta: resp.meta };
 }
