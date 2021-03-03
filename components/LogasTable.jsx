@@ -44,8 +44,10 @@ function LoadingOverlay() {
 
 /*
  * Call /users and display a table to log as users.
+ *
+ * If minimal is true, only display a few columns.
  */
-export default function LogasTable({ displayColumns }) {
+export default function LogasTable({ minimal }) {
   const userContext = React.useContext(UserContext);
   const classes = useStyles();
   const [request, setRequest] = React.useState({});
@@ -93,7 +95,7 @@ export default function LogasTable({ displayColumns }) {
 
   const columns = [];
 
-  if (!displayColumns || displayColumns.indexOf('id') > -1) {
+  if (!minimal) {
     columns.push({
       field: 'id',
       headerName: 'Id',
@@ -101,23 +103,22 @@ export default function LogasTable({ displayColumns }) {
       sortable: false,
     });
   }
-  if (!displayColumns || displayColumns.indexOf('email') > -1) {
-    columns.push({
-      field: 'email',
-      headerName: 'Identifiant',
-      flex: 2,
-      sortable: false,
-    });
-  }
-  if (!displayColumns || displayColumns.indexOf('commercial_name') > -1) {
-    columns.push({
-      field: 'name',
-      headerName: 'Nom commercial',
-      flex: 2,
-      sortable: false,
-    });
-  }
-  if (!displayColumns || displayColumns.indexOf('roles') > -1) {
+
+  columns.push({
+    field: 'email',
+    headerName: 'Identifiant',
+    flex: 2,
+    sortable: false,
+  });
+
+  columns.push({
+    field: 'name',
+    headerName: 'Nom commercial',
+    flex: 2,
+    sortable: false,
+  });
+
+  if (!minimal) {
     columns.push({
       field: 'roles',
       headerName: 'Roles',
@@ -125,8 +126,7 @@ export default function LogasTable({ displayColumns }) {
       valueFormatter: (cell) => cell.value.map((role) => role.name).join(', '),
       sortable: false,
     });
-  }
-  if (!displayColumns || displayColumns.indexOf('manager') > -1) {
+
     columns.push({
       field: 'manager',
       headerName: 'Manager',
@@ -210,9 +210,9 @@ export default function LogasTable({ displayColumns }) {
 }
 
 LogasTable.defaultProps = {
-  displayColumns: null,
+  minimal: false,
 };
 
 LogasTable.propTypes = {
-  displayColumns: PropTypes.arrayOf(String),
+  minimal: PropTypes.bool,
 };

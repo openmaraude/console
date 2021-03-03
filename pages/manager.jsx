@@ -10,7 +10,7 @@ export default function ManagerPage() {
         compte.
       </p>
 
-      <LogasTable displayColumns={['email', 'commercial_name']} />
+      <LogasTable minimal />
     </BaseLayout>
   );
 }
