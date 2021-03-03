@@ -23,7 +23,6 @@ export default function AdminPage() {
       </p>
 
       <LogasTable />
-
     </BaseLayout>
   );
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import { hasRole, UserContext } from '../../src/auth';
@@ -11,12 +12,19 @@ import {
   MenuItem,
 } from '../../components/layouts/MenuLayout';
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    minWidth: theme.breakpoints.width('md'),
+  },
+}));
+
 export function Layout({ children }) {
   const userContext = React.useContext(UserContext);
   const { user } = userContext;
+  const classes = useStyles();
 
   return (
-    <MenuLayout>
+    <MenuLayout className={classes.root}>
       <Menu>
         {
           hasRole(user, 'admin')
