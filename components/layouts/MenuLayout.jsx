@@ -78,10 +78,10 @@ Content.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export function MenuLayout({ children }) {
+export function MenuLayout({ children, ...props }) {
   const classes = useStyles();
   return (
-    <BaseLayout maxWidth="lg" paperClassName={classes.paper}>
+    <BaseLayout maxWidth="lg" paperClassName={classes.paper} {...props}>
       { children }
     </BaseLayout>
   );
