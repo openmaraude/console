@@ -20,8 +20,15 @@ const useStyles = makeStyles((theme) => ({
   },
 
   menu: {
-    borderRight: `1px solid ${theme.palette.divider}`,
+    borderRight: 'none',
+    borderBottom: `1px solid ${theme.palette.divider}`,
+
+    [theme.breakpoints.up('md')]: {
+      borderRight: `1px solid ${theme.palette.divider}`,
+      borderBottom: 'none',
+    },
     paddingRight: theme.spacing(3),
+    paddingBottom: theme.spacing(3),
     marginBottom: theme.spacing(3),
   },
 
