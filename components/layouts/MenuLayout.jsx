@@ -21,8 +21,7 @@ const useStyles = makeStyles((theme) => ({
 
   menu: {
     borderRight: `1px solid ${theme.palette.divider}`,
-    width: '250px',
-    minWidth: '250px',
+    paddingRight: theme.spacing(3),
     marginBottom: theme.spacing(3),
   },
 
@@ -37,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
   content: {
     paddingLeft: theme.spacing(3),
     paddingRight: theme.spacing(3),
+    flex: 1,
   },
 }));
 
