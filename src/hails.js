@@ -1,22 +1,8 @@
-import { request } from './api';
+import { requestList } from './api';
 
-export async function listHails(token, page, filters) {
-  const url = '/hails';
-  const args = {};
-
-  if (page) {
-    args.p = page + 1;
-  }
-  if (filters?.id) {
-    args.id = filters.id;
-  }
-  if (filters?.taxi_id) {
-    args.taxi_id = filters.taxi_id;
-  }
-
-  const resp = await request(url, {
+export function listHails(token, page, filters) {
+  return requestList('/hails', page, {
     token,
-    args,
+    args: filters,
   });
-  return { data: resp.data, meta: resp.meta };
 }

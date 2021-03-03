@@ -1,22 +1,8 @@
-import { request } from './api';
+import { requestList } from './api';
 
-export async function listUsers(token, page, filters) {
-  const url = '/users';
-  const args = {};
-
-  if (page) {
-    args.p = page + 1;
-  }
-  if (filters?.name) {
-    args.name = filters.name;
-  }
-  if (filters?.email) {
-    args.email = filters.email;
-  }
-
-  const resp = await request(url, {
+export function listUsers(token, page, filters) {
+  return requestList('/users', page, {
     token,
-    args,
+    args: filters,
   });
-  return { data: resp.data, meta: resp.meta };
 }

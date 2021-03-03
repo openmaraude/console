@@ -74,3 +74,14 @@ export async function request(url, opts = {}) {
     throw new InvalidJSONError(resp.status, data);
   }
 }
+
+export async function requestList(url, page, opts = {}) {
+  const args = { ...opts.args };
+
+  if (page) {
+    args.p = page + 1;
+  }
+
+  const resp = await request(url, { ...opts, args });
+  return { data: resp.data, meta: resp.meta };
+}
