@@ -58,7 +58,7 @@ export default function APIListTable({
   // Call apiFunc, then setResponse() with the result.
   const APIQuery = React.useCallback(async (ref) => {
     try {
-      setResponse({ ...response, loading: true });
+      setResponse({ ...response, loading: true, resp: null });
 
       // apiFunc is a function which takes three arguments:
       // - apikey
