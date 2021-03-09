@@ -55,7 +55,7 @@ export default function APIListTable({
   const classes = useStyles();
   const [request, setRequest] = React.useState({});
   const { data, error } = useSWR(
-    [userContext.user.apikey, request?.page, request?.filters],
+    [userContext.user.apikey, request?.page, request?.filters, apiFunc.name],
     apiFunc,
   );
 

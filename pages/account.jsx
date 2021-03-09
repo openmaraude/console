@@ -47,7 +47,7 @@ export default function AccountPage() {
   const classes = useStyles();
   const userContext = React.useContext(UserContext);
   const { data, error, mutate } = useSWR(
-    [userContext.user.apikey, userContext.user.id],
+    [userContext.user.apikey, userContext.user.id, getUserAccount.name],
     getUserAccount,
     { revalidateOnFocus: false },
   );
