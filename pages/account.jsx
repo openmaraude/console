@@ -4,7 +4,6 @@ import useSWR from 'swr';
 
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import LinearProgress from '@material-ui/core/LinearProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
@@ -85,16 +84,8 @@ export default function AccountPage() {
     }
   }
 
-  if (!data) {
-    return (
-      <BaseLayout>
-        <LinearProgress />
-      </BaseLayout>
-    );
-  }
-
   return (
-    <BaseLayout>
+    <BaseLayout loading={!data}>
       <form onSubmit={onSubmit}>
         <div className={classes.formSection}>
           <Typography variant="h4" className={classes.formSectionTitle}>Votre compte</Typography>

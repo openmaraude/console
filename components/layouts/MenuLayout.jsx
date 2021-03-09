@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { fade, makeStyles } from '@material-ui/core/styles';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import BaseLayout from './BaseLayout';
 import { ButtonLink } from '../LinksRef';
@@ -74,13 +75,22 @@ MenuItem.propTypes = {
   href: PropTypes.string.isRequired,
 };
 
-export function Content({ children }) {
+export function Content({ loading, children }) {
   const classes = useStyles();
-  return <div className={classes.content}>{ children }</div>;
+  return (
+    <div className={classes.content}>
+      {loading ? <LinearProgress /> : children}
+    </div>
+  );
 }
+
+Content.defaultProps = {
+  loading: false,
+};
 
 Content.propTypes = {
   children: PropTypes.node.isRequired,
+  loading: PropTypes.bool,
 };
 
 export function MenuLayout({ children, ...props }) {
