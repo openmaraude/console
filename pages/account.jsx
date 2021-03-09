@@ -1,7 +1,10 @@
 import React from 'react';
 
+import useSWR from 'swr';
+
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
@@ -12,7 +15,6 @@ import { hasRole, UserContext } from '../src/auth';
 import { getUserAccount, updateUserAccount } from '../src/account';
 import APIErrorAlert from '../components/APIErrorAlert';
 import BaseLayout from '../components/layouts/BaseLayout';
-import { safeUseEffect } from '../src/hooks';
 
 const useStyles = makeStyles((theme) => ({
   formSection: {
@@ -43,60 +45,52 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AccountPage() {
   const classes = useStyles();
-  const [account, setAccount] = React.useState();
-  const [apiError, setApiError] = React.useState();
-  const [disabled, setDisabled] = React.useState(false);
   const userContext = React.useContext(UserContext);
+  const { data, error, mutate } = useSWR(
+    [userContext.user.apikey, userContext.user.id],
+    getUserAccount,
+    { revalidateOnFocus: false },
+  );
 
   // Passwords are valid only if both are unset, or if both are set and equal.
   const passwordConfirmIsValid = (
-    !account
-    || (!account.password && !account.passwordConfirm)
-    || account.password === account.passwordConfirm
+    !data
+    || (!data.password && !data.passwordConfirm)
+    || data.password === data.passwordConfirm
   );
 
-  safeUseEffect(async (ref) => {
-    try {
-      const obj = await getUserAccount(userContext.user.apikey, userContext.user.id);
-
-      if (ref.mounted) {
-        setAccount(obj);
-      }
-    } catch (err) {
-      if (ref.mounted) {
-        setApiError(err);
-      }
-    }
-  }, [userContext.user]);
-
-  React.useEffect(
-    () => setDisabled(!account || !passwordConfirmIsValid),
-    [account, passwordConfirmIsValid],
-  );
-
-  function updateField(e) {
-    setAccount({ ...account, [e.target.name]: e.target.value });
+  async function updateField(e) {
+    mutate(
+      { ...data, [e.target.name]: e.target.value },
+      false,
+    );
   }
 
   async function onSubmit(e) {
     // Remove confirmPassword from parameters sent to updateUserAccount.
     // The confirmation password should not be provided to the API, and is only
     // present to make sure the password provided is valid.
-    const { passwordConfirm, ...params } = account;
+    const { passwordConfirm, ...params } = data;
     e.preventDefault();
+
     try {
-      const updatedAccount = await updateUserAccount(
-        userContext.user.apikey,
-        userContext.user.id,
-        params,
+      await mutate(
+        updateUserAccount(userContext.user.apikey, userContext.user.id, params),
+        false,
       );
       toast.success('Mise à jour effectuée.');
-      setAccount(updatedAccount);
-      setApiError(null);
-    } catch (err) {
-      setApiError(err);
+      await mutate(); // resynchronize data
+    } catch {
       toast.error('Impossible de mettre à jour le profil.');
     }
+  }
+
+  if (!data) {
+    return (
+      <BaseLayout>
+        <LinearProgress />
+      </BaseLayout>
+    );
   }
 
   return (
@@ -108,7 +102,7 @@ export default function AccountPage() {
           <Box marginBottom={5}>
             <div className={classes.formEntry}>
               <div>
-                <strong>Votre clé d'API :</strong> <small>{account?.apikey}</small>
+                <strong>Votre clé d'API :</strong> <small>{data?.apikey}</small>
               </div>
               <div className={classes.helpText}>
                 Cette clé est un identifiant unique qui permet à vos applications
@@ -121,7 +115,7 @@ export default function AccountPage() {
 
             <div className={classes.formEntry}>
               <div>
-                <strong>Votre identifiant :</strong> <small>{account?.email}</small>
+                <strong>Votre identifiant :</strong> <small>{data?.email}</small>
               </div>
               <div className={classes.helpText}>
                 Identifiant utilisé pour vous connecter. Vous ne pouvez pas en changer.
@@ -134,9 +128,8 @@ export default function AccountPage() {
               <TextField
                 label="Nom commercial"
                 name="name"
-                disabled={disabled}
                 fullWidth
-                value={account?.name || ""}
+                value={data?.name || ""}
                 onChange={updateField}
                 InputLabelProps={{ shrink: true }}
               />
@@ -151,10 +144,10 @@ export default function AccountPage() {
               <TextField
                 label="Mot de passe"
                 name="password"
-                disabled={disabled}
                 type="password"
+                error={!!error?.json.errors.data[0].password}
                 fullWidth
-                value={account?.password || ""}
+                value={data?.password || ""}
                 onChange={updateField}
                 InputLabelProps={{ shrink: true }}
               />
@@ -169,11 +162,10 @@ export default function AccountPage() {
               <TextField
                 label="Confirmation"
                 name="passwordConfirm"
-                disabled={disabled}
                 type="password"
                 error={!passwordConfirmIsValid}
                 fullWidth
-                value={account?.passwordConfirm || ""}
+                value={data?.passwordConfirm || ""}
                 onChange={updateField}
                 InputLabelProps={{ shrink: true }}
               />
@@ -193,9 +185,8 @@ export default function AccountPage() {
                 <TextField
                   label="URL de votre API"
                   name="hail_endpoint_production"
-                  disabled={disabled}
                   fullWidth
-                  value={account?.hail_endpoint_production || ""}
+                  value={data?.hail_endpoint_production || ""}
                   onChange={updateField}
                   InputLabelProps={{ shrink: true }}
                 />
@@ -213,9 +204,8 @@ export default function AccountPage() {
                 <TextField
                   label="Header"
                   name="operator_header_name"
-                  disabled={disabled}
                   fullWidth
-                  value={account?.operator_header_name || ""}
+                  value={data?.operator_header_name || ""}
                   onChange={updateField}
                   InputLabelProps={{ shrink: true }}
                 />
@@ -233,9 +223,8 @@ export default function AccountPage() {
                 <TextField
                   label="Valeur header"
                   name="operator_api_key"
-                  disabled={disabled}
                   fullWidth
-                  value={account?.operator_api_key || ""}
+                  value={data?.operator_api_key || ""}
                   onChange={updateField}
                   InputLabelProps={{ shrink: true }}
                 />
@@ -255,9 +244,8 @@ export default function AccountPage() {
               <TextField
                 label="Tél. technique"
                 name="phone_number_technical"
-                disabled={disabled}
                 fullWidth
-                value={account?.phone_number_technical || ""}
+                value={data?.phone_number_technical || ""}
                 onChange={updateField}
                 InputLabelProps={{ shrink: true }}
               />
@@ -272,9 +260,8 @@ export default function AccountPage() {
               <TextField
                 label="Email technique"
                 name="email_technical"
-                disabled={disabled}
                 fullWidth
-                value={account?.email_technical || ""}
+                value={data?.email_technical || ""}
                 onChange={updateField}
                 InputLabelProps={{ shrink: true }}
               />
@@ -293,9 +280,8 @@ export default function AccountPage() {
               <TextField
                 label="Tél. service client"
                 name="phone_number_customer"
-                disabled={disabled}
                 fullWidth
-                value={account?.phone_number_customer || ""}
+                value={data?.phone_number_customer || ""}
                 onChange={updateField}
                 InputLabelProps={{ shrink: true }}
               />
@@ -310,9 +296,8 @@ export default function AccountPage() {
               <TextField
                 label="Email service client"
                 name="email_customer"
-                disabled={disabled}
                 fullWidth
-                value={account?.email_customer || ""}
+                value={data?.email_customer || ""}
                 onChange={updateField}
                 InputLabelProps={{ shrink: true }}
               />
@@ -323,9 +308,9 @@ export default function AccountPage() {
           </div>
         </div>
 
-        {apiError && <APIErrorAlert className={classes.error} error={apiError} />}
+        {error && <APIErrorAlert className={classes.error} error={error} />}
 
-        <Button type="submit" variant="contained" color="primary" disabled={disabled}>
+        <Button type="submit" variant="contained" color="primary" disabled={!data || !passwordConfirmIsValid}>
           Mettre à jour
         </Button>
       </form>

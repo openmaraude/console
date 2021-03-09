@@ -5,6 +5,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import useSWR from 'swr';
+
 import Box from '@material-ui/core/Box';
 import { DataGrid, GridOverlay } from '@material-ui/data-grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -13,7 +15,6 @@ import Typography from '@material-ui/core/Typography';
 
 import APIErrorAlert from './APIErrorAlert';
 import { UserContext } from '../src/auth';
-import { safeUseEffect } from '../src/hooks';
 import { TimeoutGroup } from './TimeoutForm';
 
 const useStyles = makeStyles((theme) => ({
@@ -53,46 +54,10 @@ export default function APIListTable({
   const userContext = React.useContext(UserContext);
   const classes = useStyles();
   const [request, setRequest] = React.useState({});
-  const [response, setResponse] = React.useState({});
-
-  // Call apiFunc, then setResponse() with the result.
-  const APIQuery = React.useCallback(async (ref) => {
-    try {
-      setResponse({ ...response, loading: true, resp: null });
-
-      // apiFunc is a function which takes three arguments:
-      // - apikey
-      // - page to browse
-      // - filters to apply
-      const resp = await apiFunc(
-        userContext.user.apikey,
-        request?.page,
-        request?.filters,
-      );
-
-      if (ref.mounted) {
-        setResponse({ resp });
-      }
-    } catch (err) {
-      if (ref.mounted) {
-        setResponse({ loading: true, err });
-        throw err;
-      }
-    }
-  }, [userContext.user, request]);
-
-  // Call APIQuery. It it throws, try again after a few seconds.
-  safeUseEffect((ref) => {
-    let timeoutRetry;
-
-    APIQuery(ref).catch(() => {
-      timeoutRetry = setTimeout(
-        () => setRequest({ ...request, retry: (request.retry || 0) + 1 }),
-        2000,
-      );
-    });
-    return () => clearTimeout(timeoutRetry);
-  }, [request.retry, APIQuery]);
+  const { data, error } = useSWR(
+    [userContext.user.apikey, request?.page, request?.filters],
+    apiFunc,
+  );
 
   const handlePageChange = (param) => {
     setRequest({ ...request, page: param.page });
@@ -104,8 +69,8 @@ export default function APIListTable({
 
   return (
     <>
-      {response.err && (
-        <APIErrorAlert className={classes.error} error={response.err} />
+      {error && (
+        <APIErrorAlert className={classes.error} error={error} />
       )}
 
       {filters && (
@@ -127,16 +92,16 @@ export default function APIListTable({
         hideFooterSelectedRowCount
         hideFooterRowCount
         columns={columns}
-        rows={response.resp?.data || []}
-        pageSize={response.resp?.meta.per_page}
-        rowCount={response.resp?.meta.total}
+        rows={data?.data || []}
+        pageSize={data?.meta.per_page}
+        rowCount={data?.meta.total}
         page={request.page}
         onPageChange={handlePageChange}
         paginationMode="server"
         components={{
           LoadingOverlay,
         }}
-        loading={response.loading}
+        loading={error || !data}
       />
     </>
   );
