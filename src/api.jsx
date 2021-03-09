@@ -46,7 +46,12 @@ export async function request(url, opts = {}) {
   }
 
   if (args) {
-    url += `?${Object.entries(args).map(([k, v]) => `${k}=${v}`).join('&')}`;
+    // Remove falsy args
+    const nonEmptyArgs = Object.fromEntries(
+      Object.entries(args).filter(([key, value]) => value && [key, value]),
+    );
+
+    url += `?${Object.entries(nonEmptyArgs).map(([k, v]) => `${k}=${v}`).join('&')}`;
   }
 
   let resp;
