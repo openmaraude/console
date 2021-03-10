@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 
+import getConfig from 'next/config';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
@@ -55,6 +56,7 @@ export default function Introduction({ slug }) {
   const ALL_PAGES = ['introduction', 'search', 'operator', 'reference', 'examples'];
   const validSlug = ALL_PAGES.indexOf(slug) >= 0 ? slug : 'introduction';
   const MDXDocument = dynamic(() => import(`../../public/documentation/${validSlug}.mdx`));
+  const { publicRuntimeConfig } = getConfig();
 
   return (
     <MenuLayout>
@@ -67,7 +69,7 @@ export default function Introduction({ slug }) {
       </Menu>
       <Content>
         <MDXProvider components={components}>
-          <MDXDocument />
+          <MDXDocument publicRuntimeConfig={publicRuntimeConfig} />
         </MDXProvider>
       </Content>
     </MenuLayout>

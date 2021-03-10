@@ -20,6 +20,7 @@ const withMDX = require('@next/mdx')({
 module.exports = withMDX({
   publicRuntimeConfig: {
     API_TAXI_PUBLIC_URL: readEnv('API_TAXI_PUBLIC_URL', 'http://localhost:5000'),
+    REFERENCE_DOCUMENTATION_URL: readEnv('REFERENCE_DOCUMENTATION_URL', 'http://localhost:4999/doc/'),
   },
   async redirects() {
     return [
