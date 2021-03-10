@@ -1,11 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import _ from 'lodash';
-
 import TextField from '@material-ui/core/TextField';
-
-import { usePrevious } from '../src/hooks';
 
 export const TimeoutContext = React.createContext();
 
@@ -28,15 +24,19 @@ export function TimeoutTextField({ ...props }) {
  * Calls onSubmit() after some time when children are updated.
  */
 export function TimeoutGroup({ onSubmit, children }) {
-  const [values, setValues] = React.useState();
-  const prevValues = usePrevious(values);
+  const [values, setValues] = React.useState({});
+  const timeoutRef = React.useRef(false);
 
   React.useEffect(() => {
+    // Timeout not enabled, do nothing
+    if (!timeoutRef.current) {
+      return () => {};
+    }
+
+    // When timeout is reached, disable it and call onSubmit.
     const timeout = setTimeout(() => {
-      // Do not call the callback if filters didn't change.
-      if (!_.isEqual(prevValues, values)) {
-        onSubmit(values);
-      }
+      timeoutRef.current = false;
+      onSubmit(values);
     }, 200);
 
     return () => {
@@ -44,7 +44,10 @@ export function TimeoutGroup({ onSubmit, children }) {
     };
   });
 
+  // Called when an input field has been updated. Enable timeout and refresh
+  // the group with new content.
   const updateValue = (name, value) => {
+    timeoutRef.current = true;
     setValues({ ...values, [name]: value });
   };
 
