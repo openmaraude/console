@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
   menu: {
     borderRight: 'none',
     borderBottom: `1px solid ${theme.palette.divider}`,
+    minWidth: '100px',
 
     [theme.breakpoints.up('md')]: {
       borderRight: `1px solid ${theme.palette.divider}`,
