@@ -3,7 +3,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import App from 'next/app';
 import Head from 'next/head';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -27,7 +26,7 @@ import LoginForm from '../components/Login';
 import Menu from '../components/Menu';
 import theme from '../components/theme';
 
-export default function ConsoleApp({ Component, pageProps, initialUser }) {
+export default function ConsoleApp({ Component, pageProps }) {
   React.useEffect(() => {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side');
@@ -36,10 +35,16 @@ export default function ConsoleApp({ Component, pageProps, initialUser }) {
     }
   }, []);
 
-  const [user, setUser] = React.useState(initialUser);
+  const [user, setUser] = React.useState();
 
   const authenticate = async (form) => setUser(await login(form));
   const logout = () => setUser(doLogout());
+
+  // If user is already login, reload view with it.
+  React.useEffect(() => {
+    const currentUser = getCurrentUser();
+    setUser(currentUser);
+  }, []);
 
   return (
     <>
@@ -73,19 +78,7 @@ export default function ConsoleApp({ Component, pageProps, initialUser }) {
   );
 }
 
-ConsoleApp.getInitialProps = async (appContext) => {
-  const user = getCurrentUser(appContext.ctx);
-  const appProps = await App.getInitialProps(appContext);
-
-  return { initialUser: user, ...appProps };
-};
-
-ConsoleApp.defaultProps = {
-  initialUser: null,
-};
-
 ConsoleApp.propTypes = {
   Component: PropTypes.elementType.isRequired,
   pageProps: PropTypes.object.isRequired,
-  initialUser: PropTypes.object,
 };

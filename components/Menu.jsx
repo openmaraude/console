@@ -91,7 +91,7 @@ function HighlightedLink({ href, ...props }) {
   // /account returns /account
   // /documentation/search returns /documentation
   const firstLevelHref = href.match(/^\/[^/]+/)[0];
-  const firstLevelRouter = router.asPath.match(/^\/[^/]+/)[0];
+  const firstLevelRouter = router.pathname.match(/^\/[^/]+/)?.[0];
 
   return (
     <div className={firstLevelHref === firstLevelRouter ? classes.currentMenu : null}>

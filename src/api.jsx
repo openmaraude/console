@@ -1,5 +1,3 @@
-import getConfig from 'next/config';
-
 export class APIError extends Error {
   constructor() {
     super();
@@ -33,8 +31,7 @@ export class HttpError extends APIError {
 }
 
 export async function request(url, opts = {}) {
-  const { publicRuntimeConfig } = getConfig();
-  const baseUrl = publicRuntimeConfig.API_TAXI_PUBLIC_URL;
+  const baseUrl = process.env.API_TAXI_PUBLIC_URL;
 
   const {
     token,

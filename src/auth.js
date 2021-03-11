@@ -11,8 +11,8 @@ export const UserContext = React.createContext();
 /*
  * Retrieve the list of users stored in cookie by setAuthenticatedUsers().
  */
-export function getAuthenticatedUsers(ctx) {
-  const value = nookies.get(ctx)[COOKIE_NAME];
+export function getAuthenticatedUsers() {
+  const value = nookies.get()[COOKIE_NAME];
   if (!value) {
     return [];
   }
@@ -48,8 +48,8 @@ function setAuthenticatedUsers(users) {
 /*
  * Get the first entry of authenticated users.
  */
-export function getCurrentUser(ctx) {
-  const users = getAuthenticatedUsers(ctx);
+export function getCurrentUser() {
+  const users = getAuthenticatedUsers();
   if (users.length > 0) {
     return users[0];
   }

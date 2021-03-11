@@ -1,25 +1,12 @@
 DOCKER_IMAGE = openmaraude/console
-DOCKER_PORT = 3000:3000
-
-API_TAXI_PUBLIC_URL_PROD = https://api.taxi
-API_TAXI_PUBLIC_URL_DEV = https://dev.api.taxi
-
-REFERENCE_DOCUMENTATION_URL_PROD = ${API_TAXI_PUBLIC_URL_PROD}/doc
-REFERENCE_DOCUMENTATION_URL_DEV = ${API_TAXI_PUBLIC_URL_DEV}/doc
+DOCKER_PORT = 3000:80
 
 run: run_local
 
-run_%: SUFFIX=$(shell echo $* | tr '[:lower:]' '[:upper:]')
-run_%: API_TAXI_PUBLIC_URL=${API_TAXI_PUBLIC_URL_${SUFFIX}}
-run_%: REFERENCE_DOCUMENTATION_URL=${REFERENCE_DOCUMENTATION_URL_${SUFFIX}}
 run_%: build
+run_%:
 	@echo ">>> Run $* version"
-	docker run \
-		--rm -ti \
-		-p ${DOCKER_PORT} \
-		-e API_TAXI_PUBLIC_URL=${API_TAXI_PUBLIC_URL} \
-		-e REFERENCE_DOCUMENTATION_URL=${REFERENCE_DOCUMENTATION_URL} \
-		${DOCKER_IMAGE}
+	docker run --rm -ti -p ${DOCKER_PORT} -e BUILD=$* ${DOCKER_IMAGE}
 
 build:
 	docker build -t ${DOCKER_IMAGE} .

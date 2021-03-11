@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 
-import getConfig from 'next/config';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
@@ -23,6 +22,8 @@ import {
   MenuItem,
 } from '../../components/layouts/MenuLayout';
 import { TextLink } from '../../components/LinksRef';
+
+const ALL_PAGES = ['introduction', 'search', 'operator', 'reference', 'examples'];
 
 /* eslint-disable react/prop-types */
 const components = {
@@ -53,10 +54,8 @@ const components = {
 /* eslint-enable react/prop-types */
 
 export default function Introduction({ slug }) {
-  const ALL_PAGES = ['introduction', 'search', 'operator', 'reference', 'examples'];
   const validSlug = ALL_PAGES.indexOf(slug) >= 0 ? slug : 'introduction';
   const MDXDocument = dynamic(() => import(`../../public/documentation/${validSlug}.mdx`));
-  const { publicRuntimeConfig } = getConfig();
 
   return (
     <MenuLayout>
@@ -69,7 +68,7 @@ export default function Introduction({ slug }) {
       </Menu>
       <Content>
         <MDXProvider components={components}>
-          <MDXDocument publicRuntimeConfig={publicRuntimeConfig} />
+          <MDXDocument />
         </MDXProvider>
       </Content>
     </MenuLayout>
@@ -80,7 +79,18 @@ Introduction.propTypes = {
   slug: PropTypes.string.isRequired,
 };
 
-Introduction.getInitialProps = async (ctx) => ({
-  slug: ctx.query.slug,
-  optionalAuth: true,
-});
+export async function getStaticProps(context) {
+  return {
+    props: {
+      slug: context.params.slug,
+      optionalAuth: true,
+    },
+  };
+}
+
+export async function getStaticPaths() {
+  return {
+    paths: ALL_PAGES.map((slug) => ({ params: { slug } })),
+    fallback: false,
+  };
+}
