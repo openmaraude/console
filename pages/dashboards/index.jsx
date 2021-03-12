@@ -60,7 +60,7 @@ Layout.propTypes = {
 export default function DashboardsPage() {
   return (
     <Layout>
-      <Typography variant="h5">Tableaux de bord</Typography>
+      <Typography variant="h4">Tableaux de bord</Typography>
       <p> Sélectionnez le tableau de bord à afficher.</p>
     </Layout>
   );

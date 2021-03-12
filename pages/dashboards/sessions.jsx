@@ -189,7 +189,7 @@ export default function DashboardSession() {
 
   return (
     <Layout loading={!data}>
-      <Typography variant="h6">Liste des sessions</Typography>
+      <Typography variant="h4">Liste des sessions</Typography>
 
       <p>
         Ce tableau présente les demandes utilisateurs. Lorsqu'un utilisateur
