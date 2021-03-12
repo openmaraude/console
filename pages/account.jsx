@@ -10,10 +10,10 @@ import Typography from '@material-ui/core/Typography';
 
 import { toast } from 'react-toastify';
 
-import { hasRole, UserContext } from '../src/auth';
-import { getUserAccount, updateUserAccount } from '../src/account';
 import APIErrorAlert from '../components/APIErrorAlert';
 import BaseLayout from '../components/layouts/BaseLayout';
+import { hasRole, UserContext } from '../src/auth';
+import { requestOne } from '../src/api';
 
 const useStyles = makeStyles((theme) => ({
   formSection: {
@@ -46,8 +46,8 @@ export default function AccountPage() {
   const classes = useStyles();
   const userContext = React.useContext(UserContext);
   const { data, error, mutate } = useSWR(
-    [userContext.user.apikey, userContext.user.id, getUserAccount.name],
-    getUserAccount,
+    [`/users/${userContext.user.id}`, userContext.user.apikey],
+    (url, token) => requestOne(url, { token }),
     { revalidateOnFocus: false },
   );
 
@@ -74,7 +74,16 @@ export default function AccountPage() {
 
     try {
       await mutate(
-        updateUserAccount(userContext.user.apikey, userContext.user.id, params),
+        requestOne(`/users/${userContext.user.id}`, {
+          token: userContext.user.apikey,
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            data: [{ ...params }],
+          }),
+        }),
         false,
       );
       toast.success('Mise à jour effectuée.');

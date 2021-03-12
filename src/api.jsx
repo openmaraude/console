@@ -81,6 +81,11 @@ export async function request(url, opts = {}) {
   }
 }
 
+export async function requestOne(url, opts = {}) {
+  const resp = await request(url, opts);
+  return resp.data[0];
+}
+
 export async function requestList(url, page, opts = {}) {
   const args = { ...opts.args };
 

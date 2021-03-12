@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import useSWR from 'swr';
+
 import { useRouter } from 'next/router';
 
 import Button from '@material-ui/core/Button';
@@ -8,12 +10,17 @@ import Button from '@material-ui/core/Button';
 import { toast } from 'react-toastify';
 
 import APIListTable from './APIListTable';
-import { listUsers } from '../src/users';
 import { TimeoutTextField } from './TimeoutForm';
 import { UserContext } from '../src/auth';
+import { requestList } from '../src/api';
 
 export default function LogasTable({ minimal }) {
   const userContext = React.useContext(UserContext);
+  const listUsers = (page, filters) => useSWR(
+    ['/users', userContext.user.apikey, page, JSON.stringify(filters)],
+    (url, token) => requestList(url, page, { token, args: filters }),
+  );
+
   const router = useRouter();
 
   const filters = (

@@ -22,7 +22,7 @@ import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import APIErrorAlert from '../../components/APIErrorAlert';
 import { Layout } from './index';
 import { UserContext } from '../../src/auth';
-import { listSessions } from '../../src/sessions';
+import { requestList } from '../../src/api';
 
 const useStyles = makeStyles((theme) => ({
   rowSuccess: {
@@ -179,8 +179,8 @@ export default function DashboardSession() {
   const userContext = React.useContext(UserContext);
   const [page, setPage] = React.useState(0);
   const { data, error } = useSWR(
-    [userContext.user.apikey, page, listSessions.name],
-    listSessions,
+    [`/sessions`, userContext.user.apikey, page],
+    (url, token) => requestList(url, page, { token }),
   );
 
   function handleChangePage(event, newPage) {

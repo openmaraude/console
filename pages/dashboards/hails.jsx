@@ -1,11 +1,20 @@
 import React from 'react';
 
+import useSWR from 'swr';
+
 import APIListTable from '../../components/APIListTable';
 import { Layout } from './index';
-import { listHails } from '../../src/hails';
+import { requestList } from '../../src/api';
 import { TimeoutTextField } from '../../components/TimeoutForm';
+import { UserContext } from '../../src/auth';
 
 export default function DashboardHails() {
+  const userContext = React.useContext(UserContext);
+  const listHails = (page, filters) => useSWR(
+    ['/hails', userContext.user.apikey, page, JSON.stringify(filters)],
+    (url, token) => requestList(url, page, { token, args: filters }),
+  );
+
   const filters = (
     <>
       <TimeoutTextField

@@ -5,8 +5,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import useSWR from 'swr';
-
 import Box from '@material-ui/core/Box';
 import { DataGrid, GridOverlay } from '@material-ui/data-grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -14,7 +12,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import APIErrorAlert from './APIErrorAlert';
-import { UserContext } from '../src/auth';
 import { TimeoutGroup } from './TimeoutForm';
 
 const useStyles = makeStyles((theme) => ({
@@ -51,13 +48,9 @@ export default function APIListTable({
   filters,
   columns,
 }) {
-  const userContext = React.useContext(UserContext);
   const classes = useStyles();
   const [request, setRequest] = React.useState({});
-  const { data, error } = useSWR(
-    [userContext.user.apikey, request?.page, request?.filters, apiFunc.name],
-    apiFunc,
-  );
+  const { data, error } = apiFunc(request?.page, request?.filters);
 
   const handlePageChange = (param) => {
     setRequest({ ...request, page: param.page });
