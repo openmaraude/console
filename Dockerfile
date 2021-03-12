@@ -18,12 +18,16 @@ RUN npm run export -- -o /builds/local
 # Build for https://dev.api.taxi
 ENV API_TAXI_PUBLIC_URL=https://dev.api.taxi
 ENV REFERENCE_DOCUMENTATION_URL=${API_TAXI_PUBLIC_URL}/doc
+ENV INTEGRATION_ENABLED=true
+ENV INTEGRATION_ACCOUNT_EMAIL=neotaxi
 RUN npm run build
 RUN npm run export -- -o /builds/dev
 
 # Build for https://api.taxi
 ENV API_TAXI_PUBLIC_URL=https://api.taxi
 ENV REFERENCE_DOCUMENTATION_URL=${API_TAXI_PUBLIC_URL}/doc
+ENV INTEGRATION_ENABLED=false
+ENV INTEGRATION_ACCOUNT_EMAIL=
 RUN npm run build
 RUN npm run export -- -o /builds/prod
 

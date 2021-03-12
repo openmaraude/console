@@ -163,6 +163,12 @@ export default function Menu() {
             <ButtonLink color="inherit">Documentation</ButtonLink>
           </HighlightedLink>
 
+          {userContext.user && process.env.INTEGRATION_ENABLED && (
+            <HighlightedLink href="/integration" passHref>
+              <ButtonLink color="inherit">Intégration</ButtonLink>
+            </HighlightedLink>
+          )}
+
           {userContext.user && (
             <>
               <HighlightedLink href="/account" passHref>

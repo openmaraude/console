@@ -46,10 +46,17 @@ export default function APIListTable({
   apiFunc,
   filters,
   columns,
+  hideUntilFiltersFilled,
 }) {
   const classes = useStyles();
   const [request, setRequest] = React.useState({});
-  const { data, error } = apiFunc(request?.page, request?.filters);
+  const { data, error } = apiFunc(request.page, request.filters);
+
+  // If hideUntilFiltersFilled is true at least one of the filters is not
+  // defined, table should be hidden.
+  const hideTable = hideUntilFiltersFilled && !filters.props.children.map(
+    (filter) => request.filters?.[filter.props.name],
+  ).every((v) => v);
 
   const handlePageChange = (param) => {
     setRequest({ ...request, page: param.page });
@@ -75,30 +82,37 @@ export default function APIListTable({
         </>
       )}
 
-      <DataGrid
-        autoHeight
-        disableColumnMenu
-        rowsPerPageOptions={[]}
-        hideFooterSelectedRowCount
-        hideFooterRowCount
-        columns={columns}
-        rows={data?.data || []}
-        pageSize={data?.meta.per_page}
-        rowCount={data?.meta.total}
-        page={request.page}
-        onPageChange={handlePageChange}
-        paginationMode="server"
-        components={{
-          LoadingOverlay,
-        }}
-        loading={error || !data}
-      />
+      {!hideTable && (
+        <DataGrid
+          autoHeight
+          disableColumnMenu
+          rowsPerPageOptions={[]}
+          hideFooterSelectedRowCount
+          hideFooterRowCount
+          columns={columns}
+          rows={data?.data || []}
+          // Most of list endpoints are paginated, and return an attribute "meta"
+          // with the pagination information.
+          // If there is no "meta" attribute, then assume the list endpoint is
+          // not paginated and returns all the items (like GET /taxis).
+          pageSize={data ? (data.meta?.per_page || data.length) : undefined}
+          rowCount={data ? (data.meta?.total || data.length) : undefined}
+          page={request.page}
+          onPageChange={handlePageChange}
+          paginationMode="server"
+          components={{
+            LoadingOverlay,
+          }}
+          loading={error || !data}
+        />
+      )}
     </>
   );
 }
 
 APIListTable.defaultProps = {
   filters: null,
+  hideUntilFiltersFilled: false,
 };
 
 APIListTable.propTypes = {
@@ -108,4 +122,5 @@ APIListTable.propTypes = {
     field: PropTypes.string,
     headerName: PropTypes.string,
   })).isRequired,
+  hideUntilFiltersFilled: PropTypes.bool,
 };
