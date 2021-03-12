@@ -9,7 +9,6 @@ import Box from '@material-ui/core/Box';
 import { DataGrid, GridOverlay } from '@material-ui/data-grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 
 import APIErrorAlert from './APIErrorAlert';
 import { TimeoutGroup } from './TimeoutForm';
@@ -68,8 +67,6 @@ export default function APIListTable({
 
       {filters && (
         <>
-          <Typography variant="h6">Filtres</Typography>
-
           <Box marginTop={2} marginBottom={2} className={classes.filters}>
             <TimeoutGroup onSubmit={updateFilters}>
               {filters}
