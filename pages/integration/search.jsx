@@ -8,6 +8,8 @@ import useSWR from 'swr';
 import { Alert } from '@material-ui/lab';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -52,7 +54,76 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
   },
+
+  actionsCards: {
+    display: 'flex',
+    flexWrap: 'wrap',
+
+    '& > *': {
+      marginRight: theme.spacing(2),
+      marginBottom: theme.spacing(2),
+      width: '270px',
+      textAlign: 'center',
+    },
+  },
 }));
+
+// Change hail status
+function HailDetailActions({ hail }) {
+  const classes = useStyles();
+
+  /*
+   * XXX: handle all cases (accepted_by_taxi, timeout, ...
+   * when user clicks on button, do the action
+   */
+
+  return (
+    <Box marginTop={2}>
+      <Typography variant="h5">Changer le statut de la course</Typography>
+
+      <p>
+        La course a actuellement le statut <strong>{hail.status}</strong>: le taxi a vu et accepté
+        la course.
+      </p>
+
+      <div className={classes.actionsCards}>
+        <Card>
+          <CardContent>
+            <Button variant="contained" color="primary">Accepter la course</Button>
+
+            <p>
+              Mettre le statut en <strong>accepted_by_customer</strong> pour signaler que le client
+              souhaite toujours effectuer la course. Sans confirmation de la part du client, la
+              course passe automatiquement en <strong>timeout_customer</strong>.
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent>
+            <Button variant="contained" color="primary">Refuser la course</Button>
+
+            <p>
+              Mettre le statut en <strong>declined_by_customer</strong> pour signaler que le client
+              ne souhaite plus effectuer la course.
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent>
+            <Button variant="contained" color="primary">Déclarer un incident</Button>
+
+            <p>
+              Mettre le statut en <strong>incident_customer</strong> pour signaler un problème au
+              niveau du client.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    </Box>
+  );
+}
 
 function HailDetail({ hailId, onBackClicked }) {
   const classes = useStyles();
@@ -73,7 +144,7 @@ function HailDetail({ hailId, onBackClicked }) {
 
   const HailDetailLayout = ({ children }) => (
     <>
-      <Typography variant="h5">Détails du hail</Typography>
+      <Box marginBottom={2}><Typography variant="h5">Détails du hail</Typography></Box>
 
       {error && <APIErrorAlert error={error} />}
 
@@ -147,6 +218,8 @@ function HailDetail({ hailId, onBackClicked }) {
           </TableRow>
         </TableBody>
       </Table>
+
+      <HailDetailActions hail={data} />
 
       <Box marginTop={2}>
         <Button color="primary" onClick={onBackClicked}>&lt;&lt;&lt; Retour vers le formulaire</Button>
