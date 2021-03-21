@@ -71,59 +71,208 @@ const useStyles = makeStyles((theme) => ({
 // Change hail status
 function HailDetailActions({ hail }) {
   const classes = useStyles();
+  const userContext = React.useContext(UserContext);
+  const [response, setApiResponse] = React.useState({});
+  let actions;
 
-  /*
-   * XXX: handle all cases (accepted_by_taxi, timeout, ...
-   * when user clicks on button, do the action
-   */
+  function updateHailStatus(newStatus) {
+    return async () => {
+      try {
+        const resp = await requestOne(`/hails/${hail.id}`, {
+          token: userContext.user.apikey,
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Logas': process.env.INTEGRATION_ACCOUNT_EMAIL,
+          },
+          body: JSON.stringify({
+            data: [{
+              status: newStatus,
+            }],
+          }),
+        });
+        setApiResponse({ resp });
+      } catch (err) {
+        setApiResponse({ error: err });
+      }
+    };
+  }
+
+  const incidentCustomerCard = (
+    <Card>
+      <CardContent>
+        <Button variant="contained" color="primary" onClick={updateHailStatus('incident_customer')}>Déclarer un incident</Button>
+
+        <p>
+          Mettre le statut en <strong>incident_customer</strong> pour
+          signaler un problème au niveau du client.
+        </p>
+      </CardContent>
+    </Card>
+  );
+
+  switch (hail.status) {
+    case 'received':
+      actions = (
+        <p>
+          La course a le statut <strong>received</strong>. Elle a été reçue par
+          l'API le.taxi, qui va la transmettre à l'opérateur du taxi.
+        </p>
+      );
+      break;
+    case 'received_by_operator':
+      actions = (
+        <p>
+          La course a le statut <strong>received_by_operator</strong>. Elle a
+          été transmise à l'opérateur du taxi, qui va la transmettre au taxi.
+        </p>
+      );
+      break;
+    case 'received_by_taxi':
+      actions = (
+        <p>
+          La course a le statut <strong>received_by_taxi</strong>. Le taxi
+          dispose de quelques secondes pour accepter ou refuser la course.
+        </p>
+      );
+      break;
+    case 'accepted_by_taxi':
+      actions = (
+        <>
+          <p>
+            La course a actuellement le statut <strong>{hail.status}</strong>: le
+            taxi a vu et accepté la course.
+          </p>
+
+          <div className={classes.actionsCards}>
+            <Card>
+              <CardContent>
+                <Button variant="contained" color="primary" onClick={updateHailStatus('accepted_by_customer')}>
+                  Accepter la course
+                </Button>
+
+                <p>
+                  Mettre le statut en <strong>accepted_by_customer</strong> pour
+                  signaler que le client souhaite toujours effectuer la course.
+                  Sans confirmation de la part du client, la course passera
+                  automatiquement en <strong>timeout_customer</strong> après quelques secondes.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent>
+                <Button variant="contained" color="primary" onClick={updateHailStatus('declined_by_customer')}>Refuser la course</Button>
+
+                <p>
+                  Mettre le statut en <strong>declined_by_customer</strong> pour signaler
+                  que le client ne souhaite plus effectuer la course.
+                </p>
+              </CardContent>
+            </Card>
+
+            {incidentCustomerCard}
+          </div>
+        </>
+      );
+      break;
+    case 'accepted_by_customer':
+      actions = (
+        <>
+          <p>Le client a accepté la course. Le taxi est en route vers le client.</p>
+
+          <div className={classes.actionsCards}>
+            {incidentCustomerCard}
+          </div>
+        </>
+      );
+      break;
+    case 'customer_on_board':
+      actions = (
+        <p>
+          La course a le statut <strong>{hail.status}</strong>. Le client est à
+          bord. Il peut déclarer à tout moment un incident.
+
+          <div className={classes.actionsCards}>
+            {incidentCustomerCard}
+          </div>
+        </p>
+      );
+      break;
+    case 'timeout_customer':
+      actions = (
+        <p>
+          La course a le statut <strong>{hail.status}</strong> : le client n'a
+          pas répondu à temps. Il n'est pas possible de changer son statut.
+        </p>
+      );
+      break;
+    case 'timeout_taxi':
+      actions = (
+        <p>
+          La course a le statut <strong>{hail.status}</strong> : le taxi n'a
+          pas répondu à temps. Il n'est pas possible de changer son statut.
+        </p>
+      );
+      break;
+    case 'declined_by_customer':
+      actions = (
+        <p>
+          La course a le statut <strong>{hail.status}</strong> : le client a
+          effectué une demande de course, mais a explicitement refusé de
+          poursuivre. Il n'est pas possible de changer son statut.
+        </p>
+      );
+      break;
+    case 'incident_customer':
+      actions = (
+        <p>
+          La course a le statut <strong>{hail.status}</strong> : le client a
+          déclaré un incident. Il n'est pas possible de changer son statut.
+        </p>
+      );
+      break;
+    case 'incident_taxi':
+      actions = (
+        <p>
+          La course a le statut <strong>{hail.status}</strong> : le taxi a
+          déclaré un incident. Il n'est pas possible de changer son statut.
+        </p>
+      );
+      break;
+    case 'finished':
+      actions = (
+        <p>
+          La course a le statut <strong>{hail.status}</strong> : la course
+          s'est correctement effectuée. Il n'est pas possible de changer son
+          statut.
+        </p>
+      );
+      break;
+    default:
+      actions = (
+        <p>
+          La course a le statut <strong>{hail.status}</strong>.
+        </p>
+      );
+      break;
+  }
 
   return (
     <Box marginTop={2}>
       <Typography variant="h5">Changer le statut de la course</Typography>
-
-      <p>
-        La course a actuellement le statut <strong>{hail.status}</strong>: le taxi a vu et accepté
-        la course.
-      </p>
-
-      <div className={classes.actionsCards}>
-        <Card>
-          <CardContent>
-            <Button variant="contained" color="primary">Accepter la course</Button>
-
-            <p>
-              Mettre le statut en <strong>accepted_by_customer</strong> pour signaler que le client
-              souhaite toujours effectuer la course. Sans confirmation de la part du client, la
-              course passe automatiquement en <strong>timeout_customer</strong>.
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent>
-            <Button variant="contained" color="primary">Refuser la course</Button>
-
-            <p>
-              Mettre le statut en <strong>declined_by_customer</strong> pour signaler que le client
-              ne souhaite plus effectuer la course.
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent>
-            <Button variant="contained" color="primary">Déclarer un incident</Button>
-
-            <p>
-              Mettre le statut en <strong>incident_customer</strong> pour signaler un problème au
-              niveau du client.
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+      {actions}
+      {response.error && <APIErrorAlert error={response.error} />}
     </Box>
   );
 }
+
+HailDetailActions.propTypes = {
+  hail: PropTypes.shape({
+    id: PropTypes.string,
+    status: PropTypes.string,
+  }).isRequired,
+};
 
 function HailDetail({ hailId, onBackClicked }) {
   const classes = useStyles();
@@ -510,7 +659,7 @@ export default function IntegrationSearchPage() {
         },
       });
     },
-    { refreshInterval: 5000 },
+    { refreshInterval: 1000 },
   );
   const [selectedTaxi, setSelectedTaxi] = React.useState();
 
