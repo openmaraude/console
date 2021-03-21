@@ -371,7 +371,9 @@ function HailDetail({ hailId, onBackClicked }) {
       <HailDetailActions hail={data} />
 
       <Box marginTop={2}>
-        <Button color="primary" onClick={onBackClicked}>&lt;&lt;&lt; Retour vers le formulaire</Button>
+        <Button color="primary" onClick={onBackClicked}>
+          &lt;&lt;&lt; Retour vers le formulaire de demande de course
+        </Button>
       </Box>
     </HailDetailLayout>
   );
