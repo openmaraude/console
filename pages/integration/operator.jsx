@@ -198,6 +198,12 @@ function TaxiSetNewLocation({ taxi }) {
           Mettre à jour
         </Button>
       </form>
+
+      <small>
+        Attention ! L'ADS de ce taxi est limitée à la ZUPC avec le code INSEE
+        <strong>{taxi.ads.insee}</strong>. Si vous déplacez le taxi en dehors
+        de cette zone, il ne sera pas visible lors d'une recherche.
+      </small>
     </div>
   );
 }
