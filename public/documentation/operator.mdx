@@ -133,7 +133,8 @@ Exemple d'appel :
 $> curl 'https://dev.api.taxi/taxis/' \
       -X POST \
       -H 'Content-Type: application/json' \
-      -H 'X-API-KEY: XXX'       -d '
+      -H 'X-API-KEY: XXX' \
+      -d '
 {
   "data": [
     {
@@ -157,64 +158,43 @@ L'identifiant retourné doit être conservé afin de mettre à jour la position 
 
 #### Géolocalisation
 
-Lorsqu'un taxi est en maraude, vous devez envoyer sa géolocalisation toutes les 5 secondes sur le serveur
-*geoloc.dev.api.taxi* en UDP sur le port *80*.
+Lorsqu'un taxi est en maraude, vos serveurs doivent envoyer sa géolocalisation toutes les 5 secondes à l'endpoint *POST
+/geotaxi*.
 
-La requête de mise à jour de la géolocalisation doit contenir un hash d'identification. Ce hash est un SHA1 de la
-concaténation des champs suivants, dans l'ordre, et sans séparateur : *timestamp, operator, taxi, lat, lon, device,status,
-version, api_key*.
+Pour optimiser ce processus, l'endpoint accepte jusqu'à 50 taxis à chaque requête. Le format attendu est minimal pour
+réduire les temps de réponse.
 
-Ci-dessous un exemple en python d'une fonction envoyant au serveur de geolocalisation la position d'un taxi.
+Exemple d'appel :
 
-
-```python
-from hashlib import sha1
-from time import time
-import socket
-import json
-
-
-GEOTAXI_HOST = 'geoloc.dev.api.taxi'
-GEOTAXI_PORT = 80
-
-
-def send_position(lon, lat, taxi_id, operator, apikey):
-    payload = {
-        "timestamp": int(time()),
-        "operator": operator,
-        "taxi": taxi_id,
-        "lat": lat,
-        "lon": lon,
-        "device": "phone",
-        "status": "free",
-        "version":"2",
+```shell
+$> curl 'https://dev.api.taxi/geotaxi/' \
+      -X POST \
+      -H 'Content-Type: application/json' \
+      -H 'X-API-KEY: XXX' \
+      -d '
+{
+  "data": [
+    {
+      "positions": [
+        {"taxi_id": "AAA111", "lon": "2.35", "lat": "48.86"},
+        {"taxi_id": "BBB222", "lon": "2.35", "lat": "48.86"},
+      ]
     }
-    h = ''.join(
-        str(payload[k]) for k in [
-          'timestamp',
-          'operator',
-          'taxi',
-          'lat',
-          'lon',
-          'device',
-          'status',
-          'version'
-        ]
-    )
-    h += apikey
-    payload['hash'] = sha1(
-      h.encode('utf-8')
-    ).hexdigest()
-
-    sock = socket.socket(
-      socket.AF_INET,
-      socket.SOCK_DGRAM
-    )
-    sock.sendto(
-      json.dumps(payload).encode(),
-      (GEOTAXI_HOST, GEOTAXI_PORT)
-    )
+  ]
+}'
 ```
+
+Les latitude et longitude sont aussi acceptées au format numérique.
+
+L'endpoint répondra avec un code 200 si toutes les positions de taxi ont été mises à jour. Si une seule position est en
+erreur (ID de taxi inconnu, coordonnée non valide...), toute la requête est rejetée avec le détail de l'erreur.
+
+<InfoBox>
+Historiquement, l'API utilisait un serveur UDP pour remonter la localisation. Si ce serveur reste actif, son usage est
+déconseillé et n'est plus documenté. Usage différent du reste de l'API, absence de réponse en cas d'erreur de
+validation, impossibilité d'envoyer plus d'une localisation à la fois... le nouvel endpoint résout toutes ces
+limitations.
+</InfoBox>
 
 ##### Statut du taxi
 
