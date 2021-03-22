@@ -6,9 +6,9 @@ import Link from 'next/link';
 import useSWR from 'swr';
 
 import Button from '@material-ui/core/Button';
-import InputLabel from '@material-ui/core/InputLabel';
-
+import Box from '@material-ui/core/Box';
 import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -34,9 +34,11 @@ const useStyles = makeStyles((theme) => ({
   section: {
     marginBottom: theme.spacing(2),
   },
+
   statusFormControl: {
     minWidth: 200,
   },
+
   newLocationForm: {
     display: 'flex',
     alignItems: 'center',
@@ -44,6 +46,12 @@ const useStyles = makeStyles((theme) => ({
     '& > *': {
       marginRight: theme.spacing(2),
     },
+  },
+
+  tableTitle: {
+    backgroundColor: theme.palette.primary.light,
+    color: theme.palette.primary.contrastText,
+    textAlign: 'center',
   },
 }));
 
@@ -218,6 +226,107 @@ TaxiSetNewLocation.propTypes = {
   }).isRequired,
 };
 
+function HailDetail({ hailId }) {
+  const classes = useStyles();
+  const userContext = React.useContext(UserContext);
+
+  const { data, error } = useSWR(
+    [`/hails/${hailId}`, userContext.user.apikey],
+    (url, token) => requestOne(url, {
+      token,
+      headers: {
+        'X-Logas': process.env.INTEGRATION_ACCOUNT_EMAIL,
+      },
+    }),
+    {
+      refreshInterval: 1000,
+    },
+  );
+
+  const HailDetailLayout = ({ children }) => (
+    <>
+      <Box marginBottom={2}><Typography variant="h5">Détails du hail</Typography></Box>
+
+      {error && <APIErrorAlert error={error} />}
+
+      {children}
+    </>
+  );
+
+  HailDetailLayout.propTypes = {
+    children: PropTypes.node.isRequired,
+  };
+
+  if (!data) {
+    return (
+      <HailDetailLayout>
+        <LinearProgress />
+      </HailDetailLayout>
+    );
+  }
+
+  return (
+    <HailDetailLayout>
+      <Table>
+        <TableBody>
+          <TableRow>
+            <TableCell variant="head" className={classes.tableTitle} colSpan={2}>Informations du hail {data.id}</TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell variant="head">Date</TableCell>
+            <TableCell>{formatDate(new Date(data.creation_datetime))}</TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell variant="head">Statut</TableCell>
+            <TableCell>{data.status}</TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell variant="head">Opérateur</TableCell>
+            <TableCell>{data.operateur}</TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell variant="head">Taxi</TableCell>
+            <TableCell>{data.taxi.id}</TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell variant="head">Tél. taxi</TableCell>
+            <TableCell>{data.taxi_phone_number}</TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell variant="head">Adresse du client</TableCell>
+            <TableCell>{data.customer_address}</TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell variant="head">Longitude/Latitude du client</TableCell>
+            <TableCell>{data.customer_lon}/{data.customer_lat}</TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell variant="head">Identifiant client</TableCell>
+            <TableCell>{data.customer_id}</TableCell>
+          </TableRow>
+
+          <TableRow>
+            <TableCell variant="head">Tél. client</TableCell>
+            <TableCell>{data.customer_phone_number}</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </HailDetailLayout>
+  );
+}
+
+HailDetail.propTypes = {
+  hailId: PropTypes.string.isRequired,
+};
+
 function TaxiHailsList({ taxi }) {
   const classes = useStyles();
   const userContext = React.useContext(UserContext);
@@ -286,13 +395,17 @@ function TaxiHailsList({ taxi }) {
   ];
 
   return (
-    <section className={classes.section}>
-      <Typography variant="h5">Liste des courses du taxi</Typography>
-      <APIListTable
-        apiFunc={listHails}
-        columns={columns}
-      />
-    </section>
+    <>
+      <section className={classes.section}>
+        <Typography variant="h5">Liste des courses du taxi</Typography>
+        <APIListTable
+          apiFunc={listHails}
+          columns={columns}
+        />
+      </section>
+      {selectedHail
+          && <HailDetail hailId={selectedHail.id} />}
+    </>
   );
 }
 
