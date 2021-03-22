@@ -56,7 +56,7 @@ export default function DashboardHails() {
     },
     {
       field: 'ads',
-      valueGetter: (params) => params.row.ads.insee,
+      valueGetter: (params) => params.row.ads.town || params.row.ads.insee,
       headerName: 'ADS',
       flex: 1,
       sortable: false,
