@@ -34,9 +34,6 @@ const useStyles = makeStyles((theme) => ({
   section: {
     marginBottom: theme.spacing(2),
   },
-  subSection: {
-    marginTop: theme.spacing(2),
-  },
   statusFormControl: {
     minWidth: 200,
   },
@@ -79,7 +76,7 @@ function TaxiSetNewStatus({ taxi }) {
   const initialValue = ['free', 'occupied', 'off'].indexOf(taxi.status) >= 0 ? taxi.status : "";
 
   return (
-    <div className={classes.subSection}>
+    <section className={classes.section}>
       <Typography variant="subtitle2">Changer le statut du taxi</Typography>
 
       <p>
@@ -103,7 +100,7 @@ function TaxiSetNewStatus({ taxi }) {
       </FormControl>
 
       {error && <APIErrorAlert error={error} />}
-    </div>
+    </section>
   );
 }
 
@@ -160,7 +157,7 @@ function TaxiSetNewLocation({ taxi }) {
   }
 
   return (
-    <div className={classes.subSection}>
+    <section className={classes.section}>
       <Typography variant="subtitle2">Mise à jour de la géolocalisation</Typography>
 
       <p>
@@ -200,11 +197,11 @@ function TaxiSetNewLocation({ taxi }) {
       </form>
 
       <small>
-        Attention ! L'ADS de ce taxi est limitée à la ZUPC avec le code INSEE
-        <strong>{taxi.ads.insee}</strong>. Si vous déplacez le taxi en dehors
-        de cette zone, il ne sera pas visible lors d'une recherche.
+        Attention ! L'ADS de ce taxi est limitée à la ZUPC avec le code
+        INSEE <strong>{taxi.ads.insee}</strong>. Si vous déplacez le taxi en
+        dehors de cette zone, il ne sera pas visible lors d'une recherche.
       </small>
-    </div>
+    </section>
   );
 }
 
@@ -215,6 +212,93 @@ TaxiSetNewLocation.propTypes = {
       lon: PropTypes.number,
       lat: PropTypes.number,
     }),
+    ads: PropTypes.shape({
+      insee: PropTypes.string,
+    }),
+  }).isRequired,
+};
+
+function TaxiHailsList({ taxi }) {
+  const classes = useStyles();
+  const userContext = React.useContext(UserContext);
+  const listHails = (page) => useSWR(
+    ['/hails', userContext.user.apikey, page, taxi.id],
+    (url, token) => requestList(url, page, {
+      token,
+      args: {
+        taxi_id: taxi.id,
+      },
+      headers: {
+        'X-Logas': process.env.INTEGRATION_ACCOUNT_EMAIL,
+      },
+    }),
+    { refreshInterval: 1000 },
+  );
+  const [selectedHail, setSelectedHail] = React.useState();
+
+  const columns = [
+    {
+      field: 'id',
+      headerName: 'Hail Id',
+      flex: 1,
+      sortable: false,
+    },
+    {
+      field: 'creation_datetime',
+      headerName: 'Date',
+      flex: 2,
+      sortable: false,
+      valueFormatter: (cell) => formatDate(new Date(cell.value)),
+    },
+    {
+      field: 'operateur',
+      headerName: 'Applicatif chauffeur',
+      flex: 1,
+      sortable: false,
+    },
+    {
+      field: 'added_by',
+      headerName: 'Applicatif client',
+      flex: 1,
+      sortable: false,
+    },
+    {
+      field: 'status',
+      headerName: 'Statut final',
+      flex: 2,
+      sortable: false,
+    },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      flex: 1,
+      sortable: false,
+      renderCell: (cell) => (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setSelectedHail(cell.row)}
+        >
+          {">>"}
+        </Button>
+      ),
+    },
+  ];
+
+  return (
+    <section className={classes.section}>
+      <Typography variant="h5">Liste des courses du taxi</Typography>
+      <APIListTable
+        apiFunc={listHails}
+        columns={columns}
+      />
+    </section>
+  );
+}
+
+TaxiHailsList.propTypes = {
+  taxi: PropTypes.shape({
+    id: PropTypes.string,
   }).isRequired,
 };
 
@@ -259,34 +343,37 @@ function Taxi({ taxi }) {
   const lastLocationUpdate = data.last_update ? new Date(data.last_update * 1000) : null;
 
   return (
-    <TaxiSection>
-      <Table>
-        <TableBody>
-          <TableRow>
-            <TableCell variant="head">Statut</TableCell>
-            <TableCell>{data.status}</TableCell>
-          </TableRow>
+    <>
+      <TaxiSection>
+        <Table>
+          <TableBody>
+            <TableRow>
+              <TableCell variant="head">Statut</TableCell>
+              <TableCell>{data.status}</TableCell>
+            </TableRow>
 
-          <TableRow>
-            <TableCell variant="head">Dernière géolocalisation</TableCell>
-            <TableCell>{formatDate(lastLocationUpdate)}</TableCell>
-          </TableRow>
+            <TableRow>
+              <TableCell variant="head">Dernière géolocalisation</TableCell>
+              <TableCell>{formatDate(lastLocationUpdate)}</TableCell>
+            </TableRow>
 
-          <TableRow>
-            <TableCell variant="head">Longitude</TableCell>
-            <TableCell>{data.position?.lon}</TableCell>
-          </TableRow>
+            <TableRow>
+              <TableCell variant="head">Longitude</TableCell>
+              <TableCell>{data.position?.lon}</TableCell>
+            </TableRow>
 
-          <TableRow>
-            <TableCell variant="head">Latitude</TableCell>
-            <TableCell>{data.position?.lat}</TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+            <TableRow>
+              <TableCell variant="head">Latitude</TableCell>
+              <TableCell>{data.position?.lat}</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TaxiSection>
 
-      <TaxiSetNewStatus taxi={data} />
-      <TaxiSetNewLocation taxi={data} />
-    </TaxiSection>
+      <TaxiSetNewStatus key={`status-${taxi.id}`} taxi={data} />
+      <TaxiSetNewLocation key={`location-${taxi.id}`} taxi={data} />
+      <TaxiHailsList key={`hails-${taxi.id}`} taxi={data} />
+    </>
   );
 }
 

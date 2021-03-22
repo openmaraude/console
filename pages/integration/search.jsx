@@ -794,7 +794,7 @@ export default function IntegrationSearchPage() {
         />
       </section>
 
-      {selectedTaxi && <Taxi taxi={selectedTaxi} />}
+      {selectedTaxi && <Taxi key={selectedTaxi.id} taxi={selectedTaxi} />}
     </Layout>
   );
 }
