@@ -7,6 +7,8 @@ import useSWR from 'swr';
 
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -52,6 +54,18 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.light,
     color: theme.palette.primary.contrastText,
     textAlign: 'center',
+  },
+
+  actionsCards: {
+    display: 'flex',
+    flexWrap: 'wrap',
+
+    '& > *': {
+      marginRight: theme.spacing(2),
+      marginBottom: theme.spacing(2),
+      width: '270px',
+      textAlign: 'center',
+    },
   },
 }));
 
@@ -226,6 +240,101 @@ TaxiSetNewLocation.propTypes = {
   }).isRequired,
 };
 
+// Update hail status
+function HailDetailActions({ hail }) {
+  const classes = useStyles();
+  const userContext = React.useContext(UserContext);
+  const [response, setApiResponse] = React.useState({});
+  let actions;
+
+  function updateHailStatus(newStatus) {
+    return async () => {
+      try {
+        const resp = await requestOne(`/hails/${hail.id}`, {
+          token: userContext.user.apikey,
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Logas': process.env.INTEGRATION_ACCOUNT_EMAIL,
+          },
+          body: JSON.stringify({
+            data: [{
+              status: newStatus,
+            }],
+          }),
+        });
+        setApiResponse({ resp });
+      } catch (err) {
+        setApiResponse({ error: err });
+      }
+    };
+  }
+
+  const incidentTaxiCard = (
+    <Card>
+      <CardContent>
+        <Button variant="contained" color="primary" onClick={updateHailStatus('incident_taxi')}>Déclarer un incident</Button>
+
+        <p>
+          Mettre le statut en <strong>incident_taxi</strong> pour
+          signaler un problème au niveau du taxi.
+        </p>
+      </CardContent>
+    </Card>
+  );
+
+  switch (hail.status) {
+    case 'accepted_by_customer':
+      actions = (
+        <>
+          <p>
+            La course a actuellement le statut <strong>{hail.status}</strong> :
+            le client a confirmé sa demande. Le taxi se dirige vers le client.
+          </p>
+
+          <div className={classes.actionsCards}>
+            <Card>
+              <CardContent>
+                <Button variant="contained" color="primary" onClick={updateHailStatus('customer_on_board')}>
+                  Déclarer le client à bord
+                </Button>
+
+                <p>
+                  Mettre le statut à <strong>customer_on_baord</strong> pour
+                  signaler que le client est à bord.
+                </p>
+              </CardContent>
+            </Card>
+
+            {incidentTaxiCard}
+          </div>
+        </>
+      );
+      break;
+    default:
+      actions = (
+        <p>
+          La course a le statut <strong>{hail.status}</strong>.
+        </p>
+      );
+      break;
+  }
+  return (
+    <Box marginTop={2}>
+      <Typography variant="h5">Changer le statut de la course</Typography>
+      {actions}
+      {response.error && <APIErrorAlert error={response.error} />}
+    </Box>
+  );
+}
+
+HailDetailActions.propTypes = {
+  hail: PropTypes.shape({
+    id: PropTypes.string,
+    status: PropTypes.string,
+  }).isRequired,
+};
+
 function HailDetail({ hailId }) {
   const classes = useStyles();
   const userContext = React.useContext(UserContext);
@@ -319,6 +428,8 @@ function HailDetail({ hailId }) {
           </TableRow>
         </TableBody>
       </Table>
+
+      <HailDetailActions hail={data} />
     </HailDetailLayout>
   );
 }
