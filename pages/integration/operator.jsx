@@ -17,6 +17,7 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
+import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 
 import faker from 'faker/locale/fr';
@@ -25,7 +26,7 @@ import APIErrorAlert from '../../components/APIErrorAlert';
 import APIListTable from '../../components/APIListTable';
 import { formatDate } from '../../src/utils';
 import { Layout } from './index';
-import { requestOne, requestList } from '../../src/api';
+import { request, requestOne, requestList } from '../../src/api';
 import { TextLink } from '../../components/LinksRef';
 import { UserContext } from '../../src/auth';
 
@@ -38,6 +39,14 @@ const useStyles = makeStyles((theme) => ({
   },
   statusFormControl: {
     minWidth: 200,
+  },
+  newLocationForm: {
+    display: 'flex',
+    alignItems: 'center',
+
+    '& > *': {
+      marginRight: theme.spacing(2),
+    },
   },
 }));
 
@@ -71,7 +80,7 @@ function TaxiSetNewStatus({ taxiId, status }) {
 
   return (
     <div className={classes.subSection}>
-      <Typography variant="subtitle1">Changer le statut du taxi</Typography>
+      <Typography variant="subtitle2">Changer le statut du taxi</Typography>
 
       <p>
         Le statut a le statut <strong>{status}</strong>. Seuls les taxis
@@ -101,6 +110,102 @@ function TaxiSetNewStatus({ taxiId, status }) {
 TaxiSetNewStatus.propTypes = {
   taxiId: PropTypes.string.isRequired,
   status: PropTypes.string.isRequired,
+};
+
+function TaxiSetNewLocation({ taxiId, currentLocation }) {
+  const classes = useStyles();
+  const userContext = React.useContext(UserContext);
+  const [values, setValues] = React.useState({
+    lon: currentLocation.lon,
+    lat: currentLocation.lat,
+  });
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState();
+
+  function updateField(e) {
+    setValues({
+      ...values,
+      [e.target.name]: e.target.value,
+    });
+  }
+
+  async function onSubmit(e) {
+    e.preventDefault();
+
+    try {
+      setError(null);
+      setLoading(true);
+      await request(`/geotaxi`, {
+        token: userContext.user.apikey,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Logas': process.env.INTEGRATION_ACCOUNT_EMAIL,
+        },
+        body: JSON.stringify({
+          data: [{
+            positions: [
+              { taxi_id: taxiId, lon: values.lon, lat: values.lat },
+            ],
+          }],
+        }),
+      });
+      setLoading(false);
+    } catch (err) {
+      setError(err);
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className={classes.subSection}>
+      <Typography variant="subtitle2">Mise à jour de la géolocalisation</Typography>
+
+      <p>
+        Renseignez les coordonnées où vous souhaitez déplacer le taxi. Seuls
+        les taxis ayant une géolocalisation mise à jour il y a moins de deux
+        minutes sont visibles lors d'une recherche par un applicatif client.
+      </p>
+
+      {error && <APIErrorAlert error={error} />}
+
+      <form className={classes.newLocationForm} onSubmit={onSubmit}>
+        <TextField
+          label="Longitude"
+          name="lon"
+          type="number"
+          inputProps={{ step: 0.000001 }}
+          margin="normal"
+          value={values.lon || ""}
+          onChange={updateField}
+          required
+        />
+
+        <TextField
+          label="Latitude"
+          name="lat"
+          type="number"
+          inputProps={{ step: 0.000001 }}
+          margin="normal"
+          value={values.lat || ""}
+          onChange={updateField}
+          required
+        />
+
+        <Button type="submit" variant="contained" color="primary" disabled={loading}>
+          Mettre à jour
+        </Button>
+      </form>
+    </div>
+  );
+}
+
+TaxiSetNewLocation.propTypes = {
+  taxiId: PropTypes.string.isRequired,
+  currentLocation: PropTypes.shape({
+    lon: PropTypes.number,
+    lat: PropTypes.number,
+  }).isRequired,
 };
 
 function Taxi({ taxi }) {
@@ -170,6 +275,7 @@ function Taxi({ taxi }) {
       </Table>
 
       <TaxiSetNewStatus taxiId={taxi.id} status={data.status} />
+      <TaxiSetNewLocation taxiId={taxi.id} currentLocation={data.position} />
     </TaxiSection>
   );
 }

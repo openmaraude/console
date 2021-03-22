@@ -74,6 +74,13 @@ export async function request(url, opts = {}) {
   }
 
   const data = await resp.text();
+
+  // JSON.parse('') throws an error. Let's return null if the response is
+  // empty.
+  if (!data) {
+    return null;
+  }
+
   try {
     return JSON.parse(data);
   } catch {
