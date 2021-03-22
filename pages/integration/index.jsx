@@ -41,8 +41,9 @@ export function Layout({ loading, children }) {
   return (
     <MenuLayout className={classes.root}>
       <Menu>
-        <MenuItem title="Application opérateur" href="/integration/operator" />
-        <MenuItem title="Application client" href="/integration/search" />
+        <MenuItem title="Introduction" href="/integration" />
+        <MenuItem title="Simuler application opérateur" href="/integration/operator" />
+        <MenuItem title="Simuler application client" href="/integration/search" />
       </Menu>
       <Content loading={loading}>
         { children }
