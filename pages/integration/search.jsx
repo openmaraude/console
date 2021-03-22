@@ -609,30 +609,28 @@ function Taxi({ taxi }) {
             </TableBody>
           </Table>
 
-          {data.position && (
-            <Table>
-              <TableBody>
-                <TableRow>
-                  <TableCell variant="head" className={classes.tableTitle} colSpan={2}>Dernière géolocalisation</TableCell>
-                </TableRow>
-                <TableRow>
+          <Table>
+            <TableBody>
+              <TableRow>
+                <TableCell variant="head" className={classes.tableTitle} colSpan={2}>Dernière géolocalisation</TableCell>
+              </TableRow>
+              <TableRow>
 
-                  <TableCell variant="head">Date</TableCell>
-                  <TableCell>{formatDate(lastLocationUpdate)}</TableCell>
-                </TableRow>
+                <TableCell variant="head">Date</TableCell>
+                <TableCell>{formatDate(lastLocationUpdate)}</TableCell>
+              </TableRow>
 
-                <TableRow>
-                  <TableCell variant="head">Longitude</TableCell>
-                  <TableCell>{data.position?.lon}</TableCell>
-                </TableRow>
+              <TableRow>
+                <TableCell variant="head">Longitude</TableCell>
+                <TableCell>{data.position?.lon}</TableCell>
+              </TableRow>
 
-                <TableRow>
-                  <TableCell variant="head">Latitude</TableCell>
-                  <TableCell>{data.position?.lat}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          )}
+              <TableRow>
+                <TableCell variant="head">Latitude</TableCell>
+                <TableCell>{data.position?.lat}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </Box>
       </TaxiSection>
 
