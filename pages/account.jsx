@@ -145,7 +145,7 @@ export default function AccountPage() {
                 label="Mot de passe"
                 name="password"
                 type="password"
-                error={!!error?.json.errors.data[0].password}
+                error={!!error?.json?.errors.data[0].password}
                 fullWidth
                 value={data?.password || ""}
                 onChange={updateField}
