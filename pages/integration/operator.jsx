@@ -193,7 +193,7 @@ export default function IntegrationOperatorPage() {
     }),
     { refreshInterval: 1000 },
   );
-  const [error, setApiError] = React.useState();
+  const [error, setError] = React.useState();
   const [selectedTaxi, setSelectedTaxi] = React.useState();
 
   // Create new taxi: POST /ads, POST /drivers, POST /vehicles, POST /taxis.
@@ -252,9 +252,9 @@ export default function IntegrationOperatorPage() {
           licence_plate: vehicle.licence_plate,
         },
       });
-      setApiError(null);
+      setError(null);
     } catch (err) {
-      setApiError(err);
+      setError(err);
     }
   }
 
@@ -273,15 +273,15 @@ export default function IntegrationOperatorPage() {
     },
     {
       field: 'vehicle',
-      headerName: 'Plaque d\'immatriculation',
-      flex: 1,
+      headerName: 'Immatriculation',
+      flex: 2,
       sortable: false,
       valueFormatter: (cell) => cell.value.licence_plate,
     },
     {
       field: 'ads',
       headerName: 'Code INSEE de l\'ADS',
-      flex: 1,
+      flex: 2,
       sortable: false,
       valueFormatter: (cell) => cell.value.insee,
     },
