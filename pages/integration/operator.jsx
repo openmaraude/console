@@ -284,6 +284,39 @@ function HailDetailActions({ hail }) {
   );
 
   switch (hail.status) {
+    case 'received':
+      actions = (
+        <p>
+          La course a le statut <strong>{hail.status}</strong>. Elle a été reçue par
+          l'API le.taxi, qui va la transmettre à l'opérateur du taxi.
+        </p>
+      );
+      break;
+    case 'received_by_operator':
+      actions = (
+        <p>
+          La course a le statut <strong>{hail.status}</strong>. Elle a
+          été transmise à l'opérateur du taxi, qui va la transmettre au taxi.
+        </p>
+      );
+      break;
+    case 'received_by_taxi':
+      actions = (
+        <p>
+          La course a le statut <strong>{hail.status}</strong>. Le taxi
+          dispose de quelques secondes pour accepter ou refuser la course.
+        </p>
+      );
+      break;
+    case 'accepted_by_taxi':
+      actions = (
+        <p>
+          La course a le statut <strong>{hail.status}</strong>. Le taxi a
+          accepté la course. La course est en attente de confirmation par le
+          client.
+        </p>
+      );
+      break;
     case 'accepted_by_customer':
       actions = (
         <>
@@ -309,6 +342,80 @@ function HailDetailActions({ hail }) {
             {incidentTaxiCard}
           </div>
         </>
+      );
+      break;
+    case 'customer_on_board':
+      actions = (
+        <p>
+          La course a le statut <strong>{hail.status}</strong>. Le client est à
+          bord.
+
+          <div className={classes.actionsCards}>
+            <Card>
+              <CardContent>
+                <Button variant="contained" color="primary" onClick={updateHailStatus('finished')}>
+                  Terminer la course
+                </Button>
+
+                <p>
+                  Mettre le statut à <strong>finished</strong> pour terminer la
+                  course.
+                </p>
+              </CardContent>
+            </Card>
+            {incidentTaxiCard}
+          </div>
+        </p>
+      );
+      break;
+    case 'timeout_customer':
+      actions = (
+        <p>
+          La course a le statut <strong>{hail.status}</strong> : le client n'a
+          pas répondu à temps. Il n'est pas possible de changer son statut.
+        </p>
+      );
+      break;
+    case 'timeout_taxi':
+      actions = (
+        <p>
+          La course a le statut <strong>{hail.status}</strong> : le taxi n'a
+          pas répondu à temps. Il n'est pas possible de changer son statut.
+        </p>
+      );
+      break;
+    case 'declined_by_customer':
+      actions = (
+        <p>
+          La course a le statut <strong>{hail.status}</strong> : le client a
+          effectué une demande de course, mais a explicitement refusé de
+          poursuivre. Il n'est pas possible de changer son statut.
+        </p>
+      );
+      break;
+    case 'incident_customer':
+      actions = (
+        <p>
+          La course a le statut <strong>{hail.status}</strong> : le client a
+          déclaré un incident. Il n'est pas possible de changer son statut.
+        </p>
+      );
+      break;
+    case 'incident_taxi':
+      actions = (
+        <p>
+          La course a le statut <strong>{hail.status}</strong> : le taxi a
+          déclaré un incident. Il n'est pas possible de changer son statut.
+        </p>
+      );
+      break;
+    case 'finished':
+      actions = (
+        <p>
+          La course a le statut <strong>{hail.status}</strong> : la course
+          s'est correctement effectuée. Il n'est pas possible de changer son
+          statut.
+        </p>
       );
       break;
     default:
