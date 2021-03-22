@@ -482,6 +482,12 @@ function HailRequestForm({ taxi, onRequest }) {
 
         {error && <APIErrorAlert error={error} />}
 
+        <small>
+          Attention: la demande de course ne peut fonctionner que si le taxi a
+          le statut <strong>free</strong> et que sa géolocalisation a été mise
+          à jour il y a moins de deux minutes.
+        </small>
+
         <Button type="submit" variant="contained" color="primary">
           Envoyer la demande de course à {taxi.operator}
         </Button>
