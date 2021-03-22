@@ -51,14 +51,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // Section to change taxi status
-function TaxiSetNewStatus({ taxiId, status }) {
+function TaxiSetNewStatus({ taxi }) {
   const classes = useStyles();
   const userContext = React.useContext(UserContext);
   const [error, setError] = React.useState();
 
   async function onTaxiStatusChange(e) {
     try {
-      await requestOne(`/taxis/${taxiId}`, {
+      await requestOne(`/taxis/${taxi.id}`, {
         token: userContext.user.apikey,
         method: 'PUT',
         headers: {
@@ -76,14 +76,14 @@ function TaxiSetNewStatus({ taxiId, status }) {
     }
   }
 
-  const initialValue = ['free', 'occupied', 'off'].indexOf(status) >= 0 ? status : "";
+  const initialValue = ['free', 'occupied', 'off'].indexOf(taxi.status) >= 0 ? taxi.status : "";
 
   return (
     <div className={classes.subSection}>
       <Typography variant="subtitle2">Changer le statut du taxi</Typography>
 
       <p>
-        Le statut a le statut <strong>{status}</strong>. Seuls les taxis
+        Le statut a le statut <strong>{taxi.status}</strong>. Seuls les taxis
         avec le statut <i>free</i> peuvent apparaitre lors d'une
         recherche.
       </p>
@@ -108,16 +108,18 @@ function TaxiSetNewStatus({ taxiId, status }) {
 }
 
 TaxiSetNewStatus.propTypes = {
-  taxiId: PropTypes.string.isRequired,
-  status: PropTypes.string.isRequired,
+  taxi: PropTypes.shape({
+    id: PropTypes.string,
+    status: PropTypes.string,
+  }).isRequired,
 };
 
-function TaxiSetNewLocation({ taxiId, currentLocation }) {
+function TaxiSetNewLocation({ taxi }) {
   const classes = useStyles();
   const userContext = React.useContext(UserContext);
   const [values, setValues] = React.useState({
-    lon: currentLocation.lon,
-    lat: currentLocation.lat,
+    lon: taxi.position.lon,
+    lat: taxi.position.lat,
   });
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState();
@@ -145,7 +147,7 @@ function TaxiSetNewLocation({ taxiId, currentLocation }) {
         body: JSON.stringify({
           data: [{
             positions: [
-              { taxi_id: taxiId, lon: values.lon, lat: values.lat },
+              { taxi_id: taxi.id, lon: values.lon, lat: values.lat },
             ],
           }],
         }),
@@ -201,10 +203,12 @@ function TaxiSetNewLocation({ taxiId, currentLocation }) {
 }
 
 TaxiSetNewLocation.propTypes = {
-  taxiId: PropTypes.string.isRequired,
-  currentLocation: PropTypes.shape({
-    lon: PropTypes.number,
-    lat: PropTypes.number,
+  taxi: PropTypes.shape({
+    id: PropTypes.string,
+    position: PropTypes.shape({
+      lon: PropTypes.number,
+      lat: PropTypes.number,
+    }),
   }).isRequired,
 };
 
@@ -274,8 +278,8 @@ function Taxi({ taxi }) {
         </TableBody>
       </Table>
 
-      <TaxiSetNewStatus taxiId={taxi.id} status={data.status} />
-      <TaxiSetNewLocation taxiId={taxi.id} currentLocation={data.position} />
+      <TaxiSetNewStatus taxi={data} />
+      <TaxiSetNewLocation taxi={data} />
     </TaxiSection>
   );
 }
