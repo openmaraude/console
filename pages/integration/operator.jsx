@@ -442,7 +442,7 @@ HailDetailActions.propTypes = {
   }).isRequired,
 };
 
-function HailDetail({ hailId }) {
+function HailDetail({ hailId, onBackClicked }) {
   const classes = useStyles();
   const userContext = React.useContext(UserContext);
 
@@ -537,12 +537,19 @@ function HailDetail({ hailId }) {
       </Table>
 
       <HailDetailActions hail={data} />
+
+      <Box marginTop={2}>
+        <Button color="primary" onClick={onBackClicked}>
+          &lt;&lt;&lt; Fermer les détails du hail
+        </Button>
+      </Box>
     </HailDetailLayout>
   );
 }
 
 HailDetail.propTypes = {
   hailId: PropTypes.string.isRequired,
+  onBackClicked: PropTypes.func.isRequired,
 };
 
 function TaxiHailsList({ taxi }) {
@@ -622,7 +629,7 @@ function TaxiHailsList({ taxi }) {
         />
       </section>
       {selectedHail
-          && <HailDetail hailId={selectedHail.id} />}
+        && <HailDetail hailId={selectedHail.id} onBackClicked={() => setSelectedHail(null)} />}
     </>
   );
 }
