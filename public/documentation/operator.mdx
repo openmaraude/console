@@ -316,11 +316,12 @@ la course terminée avec le statut *finished*.
 
 ##### Signalement de client
 
-Un problème lors de la course peut être signalé en utilisant l'endpoint *PUT /hails/hail_id*, en fournissant le paramètre
+Un problème lors de la course peut être signalé en utilisant l'endpoint *PUT /hails/:hail_id*, en fournissant le paramètre
 *reporting_customer* à *true* et le champ *reporting_customer_reason* à une des valeurs suivantes :
 
 * *payment* : il y a eu un problème avec le paiement.
 * *courtesy* : le client n'était pas courtois.
+* *route* : le client demandait une adresse de destination introuvable.
 * *cleanliness* : le client n'était pas propre.
 * *late* : le client était en retard.
 * *aggressive* : le client était agressif.

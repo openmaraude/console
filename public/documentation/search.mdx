@@ -62,7 +62,7 @@ Ces points sont à noter :
 
 * *taxi_id* est retourné par l'endpoint *GET /taxis*.
 * Les paramètres *customer_lon* et *customer_lat* doivent correspondre à ceux utilisés pour obtenir la liste des taxis.
-* L'adresse *customer_address* sera montée au taxi une fois la course acceptée par celui-ci.
+* L'adresse *customer_address* sera montrée au taxi une fois la course acceptée par celui-ci.
 * Vous devez vérifier la validité du *customer_phone_number*, que ce soit par un SMS de confirmation ou par un appel.
 * *customer_id* est votre identifiant pour ce client. Il doit être unique pour chaque client.
 * Vous recevez un *session_id* de type UUID4 dans la ressource renvoyée en réponse, voir ci-dessous.
@@ -72,7 +72,7 @@ Ces points sont à noter :
 L'API considère les créations de course d'un même client comme faisant partie de la même session utilisateur quand elles
 sont assez proches dans le temps (moins de 5 minutes entre deux requêtes).
 
-La première requête se fait sans *session_id* et initie la session utilisateur. C'est l'API qui assigne le session_id en
+La première requête se fait sans *session_id* et initie la session utilisateur. C'est l'API qui assigne le *session_id* en
 le fournissant dans la réponse. L'application fournit ensuite ce *session_id* dans les requêtes suivantes de la même
 session utilisateur. l'API vérifiera que cet ID existe et correspond bien à ce client, mais il est à la discrétion de
 l'application de déterminer la durée de validité de cette session.
@@ -96,13 +96,11 @@ erreur. Faisons un zoom sur les actions que vous devez exécuter :
 ![status de la course pour applicatif client](/images/doc/trip-status-search.png)
 
 Lorsque l'API reçoit une demande de course, celle-ci est transmise à l'opérateur du taxi. Dans le cas où le taxi accepte
-la course, vous avez une vingtaine de secondes pour demander à votre client de confirmer une dernière fois la course.
-Deux statuts sont alors disponibles :
+la course, vous avez une vingtaine de secondes pour demander à votre client de confirmer une dernière fois la course
+(double confirmation). Deux statuts sont alors disponibles :
 
 * **declined_by_customer** : le client ne souhaite pas confirmer la course et en informe le taxi.
 * **accepted_by_customer** : le client confirme la course, le taxi vient le chercher.
-
-Vous devez à tout moment permettre au client d'annuler la course en passant au statut *incident_customer*.
 
 Exemple d'appel :
 
@@ -120,3 +118,9 @@ $> curl 'https://dev.api.taxi/hails/:hail_id/' \
   ]
 }'
 ```
+
+<InfoBox>
+Vous devez toujours permettre au client d'annuler la course en passant au statut *incident_customer* s'il subit un
+imprévu après confirmation, plutôt que de laisser le taxi attendre un client qui ne se présente pas et pénaliser les
+deux parties.
+</InfoBox>
