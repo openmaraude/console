@@ -34,10 +34,10 @@ $> curl 'api.taxi/hails/:hail_id/'                \
 }'
 ```
 
-**Changer le statut d'un taxi à accepted_by_customer**
+**Confirmer une demande de course après acception par le chauffeur**
 
 ```shell
-$> curl 'api.taxi/hails/hail_id/'          \
+$> curl 'api.taxi/hails/:hail_id/'          \
     -X PUT                                 \
     -H "Content-Type: application/json"    \
     -H "X-API-KEY: XXX"                    \
@@ -51,7 +51,7 @@ $> curl 'api.taxi/hails/hail_id/'          \
 
 ###### Exemples utiles pour les opérateurs
 
-**Libérer un taxi**
+**Rendre un taxi à nouveau disponible après une course**
 
 ```shell
 $> curl 'api.taxi/taxis/:taxi_id/'      \
@@ -66,7 +66,7 @@ $> curl 'api.taxi/taxis/:taxi_id/'      \
 }'
 ```
 
-**Changer le statut d'un taxi à received_by_taxi**
+**Confirmer la réception d'une course par l'application chauffeur**
 
 ```shell
 $> curl 'api.taxi/hails/:hail_id/'      \
