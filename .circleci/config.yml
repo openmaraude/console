@@ -1,0 +1,34 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.2
+      - run:
+          name: Build docker image
+          command: |
+            docker build -t openmaraude/console:${CIRCLE_TAG} .
+            docker tag openmaraude/console:${CIRCLE_TAG} openmaraude/console:latest
+      - run:
+          name: Publish docker Image to hub.docker.com
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push openmaraude/console:${CIRCLE_TAG}
+            docker push openmaraude/console:latest
+
+workflows:
+  version: 2
+
+  # Build artifacts, only run for tags.
+  artifacts:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /.*/
