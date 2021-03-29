@@ -458,10 +458,19 @@ function HailDetail({ hailId, onBackClicked }) {
       refreshInterval: 1000,
     },
   );
+  const sectionRef = React.createRef();
+
+  // Scroll to section when page loads.
+  React.useEffect(
+    () => sectionRef.current.scrollIntoView(),
+    [hailId],
+  );
 
   const HailDetailLayout = ({ children }) => (
     <>
-      <Box marginBottom={2}><Typography variant="h5">Détails du hail</Typography></Box>
+      <Box ref={sectionRef} marginBottom={2}>
+        <Typography variant="h5">Détails du hail</Typography>
+      </Box>
 
       {error && <APIErrorAlert error={error} />}
 
@@ -655,10 +664,17 @@ function Taxi({ taxi }) {
       refreshInterval: 1000,
     },
   );
+  const sectionRef = React.createRef();
+
+  // Scroll to section when page loads.
+  React.useEffect(
+    () => sectionRef.current.scrollIntoView(),
+    [taxi],
+  );
 
   // Avoid code duplication.
   const TaxiSection = ({ children }) => (
-    <section className={classes.section}>
+    <section ref={sectionRef} className={classes.section}>
       <Typography variant="h5">Détails du taxi {taxi.id}</Typography>
 
       {error && <APIErrorAlert error={error} />}

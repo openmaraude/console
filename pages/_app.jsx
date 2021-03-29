@@ -25,6 +25,7 @@ import {
 import LoginForm from '../components/Login';
 import Menu from '../components/Menu';
 import theme from '../components/theme';
+import '../styles/styles.css';
 
 export default function ConsoleApp({ Component, pageProps }) {
   React.useEffect(() => {
