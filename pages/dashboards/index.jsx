@@ -38,7 +38,12 @@ export function Layout({ loading, children }) {
 
         {
           hasRole(user, 'operateur')
-            && <MenuItem title="Taxis" href="/dashboards/taxis" />
+            && <MenuItem title="Taxis enregistrés" href="/dashboards/taxis" />
+        }
+
+        {
+          (hasRole(user, 'admin') || hasRole(user, 'moteur'))
+            && <MenuItem title="Taxis en ligne" href="/dashboards/map" />
         }
       </Menu>
       <Content loading={loading}>
