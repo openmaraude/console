@@ -107,6 +107,13 @@ export default function LoginForm() {
               Connexion
             </Button>
           </form>
+
+          <p>
+            Vous êtes un opérateur de taxis ou un applicatif client, mais
+            n'avez pas de compte pour vous connecter ? Faites la demande de
+            création en vous rendant sur
+            le <TextLink href="https://api.gouv.fr/les-api/le-taxi/demande-acces">formulaire de création de compte</TextLink>.
+          </p>
         </div>
       </Grid>
     </Grid>
