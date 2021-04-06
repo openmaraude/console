@@ -66,7 +66,7 @@ export default function LoginForm() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">Connexion à la console&nbsp;
-            <TextLink href="https://le.taxi">le.taxi</TextLink>
+            <TextLink target="_blank" href="https://le.taxi">le.taxi</TextLink>
           </Typography>
           <form method="POST" className={classes.form} onSubmit={onSubmit}>
             <TextField
@@ -112,7 +112,7 @@ export default function LoginForm() {
             Vous êtes un opérateur de taxis ou un applicatif client, mais
             n'avez pas de compte pour vous connecter ? Faites la demande de
             création en vous rendant sur
-            le <TextLink href="https://api.gouv.fr/les-api/le-taxi/demande-acces">formulaire de création de compte</TextLink>.
+            le <TextLink target="_blank" href="https://api.gouv.fr/les-api/le-taxi/demande-acces">formulaire de création de compte</TextLink>.
           </p>
         </div>
       </Grid>
