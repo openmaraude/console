@@ -11,7 +11,7 @@ import { UserContext } from '../../src/auth';
 export default function DashboardHails() {
   const userContext = React.useContext(UserContext);
   const listTaxis = (page, filters) => useSWR(
-    ['/taxis/all', userContext.user.apikey],
+    ['/taxis/all', userContext.user.apikey, page, JSON.stringify(filters)],
     (url, token) => requestList(url, page, { token, args: filters }),
   );
   const filters = (
