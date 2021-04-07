@@ -42,7 +42,7 @@ export function Layout({ loading, children }) {
         }
 
         {
-          (hasRole(user, 'admin') || hasRole(user, 'moteur'))
+          (hasRole(user, 'admin') || hasRole(user, 'operateur') || hasRole(user, 'moteur'))
             && <MenuItem title="Taxis en ligne" href="/dashboards/map" />
         }
       </Menu>
