@@ -4,7 +4,6 @@ DOCKER_PORT = 3000:80
 run: run_local
 
 run_%: build
-run_%:
 	@echo ">>> Run $* version"
 	docker run --rm -ti -p ${DOCKER_PORT} -e BUILD=$* ${DOCKER_IMAGE}
 
