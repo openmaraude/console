@@ -33,18 +33,26 @@ import {
 import 'leaflet/dist/leaflet.css';
 
 import APIErrorAlert from './APIErrorAlert';
-import { requestList } from '../src/api';
-import { UserContext } from '../src/auth';
 import { formatDate } from '../src/utils';
+import { requestList } from '../src/api';
+import SearchAddressDialog from './SearchAddressDialog';
+import { UserContext } from '../src/auth';
 
 const PARIS = [48.86, 2.35];
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   taxiIcon: {
     fontSize: '32px',
   },
   errorIcon: {
     fontSize: '127px',
+  },
+  mapButtons: {
+    marginBottom: theme.spacing(1),
+
+    '& > *': {
+      marginRight: theme.spacing(1),
+    },
   },
 }));
 
@@ -194,9 +202,11 @@ AvailableTaxis.propTypes = {
  */
 function MapWidgets() {
   const map = useMap();
+  const initialCenter = map.getCenter();
 
-  // Default: middle of Paris.
-  const [center, setCenter] = React.useState(PARIS);
+  const [center, setCenter] = React.useState(
+    [initialCenter.lat, initialCenter.lng],
+  );
 
   const onChange = () => {
     const newCenter = map.getCenter();
@@ -221,13 +231,23 @@ function MapWidgets() {
 }
 
 export default function TaxisMap() {
-  const [open, setOpen] = React.useState(false);
+  const classes = useStyles();
+  const [searchDialog, setSearchDialog] = React.useState(false);
+  const [fullscreen, setFullscreen] = React.useState(false);
 
   // We haven't changed this token for years. If you need to update the token
   // in the future, maybe you should consider setting it in process.env.
   const mapboxToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
   const mapboxTileLayer = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}';
   const [mapInstance, setMapInstance] = React.useState();
+
+  const onSearch = (address) => {
+    if (address) {
+      const [lon, lat] = address.geometry.coordinates;
+      mapInstance.flyTo([lat, lon], 15, { animate: true });
+    }
+    setSearchDialog(false);
+  };
 
   const map = (
     <>
@@ -236,7 +256,7 @@ export default function TaxisMap() {
         minZoom={5}
         maxZoom={16}
         zoom={15}
-        style={{ height: open ? '90vh' : 600, width: "100%" }}
+        style={{ height: fullscreen ? '90vh' : 600, width: "100%" }}
         attributionControl={false}
         whenCreated={setMapInstance}
       >
@@ -252,16 +272,16 @@ export default function TaxisMap() {
     </>
   );
 
-  if (open) {
+  if (fullscreen) {
     return (
       <Dialog
         fullWidth
         maxWidth="xl"
-        open={open}
-        onClose={() => setOpen(false)}
+        open={fullscreen}
+        onClose={() => setFullscreen(false)}
       >
         <DialogActions>
-          <Button onClick={() => setOpen(false)} color="primary">
+          <Button onClick={() => setFullscreen(false)} color="primary">
             Fermer
           </Button>
         </DialogActions>
@@ -272,12 +292,17 @@ export default function TaxisMap() {
 
   return (
     <div>
-      <Box display="flex" justifyContent="flex-end">
-        <Button color="primary" onClick={() => setOpen(true)}>
+      <Box className={classes.mapButtons}>
+        <Button variant="contained" color="primary" onClick={() => setSearchDialog(true)}>
+          Chercher une adresse
+        </Button>
+
+        <Button variant="contained" color="primary" onClick={() => setFullscreen(true)}>
           Afficher en grand
         </Button>
       </Box>
       {map}
+      <SearchAddressDialog open={searchDialog} onClose={onSearch} />
     </div>
   );
 }
