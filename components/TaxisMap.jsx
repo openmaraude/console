@@ -174,17 +174,38 @@ function AvailableTaxis({ map }) {
     { refreshInterval: 5000 },
   );
 
+  const statsOperators = (operators) => {
+    if (!operators) {
+      return null;
+    }
+    return (
+      <span>, dont
+        {Object.entries(operators).map(
+          ([operator, num]) => <span key={operator}>&nbsp;<strong>{num}</strong> taxis <i>{operator}</i></span>
+        )}
+      </span>
+    );
+  };
+
   return (
     <>
       {error && <APIErrorAlert error={error} />}
 
       <Box display="flex" justifyContent="flex-end" paddingRight={1}>
         {!error && !data && <p>...</p>}
-        {data?.data.map((zupc) => (
-          <p key={zupc.zupc_id}>
-            <strong>{zupc.nb_active}</strong> taxis connectés dans <strong>{zupc.nom}</strong>
-          </p>
-        ))}
+        {
+          data?.data.map((entry) => entry.type === 'ZUPC' ? (
+            <p key={entry.zupc_id}>
+              <strong>{entry.stats.total}</strong> taxis connectés dans la ZUPC <strong>{entry.name}</strong>
+              {statsOperators(entry.stats.operators)}
+            </p>
+          ) : (
+            <p key={entry.insee}>
+              <strong>{entry.stats.total}</strong> taxis connectés à <strong>{entry.name}</strong>
+              {statsOperators(entry.stats.operators)}
+            </p>
+          ))
+        }
       </Box>
     </>
   );
