@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function Layout({ loading, children }) {
+export function Layout({ children }) {
   const userContext = React.useContext(UserContext);
   const { user } = userContext;
   const classes = useStyles();
@@ -27,7 +27,7 @@ export function Layout({ loading, children }) {
     <MenuLayout className={classes.root}>
       <Menu>
         {
-          hasRole(user, 'admin')
+          (hasRole(user, 'admin') || hasRole(user, 'moteur'))
             && <MenuItem title="Courses par utilisateur" href="/dashboards/sessions" />
         }
 
@@ -46,19 +46,14 @@ export function Layout({ loading, children }) {
             && <MenuItem title="Taxis en ligne" href="/dashboards/map" />
         }
       </Menu>
-      <Content loading={loading}>
+      <Content>
         { children }
       </Content>
     </MenuLayout>
   );
 }
 
-Layout.defaultProps = {
-  loading: false,
-};
-
 Layout.propTypes = {
-  loading: PropTypes.bool,
   children: PropTypes.node.isRequired,
 };
 

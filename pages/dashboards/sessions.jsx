@@ -9,6 +9,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -188,7 +189,7 @@ export default function DashboardSession() {
   }
 
   return (
-    <Layout loading={!data}>
+    <Layout>
       <Typography variant="h4">Liste des sessions</Typography>
 
       <p>
@@ -199,34 +200,37 @@ export default function DashboardSession() {
         première demande de course comme échouée.
       </p>
 
+      {!data && <LinearProgress />}
       {error && <APIErrorAlert error={error} />}
 
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell>Date</TableCell>
-            <TableCell>Session</TableCell>
-            <TableCell>Nombre de hails</TableCell>
-            <TableCell>Dernier statut</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data?.data.map((session) => (
-            <Session key={session.session_id} session={session} />
-          ))}
+      {data && (
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell>Date</TableCell>
+              <TableCell>Session</TableCell>
+              <TableCell>Nombre de hails</TableCell>
+              <TableCell>Dernier statut</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data?.data.map((session) => (
+              <Session key={session.session_id} session={session} />
+            ))}
 
-          <TableRow>
-            <TablePagination
-              count={data?.meta.total}
-              page={page}
-              onChangePage={handleChangePage}
-              rowsPerPage={data?.meta.per_page}
-              rowsPerPageOptions={[]}
-            />
-          </TableRow>
-        </TableBody>
-      </Table>
+            <TableRow>
+              <TablePagination
+                count={data?.meta.total}
+                page={page}
+                onChangePage={handleChangePage}
+                rowsPerPage={data?.meta.per_page}
+                rowsPerPageOptions={[]}
+              />
+            </TableRow>
+          </TableBody>
+        </Table>
+      )}
     </Layout>
   );
 }
