@@ -16,8 +16,6 @@ import useSWR from 'swr';
 
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import { makeStyles } from '@material-ui/core/styles';
 
 import L from 'leaflet';
@@ -257,7 +255,6 @@ function MapWidgets() {
 export default function TaxisMap() {
   const classes = useStyles();
   const [searchDialog, setSearchDialog] = React.useState(false);
-  const [fullscreen, setFullscreen] = React.useState(false);
 
   // We haven't changed this token for years. If you need to update the token
   // in the future, maybe you should consider setting it in process.env.
@@ -273,14 +270,20 @@ export default function TaxisMap() {
     setSearchDialog(false);
   };
 
-  const map = (
-    <>
+  return (
+    <div>
+      <Box className={classes.mapButtons}>
+        <Button variant="contained" color="primary" onClick={() => setSearchDialog(true)}>
+          Chercher une adresse
+        </Button>
+      </Box>
+
       <MapContainer
         center={PARIS}
         minZoom={5}
         maxZoom={16}
         zoom={15}
-        style={{ height: fullscreen ? '90vh' : 600, width: "100%" }}
+        style={{ height: 600, width: "100%" }}
         attributionControl={false}
         whenCreated={setMapInstance}
       >
@@ -293,39 +296,6 @@ export default function TaxisMap() {
       </MapContainer>
 
       {mapInstance && <AvailableTaxis map={mapInstance} />}
-    </>
-  );
-
-  if (fullscreen) {
-    return (
-      <Dialog
-        fullWidth
-        maxWidth="xl"
-        open={fullscreen}
-        onClose={() => setFullscreen(false)}
-      >
-        <DialogActions>
-          <Button onClick={() => setFullscreen(false)} color="primary">
-            Fermer
-          </Button>
-        </DialogActions>
-        {map}
-      </Dialog>
-    );
-  }
-
-  return (
-    <div>
-      <Box className={classes.mapButtons}>
-        <Button variant="contained" color="primary" onClick={() => setSearchDialog(true)}>
-          Chercher une adresse
-        </Button>
-
-        <Button variant="contained" color="primary" onClick={() => setFullscreen(true)}>
-          Afficher en grand
-        </Button>
-      </Box>
-      {map}
       <SearchAddressDialog open={searchDialog} onClose={onSearch} />
     </div>
   );
