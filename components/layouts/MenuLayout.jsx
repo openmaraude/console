@@ -86,11 +86,12 @@ export function Content({ loading, children }) {
 }
 
 Content.defaultProps = {
+  children: null,
   loading: false,
 };
 
 Content.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   loading: PropTypes.bool,
 };
 

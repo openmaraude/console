@@ -45,6 +45,11 @@ export function Layout({ children }) {
           (hasRole(user, 'admin') || hasRole(user, 'operateur') || hasRole(user, 'moteur'))
             && <MenuItem title="Taxis en ligne" href="/dashboards/map" />
         }
+
+        {
+          (hasRole(user, 'admin'))
+            && <MenuItem title="Liste des ZUPC" href="/dashboards/zupc" />
+        }
       </Menu>
       <Content>
         { children }
@@ -53,8 +58,12 @@ export function Layout({ children }) {
   );
 }
 
+Layout.defaultProps = {
+  children: null,
+};
+
 Layout.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
 };
 
 export default function DashboardsPage() {
