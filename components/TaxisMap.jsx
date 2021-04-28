@@ -181,7 +181,9 @@ function AvailableTaxis({ map }) {
     return (
       <span>, dont
         {Object.entries(operators).map(
-          ([operator, num]) => <span key={operator}>&nbsp;<strong>{num}</strong> taxis <i>{operator}</i></span>
+          ([operator, num]) => (
+            <span key={operator}>&nbsp;<strong>{num}</strong> taxis <i>{operator}</i></span>
+          ),
         )}
       </span>
     );
@@ -194,9 +196,10 @@ function AvailableTaxis({ map }) {
       <Box display="flex" justifyContent="flex-end" paddingRight={1}>
         {!error && !data && <p>...</p>}
         {
-          data?.data.map((entry) => entry.type === 'ZUPC' ? (
+          data?.data.map((entry) => (entry.type === 'ZUPC' ? (
             <p key={entry.zupc_id}>
-              <strong>{entry.stats.total}</strong> taxis connectés dans la ZUPC <strong>{entry.name}</strong>
+              <strong>{entry.stats.total}</strong> taxis connectés
+              dans la ZUPC <strong>{entry.name}</strong>
               {statsOperators(entry.stats.operators)}
             </p>
           ) : (
@@ -204,7 +207,7 @@ function AvailableTaxis({ map }) {
               <strong>{entry.stats.total}</strong> taxis connectés à <strong>{entry.name}</strong>
               {statsOperators(entry.stats.operators)}
             </p>
-          ))
+          )))
         }
       </Box>
     </>
