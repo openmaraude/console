@@ -20,7 +20,7 @@ import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
 import APIErrorAlert from '../../components/APIErrorAlert';
 import { formatDate } from '../../src/utils';
-import HailCard from '../../components/HailCard';
+import HailCard, { HAIL_SUCCESS_STATUS } from '../../components/HailCard';
 import { Layout } from './index';
 import { UserContext } from '../../src/auth';
 import { requestList } from '../../src/api';
@@ -41,9 +41,6 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(3),
   },
 }));
-
-// Hails with these status are considered successful.
-const HAIL_SUCCESS_STATUS = ['finished', 'customer_on_board'];
 
 function Session({ session }) {
   const classes = useStyles();
