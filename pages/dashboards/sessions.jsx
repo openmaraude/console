@@ -4,9 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import useSWR from 'swr';
 
-import { fade, makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
+import { makeStyles } from '@material-ui/core/styles';
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -21,6 +19,8 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
 import APIErrorAlert from '../../components/APIErrorAlert';
+import { formatDate } from '../../src/utils';
+import HailCard from '../../components/HailCard';
 import { Layout } from './index';
 import { UserContext } from '../../src/auth';
 import { requestList } from '../../src/api';
@@ -40,92 +40,10 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(3),
   },
-  hail: {
-    marginRight: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-    width: '350px',
-  },
-  hailTitle: {
-    padding: theme.spacing(2),
-    textAlign: 'center',
-  },
-  hailSuccessTitle: {
-    backgroundColor: fade(theme.palette.success.light, 0.35),
-  },
-  hailFailureTitle: {
-    backgroundColor: fade(theme.palette.error.light, 0.35),
-  },
 }));
 
 // Hails with these status are considered successful.
 const HAIL_SUCCESS_STATUS = ['finished', 'customer_on_board'];
-
-const formatDate = (str) => {
-  const date = new Date(str);
-  return `${date.toLocaleDateString('fr')} ${date.toLocaleTimeString('fr')}`;
-};
-
-// Format longitude or latitude
-const formatLoc = (num) => num?.toFixed(5);
-
-function Hail({ hail }) {
-  const classes = useStyles();
-  const success = HAIL_SUCCESS_STATUS.indexOf(hail.status) !== -1;
-
-  return (
-    <Card className={classes.hail}>
-      <CardContent>
-        <Typography
-          className={clsx(
-            classes.hailTitle,
-            success && classes.hailSuccessTitle,
-            !success && classes.hailFailureTitle,
-          )}
-          variant="subtitle1"
-        >
-          Hail {hail.id}
-        </Typography>
-        <dl>
-          <dt>Date</dt>
-          <dd>{formatDate(hail.added_at)}</dd>
-
-          <dt>Statut</dt>
-          <dd><strong>{hail.status}</strong></dd>
-
-          <dt>Opérateur</dt>
-          <dd>{hail.operateur.commercial_name || hail.operateur.email}</dd>
-
-          <dt>Moteur</dt>
-          <dd>{hail.moteur.commercial_name || hail.moteur.email}</dd>
-
-          <dt>Taxi</dt>
-          <dd>{hail.taxi.id}</dd>
-
-          <dt>Client adresse</dt>
-          <dd>{hail.customer_address}</dd>
-
-          <dt>Client lon/lat</dt>
-          <dd>{formatLoc(hail.customer_lon)}/{formatLoc(hail.customer_lat)}</dd>
-
-          <dt>Taxi lon/lat</dt>
-          <dd>{formatLoc(hail.initial_taxi_lon)}/{formatLoc(hail.initial_taxi_lat)}</dd>
-
-          <dt>Client tél.</dt>
-          <dd>{hail.customer_phone_number}</dd>
-
-          <dt>Taxi tél.</dt>
-          <dd>{hail.taxi_phone_number}</dd>
-        </dl>
-      </CardContent>
-    </Card>
-  );
-}
-
-/* eslint-disable react/forbid-prop-types */
-Hail.propTypes = {
-  hail: PropTypes.any.isRequired,
-};
-/* eslint-enable react/forbid-prop-types */
 
 function Session({ session }) {
   const classes = useStyles();
@@ -147,7 +65,7 @@ function Session({ session }) {
             {open ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
           </IconButton>
         </TableCell>
-        <TableCell>{formatDate(session.added_at)}</TableCell>
+        <TableCell>{formatDate(new Date(session.added_at))}</TableCell>
         <TableCell>{session.session_id}</TableCell>
         <TableCell>{session.hails.length}</TableCell>
         <TableCell>{session.hails.slice(-1)?.[0].status}</TableCell>
@@ -157,7 +75,7 @@ function Session({ session }) {
         <TableCell style={{ border: 'none', paddingBottom: 0, paddingTop: 0 }} colSpan={5}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <div className={classes.hailsContainer}>
-              {session.hails.map((hail) => <Hail key={hail.id} hail={hail} />)}
+              {session.hails.map((hail) => <HailCard key={hail.id} hail={hail} />)}
             </div>
           </Collapse>
         </TableCell>

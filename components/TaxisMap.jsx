@@ -31,7 +31,7 @@ import {
 import 'leaflet/dist/leaflet.css';
 
 import APIErrorAlert from './APIErrorAlert';
-import { formatDate } from '../src/utils';
+import { formatDate, formatLoc } from '../src/utils';
 import { requestList } from '../src/api';
 import SearchAddressDialog from './SearchAddressDialog';
 import { UserContext } from '../src/auth';
@@ -127,10 +127,10 @@ function Taxis({ lon, lat }) {
               <dd>{formatDate(new Date(taxi.last_update * 1000))}</dd>
 
               <dt>Longitude</dt>
-              <dd>{taxi.position?.lon.toFixed(5)}</dd>
+              <dd>{formatLoc(taxi.position?.lon)}</dd>
 
               <dt>Latitude</dt>
-              <dd>{taxi.position?.lat.toFixed(5)}</dd>
+              <dd>{formatLoc(taxi.position?.lat)}</dd>
 
               <dt>Distance par rapport au centre du cercle</dt>
               <dd>{taxi.crowfly_distance} mètres</dd>

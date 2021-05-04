@@ -21,7 +21,7 @@ import Typography from '@material-ui/core/Typography';
 
 import APIErrorAlert from '../../components/APIErrorAlert';
 import APIListTable from '../../components/APIListTable';
-import { formatDate } from '../../src/utils';
+import { formatDate, formatLoc } from '../../src/utils';
 import { Layout } from './index';
 import { requestList, requestOne } from '../../src/api';
 import { TextLink } from '../../components/LinksRef';
@@ -710,14 +710,14 @@ export default function IntegrationSearchPage() {
       headerName: 'Longitude',
       flex: 1,
       sortable: false,
-      valueFormatter: (cell) => cell.row.position.lon.toFixed(5),
+      valueFormatter: (cell) => formatLoc(cell.row.position.lon),
     },
     {
       field: 'lat',
       headerName: 'Latitude',
       flex: 1,
       sortable: false,
-      valueFormatter: (cell) => cell.row.position.lat.toFixed(5),
+      valueFormatter: (cell) => formatLoc(cell.row.position.lat),
     },
     {
       field: 'crowfly_distance',

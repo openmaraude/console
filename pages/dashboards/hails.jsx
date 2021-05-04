@@ -1,8 +1,10 @@
 import React from 'react';
 
+import Link from 'next/link';
 import useSWR from 'swr';
 
 import APIListTable from '../../components/APIListTable';
+import { ButtonLink } from '../../components/LinksRef';
 import { Layout } from './index';
 import { requestList } from '../../src/api';
 import { TimeoutTextField } from '../../components/TimeoutForm';
@@ -67,10 +69,17 @@ export default function DashboardHails() {
       sortable: false,
     },
     {
-      field: 'status',
-      headerName: 'Statut final',
-      flex: 2,
+      field: 'details',
+      headerName: 'Détails',
+      flex: 1,
       sortable: false,
+      renderCell: (cell) => (
+        <Link href={`/dashboards/hails/${cell.row.id}`} passHref>
+          <ButtonLink variant="contained" color="primary">
+            {">>"}
+          </ButtonLink>
+        </Link>
+      ),
     },
   ];
 

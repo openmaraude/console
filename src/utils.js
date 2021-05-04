@@ -5,3 +5,8 @@ export function formatDate(date) {
   }
   return `${date.toLocaleDateString('fr')} ${date.toLocaleTimeString('fr')}`;
 }
+
+// Format longitude or latitude
+export function formatLoc(num) {
+  return num?.toFixed(5);
+}

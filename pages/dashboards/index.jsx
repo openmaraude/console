@@ -28,7 +28,7 @@ export function Layout({ children }) {
       <Menu>
         {
           (hasRole(user, 'admin') || hasRole(user, 'moteur'))
-            && <MenuItem title="Courses par utilisateur" href="/dashboards/sessions" />
+            && <MenuItem title="Sessions" href="/dashboards/sessions" />
         }
 
         {
