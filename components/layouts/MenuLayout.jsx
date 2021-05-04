@@ -63,7 +63,7 @@ export function MenuItem({ title, href }) {
   return (
     <div>
       <Link href={href} passHref>
-        <ButtonLink className={router.asPath.startsWith(href) ? classes.activeMenuItem : null}>
+        <ButtonLink className={router.asPath === href ? classes.activeMenuItem : null}>
           {title}
         </ButtonLink>
       </Link>
