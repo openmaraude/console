@@ -7,6 +7,7 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 import { dark } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 
 import { MDXProvider } from '@mdx-js/react';
+import Slugger from 'github-slugger';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -25,14 +26,26 @@ import { TextLink } from '../../components/LinksRef';
 
 const ALL_PAGES = ['introduction', 'search', 'operator', 'reference', 'examples'];
 
+const slugger = new Slugger();
+
+const Heading = ({ variant, children }) => {
+  const slug = slugger.slug(children);
+  return (
+    <Typography variant={variant} id={slug}>
+      {children}
+      <a href={'#' + slug} title="Permalink" className="headinglink">¶</a>
+    </Typography>
+  )
+};
+
 /* eslint-disable react/prop-types */
 const components = {
-  h1: ({ children }) => <Typography variant="h1">{children}</Typography>,
-  h2: ({ children }) => <Typography variant="h2">{children}</Typography>,
-  h3: ({ children }) => <Typography variant="h3">{children}</Typography>,
-  h4: ({ children }) => <Typography variant="h4">{children}</Typography>,
-  h5: ({ children }) => <Typography variant="h5">{children}</Typography>,
-  h6: ({ children }) => <Typography variant="h6">{children}</Typography>,
+  h1: ({ children }) => <Heading variant="h1">{children}</Heading>,
+  h2: ({ children }) => <Heading variant="h2">{children}</Heading>,
+  h3: ({ children }) => <Heading variant="h3">{children}</Heading>,
+  h4: ({ children }) => <Heading variant="h4">{children}</Heading>,
+  h5: ({ children }) => <Heading variant="h5">{children}</Heading>,
+  h6: ({ children }) => <Heading variant="h6">{children}</Heading>,
 
   code: ({ className, children }) => {
     const language = className.replace(/language-/, '');
