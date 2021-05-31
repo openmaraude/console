@@ -1,3 +1,15 @@
 html {
   scroll-behavior: smooth;
 }
+
+.headinglink {
+  color: #556cd6;
+  font-size: 0.8em;
+  padding: 0 4px 0 4px;
+  text-decoration: none;
+  visibility: hidden;
+}
+
+*:hover > .headinglink {
+  visibility: visible;
+}
