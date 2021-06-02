@@ -39,12 +39,11 @@ $> curl 'https://dev.api.taxi/drivers/' \
   "data": [{
     "birth_date": "2020-03-05",
     "departement": {
-      "nom": "string",
-      "numero": "string"
+      "numero": "75"
     },
-    "first_name": "string",
-    "last_name": "string",
-    "professional_licence": "string"
+    "first_name": "Jean",
+    "last_name": "Dupont",
+    "professional_licence": "123456"
   }]
 }'
 ```
@@ -70,16 +69,16 @@ $> curl 'https://dev.api.taxi/vehicles/' \
 {
   "data": [
     {
-      "color": "string",
+      "color": "bleu",
       "pet_accepted": true,
       "special_need_vehicle": true,
       "cpam_conventionne": true,
-      "licence_plate": "string",
-      "model_year": 0,
+      "licence_plate": "AA-123-BB",
+      "model_year": 2019,
       "type_": "sedan",
-      "nb_seats": 0,
-      "constructor": "string",
-      "model": "string"
+      "nb_seats": 3,
+      "constructor": "Toyota",
+      "model": "Verso"
     }
   ]
 }'
@@ -100,11 +99,11 @@ $> curl 'https://dev.api.taxi/ads/' \
 {
   "data": [
     {
-      "category": "string",
-      "vehicle_id": 0,
-      "insee": "string",
-      "numero": "string",
-      "owner_name": "string",
+      "category": "cessible",
+      "vehicle_id": 1234,
+      "insee": "75056",
+      "numero": "1234",
+      "owner_name": "Taxis Verts",
       "owner_type": "company",
       "doublage": true
     }
@@ -115,7 +114,7 @@ $> curl 'https://dev.api.taxi/ads/' \
 Paramètres :
 
 * *category* : catégorie de l'ADS (perpétuité, cessible, incessible, annuelle).
-* *insee* : code insee de la commune de l'ADS. Vous pouvez trouver ce code sur le site de l'INSEE.
+* *insee* : code INSEE de la commune de l'ADS. Vous pouvez trouver ce code sur le site de l'INSEE.
 * *numero* : numéro de l'ADS.
 * *owner_name* : nom du propriétaire de l'ADS. S'il s'agit d'une entreprise, le nom de l'entreprise.
 * *owner_type* : individual s'il s'agit d'une autorisation donnée à une personne, company s'il s'agit d'une autorisation donnée à une entreprise.
@@ -139,15 +138,15 @@ $> curl 'https://dev.api.taxi/taxis/' \
   "data": [
     {
       "ads": {
-        "insee": "string",
-        "numero": "string"
+        "insee": "75056",
+        "numero": "1234"
       },
       "driver": {
-        "departement": "string",
-        "professional_licence": "string"
+        "departement": "75",
+        "professional_licence": "123456"
       },
       "vehicle": {
-        "licence_plate": "string"
+        "licence_plate": "AA-123-BB"
       }
     }
   ]
@@ -155,6 +154,8 @@ $> curl 'https://dev.api.taxi/taxis/' \
 ```
 
 L'identifiant retourné doit être conservé afin de mettre à jour la position et le statut du taxi.
+
+Cet identifiant est nommé `taxi_id` dans le reste de la documentation.
 
 #### Géolocalisation
 
