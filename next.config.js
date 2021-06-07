@@ -1,3 +1,5 @@
+const { withSentryConfig } = require('@sentry/nextjs');
+
 function readEnv(key, defaultValue) {
   const value = process.env[key];
 
@@ -41,3 +43,5 @@ module.exports = withMDX({
 
   pageExtensions: ['js', 'jsx', 'md', 'mdx'],
 });
+
+module.exports = withSentryConfig(module.exports, {silent: true});
