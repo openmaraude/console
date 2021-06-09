@@ -1,19 +1,22 @@
 DOCKER_IMAGE = openmaraude/console
 DOCKER_PORT = 3000:80
 
+graphs:
+	make -C public/images/doc
+
 run: run_local
 
 run_%: build
 	@echo ">>> Run $* version"
 	docker run --rm -ti -p ${DOCKER_PORT} -e BUILD=$* ${DOCKER_IMAGE}
 
-build:
+build: graphs
 	docker build -t ${DOCKER_IMAGE} .
 
 shell: build
 	docker run --rm -ti -p ${DOCKER_PORT} ${DOCKER_IMAGE} bash
 
-release:
+release: graphs
 	docker build -t ${DOCKER_IMAGE}:latest .
 	docker push ${DOCKER_IMAGE}:latest
 
