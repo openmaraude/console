@@ -1,0 +1,62 @@
+digraph {
+    rankdir=TB;
+    splines=ortho;
+    nodesep=0.5;
+    node [shape=box,fontname=sans,fontsize=10,colorscheme=paired10];
+    edge [fontname=sans,fontsize=10,colorscheme=paired10];
+    node [color=4,style="rounded,filled",fillcolor=3];
+    received;
+    sent_to_operator;
+    received_by_operator;
+    received_by_taxi;
+    accepted_by_taxi;
+    accepted_by_customer;
+    customer_on_board;
+    finished;
+    node [color=6,fillcolor=5];
+    failure;
+    declined_by_taxi;
+    incident_taxi;
+    timeout_taxi;
+    incident_customer;
+    declined_by_customer;
+    timeout_customer;
+    timeout_accepted_by_customer;
+
+    edge [style=bold]; // server update
+    received -> sent_to_operator [weight=8];
+    sent_to_operator -> received_by_operator [weight=8];
+    sent_to_operator -> failure;
+
+    edge [color=4]; // operator updates
+    received_by_operator -> received_by_taxi [weight=8];
+    received_by_taxi -> accepted_by_taxi [weight=8];
+    received_by_taxi -> declined_by_taxi;
+    received_by_taxi -> incident_taxi;
+    accepted_by_taxi -> incident_taxi;
+    accepted_by_customer -> incident_taxi;
+
+    edge [color=8]; // timeouts
+    received_by_operator -> failure [xlabel="10 s"];
+    received_by_taxi -> timeout_taxi [xlabel="30 s"];
+    accepted_by_taxi -> timeout_customer [xlabel="20 s"];
+    accepted_by_customer -> timeout_accepted_by_customer [xlabel="1 800 s"];
+
+    edge [color=10]; // search engine updates
+    accepted_by_taxi -> accepted_by_customer [weight=8];
+    received_by_taxi -> incident_customer;
+    accepted_by_taxi -> incident_customer;
+    accepted_by_taxi -> declined_by_customer;
+    accepted_by_customer -> incident_customer;
+
+    edge [color=9]; // after taxi status update
+    accepted_by_customer -> customer_on_board [weight=8];
+    customer_on_board -> finished [weight=8];
+
+    { rank = same; sent_to_operator; failure; }
+    { rank = same; received_by_taxi; incident_taxi; }
+    { rank = same; received_by_taxi; timeout_taxi; }
+    { rank = same; received_by_taxi; declined_by_taxi; }
+    { rank = same; accepted_by_taxi; incident_customer; }
+    { rank = same; customer_on_board; timeout_accepted_by_customer; }
+}
