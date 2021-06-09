@@ -263,7 +263,7 @@ Une fois que la course a le statut *received_by_taxi*, trois mises à jour sont 
 * *declined_by_taxi* : le chauffeur ne peut pas prendre la course, il décline.
 * *incident_taxi* : le chauffeur a un empêchement (accident, trafic…). Il peut annuler la course même après l'avoir acceptée, ou que le client l'ait acceptée.
 
-Dans le cas où aucune mise à jour n'est effectuée en 30 secondes, la course passe au statut *timeout_taxi*.
+Dans le cas où aucune mise à jour n'est effectuée en 30 secondes, la course passe au statut *timeout_taxi*, et le taxi passe au statut *off* et n'est plus visible.
 
 L'endpoint *PUT /hails/:hail_id* permet de mettre à jour le statut d'une course.
 
@@ -304,6 +304,18 @@ $> curl 'https://dev.api.taxi/hails/:hail_id/' \
   ]
 }'
 ```
+
+###### Cas particuliers après expiration du délai de réponse
+
+Dans le cas où le chauffeur ou le client ne confirment pas avant expiration du délai, le statut de la course est automatiquement changé, mais aussi le statut du taxi.
+
+Par exemple si le chauffeur ne répond pas à une demande de course (received_by_taxi) après 30 secondes, le taxi est passé en `off` et devient invisible pour éviter de dégrader le service.
+
+Si le client ne confirme pas dans les délais après acceptation de la course par le chauffeur, le taxi est à nouveau disponible pour un autre client.
+
+Il importe donc de vérifier que le statut du taxi corresponde à l'état de l'application, et que le chauffeur ne reste pas invisible à son insu, par exemple avec une notification pour lui signaler de revenir en ligne s'il est disponible.
+
+Un `GET /taxis/{taxi_id}` permet de récupérer le statut de référence.
 
 ##### Déroulé de la course
 
