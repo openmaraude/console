@@ -35,12 +35,14 @@ digraph {
     received_by_taxi -> incident_taxi;
     accepted_by_taxi -> incident_taxi;
     accepted_by_customer -> incident_taxi;
+    customer_on_board -> incident_taxi;
 
     edge [color=8]; // timeouts
     received_by_operator -> failure [xlabel="10 s"];
     received_by_taxi -> timeout_taxi [xlabel="30 s"];
-    accepted_by_taxi -> timeout_customer [xlabel="20 s"];
+    accepted_by_taxi -> timeout_customer [xlabel="30 s"];
     accepted_by_customer -> timeout_accepted_by_customer [xlabel="1 800 s"];
+    customer_on_board -> timeout_taxi [xlabel="7200 s"];
 
     edge [color=10]; // search engine updates
     accepted_by_taxi -> accepted_by_customer [weight=8];
@@ -48,6 +50,7 @@ digraph {
     accepted_by_taxi -> incident_customer;
     accepted_by_taxi -> declined_by_customer;
     accepted_by_customer -> incident_customer;
+    customer_on_board -> incident_customer;
 
     edge [color=9]; // after taxi status update
     accepted_by_customer -> customer_on_board [weight=8];
