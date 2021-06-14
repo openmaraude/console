@@ -17,11 +17,6 @@ workflows:
   version: 2
 
   # Build artifacts, only run for tags.
-  artifacts:
+  test:
     jobs:
-      - build:
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /.*/
+      - build
