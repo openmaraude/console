@@ -9,16 +9,16 @@ jobs:
       - setup_remote_docker:
           version: 20.10.2
       - run:
-          name: Build docker image
+          name: Install build dependencies
           command: |
-            docker build -t openmaraude/console:${CIRCLE_TAG} .
-            docker tag openmaraude/console:${CIRCLE_TAG} openmaraude/console:latest
+            sudo apt -qq update
+            sudo apt install graphviz
       - run:
-          name: Publish docker Image to hub.docker.com
+          name: Build and publish docker Image to hub.docker.com
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker push openmaraude/console:${CIRCLE_TAG}
-            docker push openmaraude/console:latest
+            RELEASE=${CIRCLE_TAG} make release
+            RELEASE=latest make release
 
 workflows:
   version: 2
