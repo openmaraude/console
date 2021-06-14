@@ -9,16 +9,9 @@ jobs:
       - setup_remote_docker:
           version: 20.10.2
       - run:
-          name: Install build dependencies
+          name: test
           command: |
-            sudo apt -qq update
-            sudo apt install graphviz
-      - run:
-          name: Build and publish docker Image to hub.docker.com
-          command: |
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            RELEASE=${CIRCLE_TAG} make release
-            RELEASE=latest make release
+            /app/node_modules/@sentry/cli/sentry-cli projects -o openmaraude list
 
 workflows:
   version: 2
