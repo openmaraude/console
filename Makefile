@@ -12,7 +12,13 @@ graphs:
 	make -C public/images/doc
 
 build: graphs
-	docker build -t ${DOCKER_IMAGE} .
+ifndef SENTRY_AUTH_TOKEN
+	@echo "	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" >&2
+	@echo "	! Please set the environment variable SENTRY_AUTH_TOKEN !" >&2
+	@echo "	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" >&2
+	@exit 1
+endif
+	docker build --build-arg SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN} -t ${DOCKER_IMAGE} .
 
 shell: build
 	docker run --rm -ti -p ${DOCKER_PORT} ${DOCKER_IMAGE} bash

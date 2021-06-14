@@ -1,5 +1,9 @@
 FROM node AS builder
 
+# Image must be built with --build-arg=<sentry token> to inform sentry of the
+# new release.
+ARG SENTRY_AUTH_TOKEN
+
 RUN mkdir /app
 WORKDIR /app
 
