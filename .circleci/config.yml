@@ -9,15 +9,29 @@ jobs:
       - setup_remote_docker:
           version: 20.10.2
       - run:
-          name: test
+          name: Install build dependencies
           command: |
-            npm install
-            /app/node_modules/@sentry/cli/sentry-cli projects -o openmaraude list
+            sudo apt -qq update
+            sudo apt install graphviz
+      - run:
+          name: Build and publish docker Image to hub.docker.com
+          command: |
+            echo token: ${SENTRY_AUTH_TOKEN}
 
 workflows:
   version: 2
 
-  # Build artifacts, only run for tags.
+  # Run unittest
   test:
     jobs:
       - build
+
+  # Build artifacts, only run for tags.
+  artifacts:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /.*/
