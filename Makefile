@@ -23,8 +23,7 @@ endif
 shell: build
 	docker run --rm -ti -p ${DOCKER_PORT} ${DOCKER_IMAGE} bash
 
-release: graphs
-	docker build -t ${DOCKER_IMAGE}:${RELEASE} .
+release: graphs build
 	docker push ${DOCKER_IMAGE}:${RELEASE}
 
 tag:
