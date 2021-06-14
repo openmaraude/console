@@ -11,6 +11,7 @@ jobs:
       - run:
           name: test
           command: |
+            npm install
             /app/node_modules/@sentry/cli/sentry-cli projects -o openmaraude list
 
 workflows:
