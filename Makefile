@@ -18,7 +18,7 @@ ifndef SENTRY_AUTH_TOKEN
 	@echo "	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" >&2
 	@exit 1
 endif
-	docker build --build-arg SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN} -t ${DOCKER_IMAGE} .
+	docker build --build-arg SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN} -t ${DOCKER_IMAGE}:${RELEASE} .
 
 shell: build
 	docker run --rm -ti -p ${DOCKER_PORT} ${DOCKER_IMAGE}:${RELEASE} bash
