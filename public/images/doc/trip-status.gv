@@ -1,6 +1,5 @@
 digraph {
     rankdir=TB;
-    splines=ortho;
     nodesep=0.5;
     node [shape=box,fontname=sans,fontsize=10,colorscheme=paired10];
     edge [fontname=sans,fontsize=10,colorscheme=paired10];
@@ -56,10 +55,8 @@ digraph {
     accepted_by_customer -> customer_on_board [weight=8];
     customer_on_board -> finished [weight=8];
 
+    // Trick to make the graph narrower
     { rank = same; sent_to_operator; failure; }
     { rank = same; received_by_taxi; incident_taxi; }
-    { rank = same; received_by_taxi; timeout_taxi; }
-    { rank = same; received_by_taxi; declined_by_taxi; }
     { rank = same; accepted_by_taxi; incident_customer; }
-    { rank = same; customer_on_board; timeout_accepted_by_customer; }
 }
