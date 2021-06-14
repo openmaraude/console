@@ -21,7 +21,7 @@ endif
 	docker build --build-arg SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN} -t ${DOCKER_IMAGE} .
 
 shell: build
-	docker run --rm -ti -p ${DOCKER_PORT} ${DOCKER_IMAGE} bash
+	docker run --rm -ti -p ${DOCKER_PORT} ${DOCKER_IMAGE}:${RELEASE} bash
 
 release: graphs build
 	docker push ${DOCKER_IMAGE}:${RELEASE}
