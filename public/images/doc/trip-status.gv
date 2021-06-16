@@ -1,7 +1,7 @@
 digraph {
     rankdir=TB;
     nodesep=0.5;
-    ranksep=0.7;
+    ranksep=0.6;
     node [shape=box,fontname=sans,fontsize=10,colorscheme=paired10];
     edge [fontname=sans,fontsize=10,colorscheme=paired10];
     node [color=4,style="rounded,filled",fillcolor=3];

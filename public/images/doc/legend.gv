@@ -1,6 +1,7 @@
 digraph {
     rankdir=LR;
     nodesep=0;
+    ranksep=0;
     node [shape=box,style="rounded,filled",fontname=sans,fontsize=10,colorscheme=paired10];
     edge [fontname=sans,fontsize=10,colorscheme=paired10];
     subgraph cluster {
