@@ -9,7 +9,7 @@ digraph {
         error [color=6,fillcolor=5,label="erreur"];
         expected -> error [style=invis];
         node [style=invis];
-        a -> b [style=bold,label="Mise à jour par le serveur"];
+        a -> b [style=bold,label="Mise à jour par le.taxi"];
         c -> d [color=8,label="Mise à jour suite à un timeout"];
         e -> f [color=4,label="Mise à jour par l'opérateur"];
         g -> h [color=10,label="Mise à jour par le moteur de recherche"];
