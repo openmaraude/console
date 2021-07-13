@@ -1,0 +1,543 @@
+import InfoBox from '../../../components/InfoBox';
+
+### Créer une application client
+
+En suivant ce tutoriel pas à pas, vous allez créer une application client permettant de mettre en relation vos utilisateurs avec l'API le.taxi.
+
+<InfoBox title="Prérequis">
+  <ul>
+    <li>Avoir un compte sur la plateforme de développement <a href="https://dev.api.taxi">dev.api.taxi</a></li>
+    <li>Une version récente de npm doit être installée.</li>
+  </ul>
+</InfoBox>
+
+L'application sera développée en Node.js en utilisant le framework [express](https://expressjs.com/). Le code est intégralement disponible sur [github](https://github.com/openmaraude/tutorials/tree/master/simple-client-app).
+
+Nous vous recommandons de suivre ce tutoriel et ce même dans le cas où vous souhaitez développer votre application dans un langage différent, car il vous permettra de comprendre un cas d'utilisation simple de l'API le.taxi.
+
+#### Initialisation
+
+Les commandes suivantes permettent d'initialiser un projet vierge.
+
+```shell
+$> mkdir simple-client-app
+$> cd simple-client-app
+$> npx express-generator --git
+$> npm install
+$> npx nodemon
+```
+* `npx express-generator --git` permet de créer le squelette de l'application.
+* `npm install` installe les dépendances du fichier package.json.
+* `npx nodemon` permet de démarrer le serveur web sur le poort 3000, et redémarre l'application en cas de changement d'un fichier source. Il est possible d'écouter les connexions sur un port alternatif avec `PORT=3001 npx nodemon`.
+
+Rendez-vous sur [http://localhost:3000](http://localhost:3000) afin de voir la page d'accueil par défaut.
+
+<CenteredImage src="/images/doc/tutorials/create_client_app/express_homepage.png" alt="Page d'accueil express.js" />
+
+
+#### Page pour demander les informations du client
+
+Une application de mobilité en conditions réelles dispose d'informations concernant son utilisateur: identifiant unique, géolocalisation, numéro de téléphone, adresse.
+
+<InfoBox title="Obtenir l'adresse d'une géolocalisation">
+  Il est possible de récupérer une adresse correspondant à une longitude et à une latitude grâce à une API de reverse geocoding, par exemple celle de <a href="https://developers.google.com/maps/documentation/geocoding/overview#ReverseGeocoding">Google</a> ou celle de <a href="https://docs.mapbox.com/api/search/geocoding/#reverse-geocoding">mapbox</a>.
+</InfoBox>
+
+La première page de ce tutoriel consiste à présenter un formulaire pour rentrer **manuellement** ces informations.
+
+Éditez le fichier `routes/index.js` pour changer l'appel à `router.get` existant, et le remplacer par :
+
+```javascript
+router.get('/', function(req, res, next) {
+  res.render('index');
+});
+```
+
+Remplacez ensuite le contenu du fichier `views/index.jade` par le formulaire suivant:
+
+```jade
+extends layout
+
+block content
+  h1 Renseignez les informations du client
+
+  form(action='/search_taxis')
+    div.formfield
+      label(for='customer_id') Customer id
+      input(id='customer_id', name='customer_id', type='text', placeholder='Id client', value="#{parseInt(Math.random() * 1000000)}" required)
+
+    div.formfield
+      label(for='phone_number') Numéro de téléphone du client
+      input(id='phone_number', name='phone_number', type='text', placeholder='Numéro de téléphone' required)
+
+    div.formfield
+      label(for='address') Adresse du client
+      input(id='address', name='address', type='text', placeholder='Adresse', required)
+
+    div.formfield
+      label(for='lon') Longitude du client
+      input(id='lon', name='lon', type='number', placeholder='Longitude', step=".0000001" required)
+
+    div.formfield
+      label(for='lat') Latitude du client
+      input(id='lat', name='lat', type='number', placeholder='Latitude', step=".0000001" required)
+
+    div.formfield
+      input(type='submit', value='OK')
+```
+
+Pour améliorer le style par défaut de ce formulaire et des pages à venir, ajoutez à la fin du fichier `public/stylesheets/style.css` les styles suivants :
+
+```css
+.error {
+  background-color: rgba(255, 0, 0, .3);
+  padding: 20px;
+  margin-top: 30px;
+}
+
+table, th, td {
+  border-collapse: collapse;
+  border: 1px solid black;
+  padding: 10px;
+  margin-top: 30px;
+}
+
+.formfield {
+  margin-top: 20px;
+}
+
+.formfield label {
+  color: #222;
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.formfield input {
+  display: block;
+}
+```
+
+Vous pouvez rafraichir votre navigateur pour voir le formulaire apparaitre.
+
+<CenteredImage src="/images/doc/tutorials/create_client_app/customer_info.png" alt="Formulaire d'informations client" />
+
+
+#### Lister les taxis disponibles
+
+Validez le formulaire de l'étape précédente avec les valeurs d'exemple suivantes :
+
+* **Customer id** : laissez la valeur générée aléatoirement. L'API le.taxi nécessite de fournir un identifiant client stable afin de pouvoir bannir les clients qui abusent du service. Référez vous aux guides thématiques pour plus d'informations.
+* **Numéro de téléphone** : 0607080910
+* **Longitude** 2.35 et **latitude** 48.86 : il s'agit d'un point pris au hasard dans le centre de Paris.
+* **Adresse du client** : 25 Rue Quincampoix, 75004 Paris : cette adresse a été récupérée à partir d'un outil de reverse geocoding disponible [en ligne](https://www.latlong.net/Show-Latitude-Longitude.html).
+
+La validation du formulaire renvoie vers une page d'erreur 404.  Nous devons maintenant créer une nouvelle page pour en effectuer le traitement.
+
+##### Récupérer la clé d'API
+
+Rendez-vous sur la section [Mon Compte](https://console.dev.api.taxi/account) de la console de développement accessible sur https://dev.api.taxi et prenez note de votre clé d'API.
+
+<InfoBox title="Note de sécurité" type="warning">
+Votre clé d'API doit rester secrète. Dans la suite de ce tutoriel, elle sera stockée dans l'environnement. Comme tout autre mot de passe, il est vivement recommandé de ne jamais stocker votre clé directement dans un fichier source.
+
+Si vous avez besoin de changer votre clé d'API, contactez notre équipe sur equipe@le.taxi.
+</InfoBox>
+
+Arrêtez le serveur node.js, et relancez le avec la commande `API_KEY=<votre clé API> npx nodemon`.
+
+##### Installation des dépendances
+
+Nous utiliserons dans l'étape suivante le module [`axios`](https://www.npmjs.com/package/axios) pour effectuer des requêtes sur l'API le.taxi.
+
+Installez `axios` avec la commande suivante, avant de relancer le serveur :
+
+```shell
+$> npm install axios
+$> API_KEY=<votre clé API> npx nodemon
+```
+
+##### Création de la page pour lister les taxis
+
+Créez le fichier `views/search_taxis.jade` avec le contenu suivant :
+
+```html
+extends layout
+
+block content
+  h1 Taxis autour du client #{client.customer_id} (lon=#{client.lon} lat=#{client.lat})
+  a(href='/') Retour vers la page d'accueil
+
+  if error
+    div.error
+      p L'API le.taxi a répondu l'erreur suivante :
+      code #{JSON.stringify(error)}
+
+  if taxis
+    table
+      tr
+        th Taxi id
+        th Opérateur
+        th Plaque d'immat.
+        th Longitude
+        th Latitude
+        th Distance
+        th Action
+
+      for taxi in taxis
+        tr
+          td #{taxi.id}
+          td #{taxi.operator}
+          td #{taxi.vehicle.licence_plate}
+          td #{taxi.position.lon.toFixed(5)}
+          td #{taxi.position.lat.toFixed(5)}
+          td #{taxi.crowfly_distance} mètres
+          td
+            form(action='/order', method="post")
+              input(name='taxi_id', type='hidden', value="#{taxi.id}")
+              input(name='operator', type='hidden', value="#{taxi.operator}")
+              input(name='client', type='hidden', value="#{JSON.stringify(client)}")
+              input(type="submit", value="Commander")
+```
+
+Ce template présente un tableau avec les taxis disponibles passés en paramètre. Il est désormais nécessaire de faire la route qui va appeler l'API le.taxi pour récupérer cette liste.
+
+Ajoutez en haut du fichier `index/routes.js` l'import à axios :
+
+```javascript
+var axios = require('axios');
+```
+
+Puis ajoutez la route à la fin du fichier :
+
+```javascript
+router.get('/search_taxis', function(req, res, next) {
+  axios(`https://dev.api.taxi/taxis?lon=${req.query.lon}&lat=${req.query.lat}`, {
+    headers: {
+      'X-Api-Key': process.env.API_KEY,
+    },
+  }).then(({ data }) => {
+    res.render('search_taxis', {
+      taxis: data.data,
+      client: {
+        ...req.query
+      },
+    });
+  }).catch(({ response }) => {
+    res.render('search_taxis', {
+      error: response.data,
+      client: {
+        ...req.query,
+      },
+    });
+  });
+});
+```
+
+Explications :
+
+* Les informations du formulaire précédent sont disponible dans l'objet `req.query`.
+* L'API le.taxi expose un endpoint `https://dev.api.taxi/taxis?lon=x&lat=y` qui retourne la liste des taxis disponibles.
+* L'appel nécessite de fournir le token d'API dans le header HTTP `X-Api-Key`.
+* Le template `search_taxis.jade` retourné peut lister les taxis via la variable `taxis` (ou `error` en cas d'erreur de l'API).
+
+Rafraichissez la page : vous devriez obtenir un tableau vide, car aucun taxi n'est actuellement disponible.
+
+<CenteredImage src="/images/doc/tutorials/create_client_app/taxis_list_empty.png" alt="Liste de taxis vide" />
+
+L'environnement de développement étant partagé entre plusieurs clients, il est possible que vous ayez un tableau présentant quelques taxis.
+
+
+##### Créer ou choisir un taxi existant de test
+
+Rendez-vous sur le menu **Intégration**, sous-menu **Simuler une application opérateur** de la console [dev.api.taxi](https://dev.api.taxi).
+
+<CenteredImage src="/images/doc/tutorials/create_client_app/integration_taxis_list.png" alt="Liste de taxis" />
+
+Cette section de la console permet de simuler le fonctionnement d'un opérateur de taxi. Vous pouvez déplacer un taxi, accepter une course ou même l'annuler. En bref, vous pouvez effectuer les actions qui vous permettent de simplement tester votre application de mobilité.
+
+Vous pouvez **créer un nouveau taxi** si vous le souhaitez, ou réutiliser un taxi existant en cliquant sur les flèches de la colonne **Actions**.
+
+Les taxis listés sont tous enregistrés par l'opérateur **neotaxi**. Il s'agit d'un opérateur de taxi fictif qui ne contient que des taxis de test.
+
+
+##### Mettre la position du taxi à jour
+
+Rendez-vous en bas de page pour afficher les détails du taxi. Changez le statut du taxi à **free**, et cliquez sur **mettre à jour** pour envoyer la position du taxi à l'API.
+
+<CenteredImage src="/images/doc/tutorials/create_client_app/integration_taxi_details.png" alt="Détails du taxi" />
+
+Un taxi est considéré comme libre par l'API si son statut est free **et** si une mise à jour de sa géolocalisation a été envoyée il y a moins de **deux minutes**.
+
+##### Lister le taxi de test disponible
+
+Retournez sur le tutoriel, et rafraichissez la page. Le taxi est désormais présent dans la liste.
+
+<CenteredImage src="/images/doc/tutorials/create_client_app/taxi_list_free.png" alt="Liste de taxis avec un taxi disponible" />
+
+Après deux minutes, le taxi ne figurera plus dans la liste en cas de rafraichissement de la page. Il sera alors nécessaire d'envoyer de nouveau sa position comme fait dans la section précédente.
+
+
+#### Commander le taxi
+
+Nous allons implémenter la commande du taxi en deux étapes :
+
+* Premièrement, nous allons faire une requête à l'API le.taxi pour demander la course. En cas d'erreur, nous affichons simplement l'erreur telle que retournée par l'API.
+* Si la demande est fructueuse, nous effectuons une redirection vers une autre page qui affiche les détails de la course et permet son statut.
+
+##### Page d'erreur
+
+Créez la page `views/order.jade` avec le contenu suivant :
+
+```jade
+extends layout
+
+block content
+  h1 Commander le taxi #{taxi_id}
+  a(href='/') Retour vers la page d'accueil
+
+  if error
+    div.error
+      p L'API le.taxi a répondu l'erreur suivante :
+      code #{JSON.stringify(error)}
+```
+
+Ajoutez ensuite la route suivante dans le fichier `routes/index.js` :
+
+```javascript
+router.post('/order', function(req, res, next) {
+  const taxiId = req.body.taxi_id;
+  const operator = req.body.operator;
+  const client = JSON.parse(req.body.client);
+
+  axios(`https://dev.api.taxi/hails`, {
+    method: 'post',
+    headers: {
+      'X-Api-Key': process.env.API_KEY,
+      'Content-Type': 'application/json',
+    },
+    data: {
+      data: [{
+        customer_address: client.address,
+        customer_id: client.customer_id,
+        customer_lon: client.lon,
+        customer_lat: client.lat,
+        customer_phone_number: client.phone_number,
+        taxi_id: taxiId,
+        operateur: req.body.operator,
+      }],
+    },
+  }).then(({ data }) => {
+    const hailId = data.data[0].id;
+    res.redirect(`/hail_info?id=${hailId}`);
+  }).catch(({ response }) => {
+    res.render('order', {
+      error: response.data,
+      taxiId,
+      operator,
+      client,
+    });
+  });
+});
+```
+
+Explications de cette route :
+
+* Les données relative à la demande de course (localisation du client, numéro de téléphone, identifiant et opérateur du taxi) ont été fournies par la page précédente et sont disponibles dans `req.body`.
+* Une requête `POST` est envoyée à `https://dev.api.taxi/hails` pour effectuer la demande de course.
+* Cette requête retourne un objet JSON, qui contient une clé `data`, qui est une liste contenant un objet détaillant les informations de la course.
+* En cas de succès, le client est redirigé vers la page `hail_info?id=<identifiant de la course>` que nous allons créer dans la section suivante.
+* En cas d'erreur, le template créé précédemment est affiché.
+
+En passant le statut du taxi à `occupied` depuis le menu **simuler une application opérateur** de la console de développement, on voit que l'erreur est correctement affichée.
+
+<CenteredImage src="/images/doc/tutorials/create_client_app/taxi_order_error.png" alt="Erreur durant la commande d'un taxi" />
+
+
+##### Page de détails de la course
+
+
+Créez le fichier `views/hail_info.jade` avec le contenu suivant :
+
+```jade
+extends layout
+
+block content
+  h1 Détails du hail #{hailId}
+  a(href='/') Retour vers la page d'accueil
+
+  if error
+    div.error
+      p L'API le.taxi a répondu l'erreur suivante :
+      code #{JSON.stringify(error)}
+
+  if hail
+    table
+      tr
+        th Id
+        td= hail.id
+
+      tr
+        th status
+        td= hail.status
+
+      tr
+        th Date du dernier changement de statut
+        td= hail.last_status_change
+
+      tr
+        th Longitude du taxi
+        td= hail.taxi.position.lon
+
+      tr
+        th Latitude du taxi
+        td= hail.taxi.position.lat
+
+      tr
+        th Numéro de téléphone du taxi
+        td= hail.taxi_phone_number
+```
+
+Ce template affiche dans un tableau la course donnée en paramètre.
+
+Il est maintenant nécessaire de créer la route pour appeler l'API le.taxi et récupérer les informations de la course. Ajoutez à la fin du fichier `routes/index.js` le contenu suivant :
+
+```javascript
+router.get('/hail_info', function(req, res, next) {
+  axios(`https://dev.api.taxi/hails/${req.query.id}`, {
+    headers: {
+      'X-Api-Key': process.env.API_KEY,
+    },
+  }).then(({ data }) => {
+    res.render('hail_info', {hail: data.data[0]});
+  }).catch(({response }) => {
+    res.render('hail_info', { error: response.data });
+  });
+});
+```
+
+Cette route appelle l'endpoint d'API `https://dev.api.taxi/hails/<identifiant de la course>`. L'identifiant de la course correspond au champ `id` retourné lors de la demande.
+
+La réponse de l'API est un objet contenant un champ `data`, qui est une liste contenant un unique objet décrivant la course.
+
+Effectuez une demande de course en prenant soit de mettre le statut du taxi à `free` depuis la console de développement, et d'envoyer la géolocalisation du taxi.
+
+<CenteredImage src="/images/doc/tutorials/create_client_app/hail_received_by_operator.png" alt="Course reçue par l'opérateur" />
+
+Après la demande, la course a le statut `received_by_operator`. Cela signifie que le.taxi a envoyé la demande à l'opérateur du taxi.
+
+Si vous rafraichissez rapidement la page, vous verrez que le statut passe à `received_by_taxi` : la demande de course a été envoyée au taxi, mais celui-ci ne l'a pas prise en compte.
+
+Les taxis appartenant à l'opérateur `neotaxi` acceptent automatiquement les demandes de course. Rafraichissez de nouveau la page pour voir le statut de la course passer à `accepted_by_taxi`.
+
+<CenteredImage src="/images/doc/tutorials/create_client_app/hail_accepted_by_taxi.png" alt="Course acceptée par le taxi" />
+
+Vous remarquerez que le numéro de téléphone du taxi devient disponible dès lors que celui-ci a accepté la demande de course. Ainsi, en cas de besoin, le client peut prendre directement contact avec le chauffeur pour organiser la rencontr pour organiser la rencontre.
+
+Attendez environ trente secondes et rafraichissez de nouveau la page. Le statut de la course est passé en `timeout_customer`.
+
+<CenteredImage src="/images/doc/tutorials/create_client_app/hail_timeout_customer.png" alt="Course temps expiré sans réponse du client" />
+
+Une fois que le taxi a accepté la course et que son statut est `accepted_by_taxi`, il est nécessaire que l'application de mobilité effectue une requête pour confirmer la demande de la course.
+
+En conditions réelles, cette requête permet de s'assurer que le client est bien toujours intéressé par la course. Ce fonctionnement nous permet de diminuer le nombre de *no show*, c'est à dire une course demandée par un client, vers lequel le taxi se déplace, mais où le client n'est plus présent.
+
+
+##### Changer le statut de la course
+
+Lorsque la course a le statut `accepted_by_taxi`, le client peut mettre le statut de la course à l'une des valeurs suivantes :
+
+* `accepted_by_customer` pour indiquer que le client confirme la demande, et que le taxi peut se mettre en route pour venir le chercher.
+* `declined_by_customer` pour indiquer que le client souhaite annuler sa demande.
+* `incident_customer` pour signaler un problème.
+
+Lorsqu'une course en cours a un statut autre, par exemple `received_by_operator` ou `customer_on_board`, le client peut à tout moment déclarer un incident en mettant la course à `incident_customer` afin de forcer la fin de celle-ci. Bien qu'il soit préférable qu'un client qui demande une course et confirme celle-ci attende le taxi qui est en route pour le chercher, nous laissons la possibilité d'annuler la course afin de prévenir le taxi le plus rapidement possible que le client ne souhaite plus effectuer la course.
+
+Ajoutez le code suivant à la fin du fichier de template `views/hail_info.jade`, sous code pour afficher le tableau :
+
+```jade
+    if hail.status === 'accepted_by_taxi'
+      form(action=`/hail_info?id=${hail.id}`, method='post')
+        div.formfield
+          label(for='status') Mettre le statut de la course à la valeur suivante :
+          select(id='status' name='status')
+            option(value='accepted_by_customer') accepted_by_customer
+            option(value='declined_by_customer') declined_by_customer
+            option(value='incident_customer') incident_customer
+
+        div.formfield
+          input(type='submit', value='Mettre le statut à jour')
+
+    else if ['received_by_operator', 'received_by_taxi', 'accepted_by_customer', 'customer_on_board'].indexOf(hail.status) > -1
+      form(action=`/hail_info?id=${hail.id}`, method='post')
+        div.formfield
+          label(for='status') Mettre le statut de la course à la valeur suivante :
+          select(id='status' name='status')
+            option(value='incident_customer') incident_customer
+
+        div.formfield
+          input(type='submit', value='Mettre le statut à jour')
+```
+
+Puis ajoutez la route suivant en bas du fichier `routes/index.js` :
+
+```javascript
+router.post('/hail_info', function(req, res, next) {
+  axios(`https://dev.api.taxi/hails/${req.query.id}`, {
+    method: 'put',
+    headers: {
+      'X-Api-Key': process.env.API_KEY,
+      'Content-Type': 'application/json',
+    },
+    data: {
+      data: [{
+        status: req.body.status,
+      }],
+    },
+  }).then(({ data }) => {
+    res.redirect(`/hail_info?id=${req.query.id}`);
+  }).catch(({ response }) => {
+    res.render('hail_info', {
+      id: req.query.id,
+      error: response.data,
+    });
+  });
+});
+```
+
+Ce code effectue une requête `PUT` sur l'endpoint `https://dev.api.taxi/hails/<identifiant>`. Comme toutes les requêtes de modification, le header `Content-Type` est initialisé à `application/json`.
+
+Le nouveau statut de la course est envoyé dans le champ `data[0].status`.
+
+Effectuez une nouvelle demande de course, attendez quelques secondes pour laisser le taxi accepter la course, et rafraichissez la page. Confirmez la demande de course en passant le statut à `accepted_by_customer`.
+
+<CenteredImage src="/images/doc/tutorials/create_client_app/hail_accepted_by_customer.png" alt="Course acceptée par le client" />
+
+Rendez-vous sur la console de développement, trouvez le taxi concerné et affichez le détail de la course en cours.
+
+<CenteredImage src="/images/doc/tutorials/create_client_app/integration_hails_list.png" alt="Détails de la course en cours" />
+
+Changez le statut à `customer_on_board` pour indiquer que le taxi a pris en charge le client.
+
+<CenteredImage src="/images/doc/tutorials/create_client_app/integration_customer_on_board.png" alt="Déclarer le client à bord" />
+
+Rafraichissez l'application : le statut de la course est bien changé.
+
+<CenteredImage src="/images/doc/tutorials/create_client_app/hail_customer_on_board.png" alt="Le client est à bord" />
+
+Depuis la console de développement, indiquez que la course est terminée.
+
+<CenteredImage src="/images/doc/tutorials/create_client_app/integration_finished.png" alt="Terminer la course" />
+
+Rafraichissez l'application client pour voir le nouveau statut.
+
+<CenteredImage src="/images/doc/tutorials/create_client_app/hail_finished.png" alt="Course terminée" />
+
+
+#### Conclusion
+
+Félicitations ! Vous avez développé une application minimaliste compatible avec l'API le.taxi.
+
+Dans des conditions réelles, il sera évidemment nécessaire d'afficher une carte, d'avoir une gestion des comptes pour vos utilisateurs et de gérer les différentes erreurs que peuvent retourner l'API.
+
+Si vous remarquez une erreur ou vous avez des remarques concernant ce tutoriel, n'hésitez pas à nous contacter sur equipe@le.taxi.

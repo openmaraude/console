@@ -1,59 +1,13 @@
-import InfoBox from '../../components/InfoBox';
+Bienvenue sur la documentation de l'API [le.taxi](https://le.taxi).
 
-#### Introduction
+L'API le.taxi permet aux **clients** d'utiliser une **application de mobilité partenaire** afin d'**arrêter un
+artisan taxi disponible** situé à **proximité**.
 
-Cette documentation technique détaille le fonctionnement de l'API le.taxi. Elle est destinée aux opérateurs ainsi qu'aux
-moteurs de recherche souhaitant se connecter sur l'API.
+Notre documentation est organisée en quatre sections :
 
-<InfoBox title="Définitions">
-  <ul>
-    <li><strong>Opérateur</strong> : acteur fournissant les informations de taxis et leur géolocalisation en temps réel à l'API.</li>
-    <li><strong>Moteur de recherche</strong> : acteur proposant une application de mise en relation entre des utilisateurs et les taxis représentés sur l'API.</li>
-  </ul>
-</InfoBox>
+* Les **tutoriels** expliquent étape par étape comment créer une application compatible avec le.taxi.
+* Les **guides thématiques** abordent des sujets clés et fournissent des explications de base utiles.
+* Les **guides de référence** contiennent la documentation technique de l'API. Elles supposent que vous avez une compréhension préalable du fonctionnement général de l'API.
+* Les **guides pratiques** sont des recettes que vous pouvez appliquer pour résoudre les problèmes que vous pourriez rencontrer en utilisant l'API. Ils supposent que vous avez une compréhension préalable du fonctionnement de l'API.
 
-Nous mettons à disposition un environnement de développement pour permettre de tester l'intégration de votre solution
-avec l'API. Cet environnement, disponible dans la section [Intégration](https://console.dev.api.taxi/integration/) de la console de développement,
-nécessite d'être authentifié. La création de compte se fait après validation de votre dossier.
-
-##### Requêtes
-
-Tous les appels à l'API doivent se faire avec les headers HTTP suivants :
-
-
-| Nom du header | Valeur                                       |
-|---------------|----------------------------------------------|
-| X-Api-Key     | Clé d'API, disponible sur la page Mon Compte |
-
-
-Les requêtes de modifications (POST, PUT, PATCH) nécessitent de fournir le header suivant :
-
-| Nom du header | Valeur             |
-|---------------|--------------------|
-| Content-Type  | *application/json* |
-
-
-Toutes les réponses de l'API sont contenues dans le champ data. Par exemple :
-
-
-```shell
-
-$> curl 'https://dev.api.taxi/taxis/?lon=2.3500013351440434&lat=48.85999989664685' \
-      -H 'X-Api-Key: XXX' | jq .
-{
-  "data": [
-    {
-      "id": "..."
-    },
-    ...
-  ]
-}
-```
-
-La section "documentation de référence" vous permet de lister et tester simplement tous les endpoints de l'API.
-
-##### Légende
-
-Les conventions utilisées sur les schémas côté opérateur et moteur de recherche&nbsp;:
-
-![légende](/images/doc/legend.png)
+Si vous constatez un manque ou une erreur dans notre documentation, n'hésitez pas à contacter l'équipe par email sur [equipe@le.taxi](mailto:equipe@le.taxi?subject=Signalement%20d'un%20problème%20sur%20votre%20documentation).

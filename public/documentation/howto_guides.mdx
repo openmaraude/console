@@ -1,0 +1,180 @@
+### Guides pratiques
+
+Cette page contient les recettes que vous pouvez appliquer pour résoudre les problèmes que vous pourriez rencontrer en utilisant l'API. Une connaissance préalable du fonctionnement de l'API est nécessaire.
+
+<hr />
+
+#### Lister les taxis autour d'un point
+
+<SideNote>
+Utile pour un applicatif client
+</SideNote>
+
+La requête suivante permet de lister les taxis disponibles autour d'un point :
+
+```shell
+$> curl 'api.taxi/taxis/?lat=48.8&lon=2.3' \
+  -H "X-API-KEY: <votre clé d'API>"
+```
+
+La réponse contient une liste de taxis, leurs positions, la distance par rapport au client, ainsi que les informations sur le véhicule.
+
+```json
+{
+  "data": [
+    {
+      "crowfly_distance": 452.0475,
+      "id": "JeSqYLp",
+      "operator": "neotaxi",
+      "position": {
+        "lat": 48.853727691275765,
+        "lon": 2.3524609208106995
+      },
+      "status": "free",
+      "vehicle": {
+        "color": "",
+        "constructor": "CITROEN",
+        "licence_plate": "DF-025-AX",
+      }
+    }
+  ]
+}
+```
+
+<SideNote>
+Les champs superflus ont été cachés de la réponse
+</SideNote>
+
+<hr />
+
+#### Effectuer une demande de course
+
+<SideNote>
+Utile pour un applicatif client
+</SideNote>
+
+La requête suivante permet d'effectuer une demande de course auprès d'un taxi disponible :
+
+
+```shell
+$> curl 'api.taxi/hails/:hail_id/'                \
+    -X POST                                       \
+    -H "Content-Type: application/json"           \
+    -H "X-API-KEY: <votre clé d'API>"             \
+    -d '
+{
+  "data": [{
+    "customer_address": "44 rue de Moscou, 75008, Paris",
+    "customer_id": "a13ca3fb-e6c4-456c-b324-ca8965d87c06",
+    "customer_lat": 48.881750,
+    "customer_lon": 2.322790,
+    "customer_phone_number": "0656435678",
+    "operateur": "neotaxi",
+    "taxi_id": "JeSqYLp"
+  }]
+}'
+```
+
+La réponse retourne un identifiant de course, ou **hail id**.
+
+```json
+{
+  "data": [
+    {
+      "id": "2f99dca",
+      "status": "received"
+  ]
+}
+```
+
+<SideNote>
+Les champs superflus ont été cachés de la réponse
+</SideNote>
+
+
+<hr />
+
+#### Récupérer le statut d'une course
+
+<SideNote>
+Utile pour un applicatif client ou un applicatif chauffeur
+</SideNote>
+
+Lorsqu'une course est en cours, il est nécessaire de régulièrement récupérer son statut, par exemple toutes les cinq secondes, afin d'être notifié d'un possible changement de statut.
+
+```shell
+$> curl 'api.taxi/hails/<hail id>'  \
+  -H "X-API-KEY: <votre clé d'API>"
+```
+
+La réponse retourne le statut de la course. Si le taxi accepte de la prendre en charge, son numéro de téléphone est aussi disponible.
+
+```json
+{
+  "data": [
+    {
+      "session_id": "eda39f39-4191-495a-8963-c1f7c0263aae",
+      "status": "accepted_by_taxi",
+      "taxi_phone_number": "0607080910",
+    }
+  ]
+}
+```
+
+<SideNote>
+Les champs superflus ont été cachés de la réponse
+</SideNote>
+
+
+<hr />
+
+#### Changer le statut de la course
+
+<SideNote>
+Utile pour un applicatif client ou un applicatif chauffeur
+</SideNote>
+
+La requête suivante permet de changer le statut d'une course.
+
+
+```shell
+$> curl 'api.taxi/hails/:hail_id'       \
+    -X PUT                              \
+    -H "Content-Type: application/json" \
+    -H "X-API-KEY: <votre clé d'API>"   \
+    -d '
+{
+  "data": [{
+    "status": "accepted_by_customer"
+  }]
+}'
+```
+
+Référez vous à la documentation pour connaitre les statuts possibles en fonction de l'état de la course.
+
+
+<hr />
+
+#### Changer le statut d'un taxi
+
+<SideNote>
+Utile pour un applicatif chauffeur
+</SideNote>
+
+La requête suivante permet de signaler à l'API le changement de statut d'un taxi.
+
+
+```shell
+$> curl 'api.taxi/taxis/:taxi_id'       \
+    -X PUT                              \
+    -H "Content-Type: application/json" \
+    -H "X-API-KEY: <votre clé d'API>"   \
+    -d '
+{
+  "data": [{
+    "status": "free"
+  }]
+}'
+```
+
+Le paramètre `status` doit être `free`, `occupied` ou `off`.

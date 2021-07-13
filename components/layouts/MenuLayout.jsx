@@ -7,6 +7,8 @@ import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
+import clsx from 'clsx';
+
 import { fade, makeStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
@@ -40,6 +42,11 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: fade(theme.palette.info.light, 0.15),
   },
 
+  secondaryMenuItem: {
+    fontSize: '0.8em',
+    marginLeft: theme.spacing(2),
+  },
+
   content: {
     paddingLeft: theme.spacing(3),
     paddingRight: theme.spacing(3),
@@ -56,14 +63,18 @@ Menu.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export function MenuItem({ title, href }) {
+export function MenuItem({ title, href, secondary }) {
   const classes = useStyles();
   const router = useRouter();
 
   return (
     <div>
       <Link href={href} passHref>
-        <ButtonLink className={router.asPath === href ? classes.activeMenuItem : null}>
+        <ButtonLink className={clsx(
+          router.asPath === href && classes.activeMenuItem,
+          secondary && classes.secondaryMenuItem,
+        )}
+        >
           {title}
         </ButtonLink>
       </Link>
@@ -71,9 +82,14 @@ export function MenuItem({ title, href }) {
   );
 }
 
+MenuItem.defaultProps = {
+  secondary: false,
+};
+
 MenuItem.propTypes = {
   title: PropTypes.string.isRequired,
   href: PropTypes.string.isRequired,
+  secondary: PropTypes.bool,
 };
 
 export function Content({ loading, children }) {
