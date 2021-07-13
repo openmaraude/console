@@ -24,7 +24,13 @@ import {
 } from '../../components/layouts/MenuLayout';
 import { TextLink } from '../../components/LinksRef';
 
-const ALL_PAGES = ['introduction', 'search', 'operator', 'reference', 'examples'];
+const ALL_PAGES = [
+  {title: 'Introduction', slug: 'introduction'},
+  {title: 'Tutoriels', slug: 'tutorials'},
+  {title: 'Guides thématiques', slug: 'topic_guides'},
+  {title: 'Guides de référence', slug: 'reference_guides'},
+  {title: 'Guides pratiques', slug: 'howto_guides'},
+];
 
 const slugger = new Slugger();
 
@@ -67,17 +73,17 @@ const components = {
 /* eslint-enable react/prop-types */
 
 export default function Introduction({ slug }) {
-  const validSlug = ALL_PAGES.indexOf(slug) >= 0 ? slug : 'introduction';
+  const validSlug = ALL_PAGES.filter((page, idx) => page.slug === slug)?.[0]?.slug || ALL_PAGES[0].slug;
   const MDXDocument = dynamic(() => import(`../../public/documentation/${validSlug}.mdx`));
 
   return (
     <MenuLayout>
       <Menu>
         <MenuItem title="Introduction" href="/documentation/introduction" />
-        <MenuItem title="Moteur de recherche" href="/documentation/search" />
-        <MenuItem title="Opérateur" href="/documentation/operator" />
-        <MenuItem title="Documentation de référence" href="/documentation/reference" />
-        <MenuItem title="Exemples" href="/documentation/examples" />
+        <MenuItem title="Tutoriels" href="/documentation/tutorials" />
+        <MenuItem title="Guides thématiques" href="/documentation/topic_guides" />
+        <MenuItem title="Guides de référence" href="/documentation/reference_guides" />
+        <MenuItem title="Guides pratiques" href="/documentation/howto_guides" />
       </Menu>
       <Content>
         <MDXProvider components={components}>
@@ -103,7 +109,7 @@ export async function getStaticProps(context) {
 
 export async function getStaticPaths() {
   return {
-    paths: ALL_PAGES.map((slug) => ({ params: { slug } })),
+    paths: ALL_PAGES.map((page) => ({ params: { slug: page.slug } })),
     fallback: false,
   };
 }
