@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
+import { makeStyles } from '@material-ui/core/styles';
+
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { dark } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 
@@ -23,6 +25,20 @@ import {
   MenuItem,
 } from '../../components/layouts/MenuLayout';
 import { TextLink } from '../../components/LinksRef';
+
+const useStyles = makeStyles(() => ({
+  hr: {
+    border: 0,
+    height: 0,
+    borderTop: '1px solid rgba(0, 0, 0, 0.1)',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.3)',
+  },
+}));
+
+function StyledHr() {
+  const classes = useStyles();
+  return <hr className={classes.hr} />;
+}
 
 const ALL_PAGES = [
   { title: 'Introduction', slug: 'introduction' },
@@ -74,7 +90,7 @@ const components = {
   th: ({ children }) => <TableCell>{children}</TableCell>,
   td: ({ children }) => <TableCell>{children}</TableCell>,
   a: ({ href, children }) => <Link href={href} passHref><TextLink>{children}</TextLink></Link>,
-  hr: () => <hr />,
+  hr: () => <StyledHr />,
 };
 /* eslint-enable react/prop-types */
 
