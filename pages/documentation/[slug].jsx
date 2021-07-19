@@ -73,17 +73,17 @@ const components = {
 /* eslint-enable react/prop-types */
 
 export default function Introduction({ slug }) {
-  const validSlug = ALL_PAGES.filter((page, idx) => page.slug === slug)?.[0]?.slug || ALL_PAGES[0].slug;
+  const validSlug = ALL_PAGES
+    .filter((page) => page.slug === slug)
+    ?.[0]
+    ?.slug || ALL_PAGES[0].slug;
+
   const MDXDocument = dynamic(() => import(`../../public/documentation/${validSlug}.mdx`));
 
   return (
     <MenuLayout>
       <Menu>
-        <MenuItem title="Introduction" href="/documentation/introduction" />
-        <MenuItem title="Tutoriels" href="/documentation/tutorials" />
-        <MenuItem title="Guides thématiques" href="/documentation/topic_guides" />
-        <MenuItem title="Guides de référence" href="/documentation/reference_guides" />
-        <MenuItem title="Guides pratiques" href="/documentation/howto_guides" />
+        {ALL_PAGES.map((page) => <MenuItem title={page.title} href={`/documentation/${page.slug}`} />)}
       </Menu>
       <Content>
         <MDXProvider components={components}>
