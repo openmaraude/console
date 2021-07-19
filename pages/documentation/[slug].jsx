@@ -25,11 +25,11 @@ import {
 import { TextLink } from '../../components/LinksRef';
 
 const ALL_PAGES = [
-  {title: 'Introduction', slug: 'introduction'},
-  {title: 'Tutoriels', slug: 'tutorials'},
-  {title: 'Guides thématiques', slug: 'topic_guides'},
-  {title: 'Guides de référence', slug: 'reference_guides'},
-  {title: 'Guides pratiques', slug: 'howto_guides'},
+  { title: 'Introduction', slug: 'introduction' },
+  { title: 'Tutoriels', slug: 'tutorials' },
+  { title: 'Guides thématiques', slug: 'topic_guides' },
+  { title: 'Guides de référence', slug: 'reference_guides' },
+  { title: 'Guides pratiques', slug: 'howto_guides' },
 ];
 
 const slugger = new Slugger();
@@ -39,9 +39,14 @@ const Heading = ({ variant, children }) => {
   return (
     <Typography variant={variant} id={slug}>
       {children}
-      <a href={'#' + slug} title="Permalink" className="headinglink">¶</a>
+      <a href={`#${slug}`} title="Permalink" className="headinglink">¶</a>
     </Typography>
-  )
+  );
+};
+
+Heading.propTypes = {
+  variant: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
 };
 
 /* eslint-disable react/prop-types */
@@ -69,6 +74,7 @@ const components = {
   th: ({ children }) => <TableCell>{children}</TableCell>,
   td: ({ children }) => <TableCell>{children}</TableCell>,
   a: ({ href, children }) => <Link href={href} passHref><TextLink>{children}</TextLink></Link>,
+  hr: () => <hr />,
 };
 /* eslint-enable react/prop-types */
 
