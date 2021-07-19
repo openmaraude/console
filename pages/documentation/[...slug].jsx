@@ -49,7 +49,7 @@ function StyledHr() {
 }
 
 const ALL_PAGES = [
-  { title: 'Introduction', slug: 'introduction' },
+  { title: 'Introduction', slug: 'introduction', hide: true },
   {
     title: 'Tutoriels',
     slug: 'tutorials',
@@ -131,7 +131,14 @@ export default function DocumentationPage({ slug }) {
       <Menu>
         {ALL_PAGES.map((page) => (
           <React.Fragment key={page.title}>
-            <MenuItem key={page.slug} title={page.title} href={`/documentation/${page.slug}`} />
+            {!page.hide && (
+              <MenuItem
+                key={page.slug}
+                title={page.title}
+                href={`/documentation/${page.slug}`}
+              />
+            )}
+
             {page.submenus?.map((submenu) => (
               <MenuItem
                 key={submenu.slug}
