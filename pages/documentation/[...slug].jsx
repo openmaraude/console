@@ -1,3 +1,4 @@
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import dynamic from 'next/dynamic';
@@ -49,7 +50,14 @@ function StyledHr() {
 
 const ALL_PAGES = [
   { title: 'Introduction', slug: 'introduction' },
-  { title: 'Tutoriels', slug: 'tutorials' },
+  {
+    title: 'Tutoriels',
+    slug: 'tutorials',
+    submenus: [
+      { title: 'Créer une application chauffeur', slug: 'create_driver_app' },
+      { title: 'Créer une application client', slug: 'create_client_app' },
+    ],
+  },
   { title: 'Guides thématiques', slug: 'topic_guides' },
   { title: 'Guides de référence', slug: 'reference_guides' },
   { title: 'Guides pratiques', slug: 'howto_guides' },
@@ -114,18 +122,19 @@ const components = {
 };
 /* eslint-enable react/prop-types */
 
-export default function Introduction({ slug }) {
-  const validSlug = ALL_PAGES
-    .filter((page) => page.slug === slug)
-    ?.[0]
-    ?.slug || ALL_PAGES[0].slug;
-
-  const MDXDocument = dynamic(() => import(`../../public/documentation/${validSlug}.mdx`));
+export default function DocumentationPage({ slug }) {
+  const path = slug.join('/') + '.mdx';
+  const MDXDocument = dynamic(() => import(`../../public/documentation/${path}`));
 
   return (
     <MenuLayout>
       <Menu>
-        {ALL_PAGES.map((page) => <MenuItem key={page.slug} title={page.title} href={`/documentation/${page.slug}`} />)}
+        {ALL_PAGES.map((page) => (
+          <React.Fragment key={page.title}>
+            <MenuItem key={page.slug} title={page.title} href={`/documentation/${page.slug}`} />
+            {page.submenus?.map((submenu) => <MenuItem key={submenu.slug} title={submenu.title} href={`/documentation/${page.slug}/${submenu.slug}`} />)}
+          </React.Fragment>
+        ))}
       </Menu>
       <Content>
         <MDXProvider components={components}>
@@ -136,8 +145,8 @@ export default function Introduction({ slug }) {
   );
 }
 
-Introduction.propTypes = {
-  slug: PropTypes.string.isRequired,
+DocumentationPage.propTypes = {
+  slug: PropTypes.array.isRequired,
 };
 
 export async function getStaticProps(context) {
@@ -150,8 +159,14 @@ export async function getStaticProps(context) {
 }
 
 export async function getStaticPaths() {
+  const slugs = ALL_PAGES.map(
+    (menu) => [[menu.slug]].concat(
+      menu.submenus?.map((submenu) => [menu.slug, submenu.slug]),
+    ),
+  ).flat().filter((slug) => slug);
+
   return {
-    paths: ALL_PAGES.map((page) => ({ params: { slug: page.slug } })),
+    paths: slugs.map((slug) => ({ params: { slug } })),
     fallback: false,
   };
 }
