@@ -123,7 +123,7 @@ const components = {
 /* eslint-enable react/prop-types */
 
 export default function DocumentationPage({ slug }) {
-  const path = slug.join('/') + '.mdx';
+  const path = `${slug.join('/')}.mdx`;
   const MDXDocument = dynamic(() => import(`../../public/documentation/${path}`));
 
   return (
@@ -146,7 +146,7 @@ export default function DocumentationPage({ slug }) {
 }
 
 DocumentationPage.propTypes = {
-  slug: PropTypes.array.isRequired,
+  slug: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export async function getStaticProps(context) {
