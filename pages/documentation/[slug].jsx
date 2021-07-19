@@ -33,6 +33,13 @@ const useStyles = makeStyles(() => ({
     borderTop: '1px solid rgba(0, 0, 0, 0.1)',
     borderBottom: '1px solid rgba(255, 255, 255, 0.3)',
   },
+  sideNote: {
+    textAlign: 'right',
+    fontStyle: 'italic',
+    fontSize: '0.9em',
+    padding: 0,
+    margin: 0,
+  },
 }));
 
 function StyledHr() {
@@ -65,6 +72,17 @@ Heading.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
+function SideNote({ children }) {
+  const classes = useStyles();
+  return (
+    <p className={classes.sideNote}>{ children }</p>
+  );
+}
+
+SideNote.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
 /* eslint-disable react/prop-types */
 const components = {
   h1: ({ children }) => <Heading variant="h1">{children}</Heading>,
@@ -82,6 +100,8 @@ const components = {
       </SyntaxHighlighter>
     );
   },
+
+  SideNote,
 
   table: ({ children }) => <Table>{children}</Table>,
   thead: ({ children }) => <TableHead>{children}</TableHead>,
@@ -105,7 +125,7 @@ export default function Introduction({ slug }) {
   return (
     <MenuLayout>
       <Menu>
-        {ALL_PAGES.map((page) => <MenuItem title={page.title} href={`/documentation/${page.slug}`} />)}
+        {ALL_PAGES.map((page) => <MenuItem key={page.slug} title={page.title} href={`/documentation/${page.slug}`} />)}
       </Menu>
       <Content>
         <MDXProvider components={components}>
