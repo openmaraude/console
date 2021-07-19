@@ -132,7 +132,14 @@ export default function DocumentationPage({ slug }) {
         {ALL_PAGES.map((page) => (
           <React.Fragment key={page.title}>
             <MenuItem key={page.slug} title={page.title} href={`/documentation/${page.slug}`} />
-            {page.submenus?.map((submenu) => <MenuItem key={submenu.slug} title={submenu.title} href={`/documentation/${page.slug}/${submenu.slug}`} />)}
+            {page.submenus?.map((submenu) => (
+              <MenuItem
+                key={submenu.slug}
+                title={submenu.title}
+                href={`/documentation/${page.slug}/${submenu.slug}`}
+                secondary
+              />
+            ))}
           </React.Fragment>
         ))}
       </Menu>
