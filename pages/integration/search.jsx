@@ -19,14 +19,14 @@ import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 
-import APIErrorAlert from '../../components/APIErrorAlert';
-import APIListTable from '../../components/APIListTable';
-import { formatDate, formatLoc } from '../../src/utils';
+import APIErrorAlert from '@/components/APIErrorAlert';
+import APIListTable from '@/components/APIListTable';
+import { formatDate, formatLoc } from '@/src/utils';
 import { Layout } from './index';
-import { requestList, requestOne } from '../../src/api';
-import { TextLink } from '../../components/LinksRef';
-import { TimeoutTextField } from '../../components/TimeoutForm';
-import { UserContext } from '../../src/auth';
+import { requestList, requestOne } from '@/src/api';
+import { TextLink } from '@/components/LinksRef';
+import { TimeoutTextField } from '@/components/TimeoutForm';
+import { UserContext } from '@/src/auth';
 
 const useStyles = makeStyles((theme) => ({
   section: {

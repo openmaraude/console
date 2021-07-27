@@ -1,5 +1,5 @@
-import BaseLayout from '../components/layouts/BaseLayout';
-import LogasTable from '../components/LogasTable';
+import BaseLayout from '@/components/layouts/BaseLayout';
+import LogasTable from '@/components/LogasTable';
 
 export default function ManagerPage() {
   return (

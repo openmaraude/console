@@ -2,8 +2,8 @@ import React from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 
-import BaseLayout from '../components/layouts/BaseLayout';
-import LogasTable from '../components/LogasTable';
+import BaseLayout from '@/components/layouts/BaseLayout';
+import LogasTable from '@/components/LogasTable';
 
 const useStyles = makeStyles((theme) => ({
   root: {

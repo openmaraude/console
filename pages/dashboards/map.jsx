@@ -6,7 +6,7 @@ import { Layout } from './index';
 
 export default function DashboardMap() {
   const Map = dynamic(
-    () => import('../../components/TaxisMap'),
+    () => import('@/components/TaxisMap'),
     { ssr: false },
   );
 

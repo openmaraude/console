@@ -4,10 +4,10 @@ import dynamic from 'next/dynamic';
 
 import useSWR from 'swr';
 
-import APIErrorAlert from '../../components/APIErrorAlert';
+import APIErrorAlert from '@/components/APIErrorAlert';
 import { Layout } from './index';
-import { requestList } from '../../src/api';
-import { UserContext } from '../../src/auth';
+import { requestList } from '@/src/api';
+import { UserContext } from '@/src/auth';
 
 export default function DashboardZUPC() {
   const userContext = React.useContext(UserContext);
@@ -17,7 +17,7 @@ export default function DashboardZUPC() {
   );
 
   const Map = dynamic(
-    () => import('../../components/StatsMap'),
+    () => import('@/components/StatsMap'),
     { ssr: false },
   );
 

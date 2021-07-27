@@ -13,7 +13,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 
 import { ButtonLink } from './LinksRef';
-import { getAuthenticatedUsers, hasRole, UserContext } from '../src/auth';
+import { getAuthenticatedUsers, hasRole, UserContext } from '@/src/auth';
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {

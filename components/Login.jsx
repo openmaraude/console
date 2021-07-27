@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 
 import { TextLink } from './LinksRef';
 import APIErrorAlert from './APIErrorAlert';
-import { UserContext } from '../src/auth';
+import { UserContext } from '@/src/auth';
 
 const useStyles = makeStyles((theme) => ({
   root: {

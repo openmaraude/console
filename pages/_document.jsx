@@ -8,7 +8,7 @@ import Document, {
 
 import { ServerStyleSheets } from '@material-ui/core/styles';
 
-import theme from '../components/theme';
+import theme from '@/components/theme';
 
 export default class MyDocument extends Document {
   render() {

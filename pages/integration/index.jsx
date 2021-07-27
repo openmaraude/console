@@ -9,14 +9,14 @@ import CardContent from '@material-ui/core/CardContent';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
-import { TextLink } from '../../components/LinksRef';
+import { TextLink } from '@/components/LinksRef';
 
 import {
   MenuLayout,
   Content,
   Menu,
   MenuItem,
-} from '../../components/layouts/MenuLayout';
+} from '@/components/layouts/MenuLayout';
 
 const useStyles = makeStyles((theme) => ({
   root: {

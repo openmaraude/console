@@ -31,10 +31,10 @@ import {
 import 'leaflet/dist/leaflet.css';
 
 import APIErrorAlert from './APIErrorAlert';
-import { formatDate, formatLoc } from '../src/utils';
-import { requestList } from '../src/api';
+import { formatDate, formatLoc } from '@/src/utils';
+import { requestList } from '@/src/api';
 import SearchAddressDialog from './SearchAddressDialog';
-import { UserContext } from '../src/auth';
+import { UserContext } from '@/src/auth';
 
 const PARIS = [48.86, 2.35];
 

@@ -12,8 +12,8 @@ import clsx from 'clsx';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
+import { ButtonLink } from '@/components/LinksRef';
 import BaseLayout from './BaseLayout';
-import { ButtonLink } from '../LinksRef';
 
 const useStyles = makeStyles((theme) => ({
   paper: {

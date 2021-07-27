@@ -24,8 +24,8 @@ import {
   Content,
   Menu,
   MenuItem,
-} from '../../components/layouts/MenuLayout';
-import { TextLink } from '../../components/LinksRef';
+} from '@/components/layouts/MenuLayout';
+import { TextLink } from '@/components/LinksRef';
 
 const useStyles = makeStyles(() => ({
   hr: {
@@ -186,7 +186,7 @@ const components = {
 
 export default function DocumentationPage({ slug }) {
   const path = `${slug.join('/')}.mdx`;
-  const MDXDocument = dynamic(() => import(`../../public/documentation/${path}`));
+  const MDXDocument = dynamic(() => import(`@/public/documentation/${path}`));
 
   return (
     <MenuLayout>

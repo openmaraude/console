@@ -10,10 +10,10 @@ import Typography from '@material-ui/core/Typography';
 
 import { toast } from 'react-toastify';
 
-import APIErrorAlert from '../components/APIErrorAlert';
-import BaseLayout from '../components/layouts/BaseLayout';
-import { hasRole, UserContext } from '../src/auth';
-import { requestOne } from '../src/api';
+import APIErrorAlert from '@/components/APIErrorAlert';
+import BaseLayout from '@/components/layouts/BaseLayout';
+import { hasRole, UserContext } from '@/src/auth';
+import { requestOne } from '@/src/api';
 
 const useStyles = makeStyles((theme) => ({
   formSection: {

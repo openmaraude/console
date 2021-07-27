@@ -14,11 +14,11 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 
-import APIErrorAlert from '../../../components/APIErrorAlert';
-import { formatDate, formatLoc } from '../../../src/utils';
+import APIErrorAlert from '@/components/APIErrorAlert';
+import { formatDate, formatLoc } from '@/src/utils';
 import { Layout } from '../index';
-import { requestOne } from '../../../src/api';
-import { UserContext } from '../../../src/auth';
+import { requestOne } from '@/src/api';
+import { UserContext } from '@/src/auth';
 
 function Hail({ hail }) {
   return (

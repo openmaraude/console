@@ -8,7 +8,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
-import { formatDate, formatLoc } from '../src/utils';
+import { formatDate, formatLoc } from '@/src/utils';
 
 const useStyles = makeStyles((theme) => ({
   hail: {

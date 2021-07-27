@@ -11,8 +11,8 @@ import { toast } from 'react-toastify';
 
 import APIListTable from './APIListTable';
 import { TimeoutTextField } from './TimeoutForm';
-import { UserContext } from '../src/auth';
-import { requestList } from '../src/api';
+import { UserContext } from '@/src/auth';
+import { requestList } from '@/src/api';
 
 export default function LogasTable({ minimal }) {
   const userContext = React.useContext(UserContext);
