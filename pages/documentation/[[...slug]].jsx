@@ -231,7 +231,8 @@ DocumentationPage.propTypes = {
 export async function getStaticProps(context) {
   return {
     props: {
-      slug: context.params.slug,
+      // Use the first entry of ALL_PAGES as default for the root page.
+      slug: context.params.slug || [ALL_PAGES[0].slug],
       optionalAuth: true,
     },
   };
@@ -243,6 +244,9 @@ export async function getStaticPaths() {
       menu.submenus?.map((submenu) => [menu.slug, submenu.slug]),
     ),
   ).flat().filter((slug) => slug);
+
+  // Push an empty array to generate the root page /documentation.
+  slugs.push([]);
 
   return {
     paths: slugs.map((slug) => ({ params: { slug } })),

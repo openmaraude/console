@@ -159,7 +159,7 @@ export default function Menu() {
             )
           }
 
-          <HighlightedLink href="/documentation/introduction" passHref>
+          <HighlightedLink href="/documentation" passHref>
             <ButtonLink color="inherit">Documentation</ButtonLink>
           </HighlightedLink>
 
