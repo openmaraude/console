@@ -9,8 +9,8 @@ import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 
-import { TextLink } from './LinksRef';
-import APIErrorAlert from './APIErrorAlert';
+import APIErrorAlert from '@/components/APIErrorAlert';
+import { TextLink } from '@/components/LinksRef';
 import { UserContext } from '@/src/auth';
 
 const useStyles = makeStyles((theme) => ({

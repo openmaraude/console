@@ -27,10 +27,10 @@ import faker from 'faker/locale/fr';
 import APIErrorAlert from '@/components/APIErrorAlert';
 import APIListTable from '@/components/APIListTable';
 import { formatDate } from '@/src/utils';
-import { Layout } from './index';
 import { request, requestOne, requestList } from '@/src/api';
 import { TextLink } from '@/components/LinksRef';
 import { UserContext } from '@/src/auth';
+import { Layout } from './index';
 
 const useStyles = makeStyles((theme) => ({
   section: {

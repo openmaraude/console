@@ -22,11 +22,11 @@ import Typography from '@material-ui/core/Typography';
 import APIErrorAlert from '@/components/APIErrorAlert';
 import APIListTable from '@/components/APIListTable';
 import { formatDate, formatLoc } from '@/src/utils';
-import { Layout } from './index';
 import { requestList, requestOne } from '@/src/api';
 import { TextLink } from '@/components/LinksRef';
 import { TimeoutTextField } from '@/components/TimeoutForm';
 import { UserContext } from '@/src/auth';
+import { Layout } from './index';
 
 const useStyles = makeStyles((theme) => ({
   section: {

@@ -21,9 +21,9 @@ import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import APIErrorAlert from '@/components/APIErrorAlert';
 import { formatDate } from '@/src/utils';
 import HailCard, { HAIL_SUCCESS_STATUS } from '@/components/HailCard';
-import { Layout } from './index';
 import { UserContext } from '@/src/auth';
 import { requestList } from '@/src/api';
+import { Layout } from './index';
 
 const useStyles = makeStyles((theme) => ({
   rowSuccess: {

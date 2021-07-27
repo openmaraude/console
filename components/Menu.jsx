@@ -12,7 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 
-import { ButtonLink } from './LinksRef';
+import { ButtonLink } from '@/components/LinksRef';
 import { getAuthenticatedUsers, hasRole, UserContext } from '@/src/auth';
 
 const useStyles = makeStyles((theme) => ({

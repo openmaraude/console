@@ -2,7 +2,7 @@ import React from 'react';
 
 import nookies from 'nookies';
 
-import { request } from './api';
+import { request } from '@/src/api';
 
 const COOKIE_NAME = 'remember-users';
 

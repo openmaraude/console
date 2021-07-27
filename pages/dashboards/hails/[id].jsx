@@ -16,9 +16,9 @@ import Typography from '@material-ui/core/Typography';
 
 import APIErrorAlert from '@/components/APIErrorAlert';
 import { formatDate, formatLoc } from '@/src/utils';
-import { Layout } from '../index';
 import { requestOne } from '@/src/api';
 import { UserContext } from '@/src/auth';
+import { Layout } from '../index';
 
 function Hail({ hail }) {
   return (

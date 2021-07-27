@@ -15,8 +15,8 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
 import { makeStyles } from '@material-ui/core/styles';
 
-import APIErrorAlert from './APIErrorAlert';
-import { TimeoutGroup, TimeoutTextField } from './TimeoutForm';
+import APIErrorAlert from '@/components/APIErrorAlert';
+import { TimeoutGroup, TimeoutTextField } from '@/components/TimeoutForm';
 
 const useStyles = makeStyles((theme) => ({
   address: {

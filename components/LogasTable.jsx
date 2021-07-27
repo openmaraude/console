@@ -9,8 +9,8 @@ import Button from '@material-ui/core/Button';
 
 import { toast } from 'react-toastify';
 
-import APIListTable from './APIListTable';
-import { TimeoutTextField } from './TimeoutForm';
+import APIListTable from '@/components/APIListTable';
+import { TimeoutTextField } from '@/components/TimeoutForm';
 import { UserContext } from '@/src/auth';
 import { requestList } from '@/src/api';
 

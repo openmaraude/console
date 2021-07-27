@@ -10,8 +10,8 @@ import { DataGrid, GridOverlay } from '@material-ui/data-grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { makeStyles } from '@material-ui/core/styles';
 
-import APIErrorAlert from './APIErrorAlert';
-import { TimeoutGroup } from './TimeoutForm';
+import APIErrorAlert from '@/components/APIErrorAlert';
+import { TimeoutGroup } from '@/components/TimeoutForm';
 
 const useStyles = makeStyles((theme) => ({
   filters: {
