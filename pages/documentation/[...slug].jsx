@@ -82,6 +82,18 @@ const ALL_PAGES = [
   { title: 'Guides thématiques', slug: 'topic_guides' },
   { title: 'Guides de référence', slug: 'reference_guides' },
   { title: 'Guides pratiques', slug: 'howto_guides' },
+  {
+    title: 'Documentation legacy',
+    slug: 'legacy',
+    separator: true,
+    submenus: [
+      { title: 'Introduction', slug: 'introduction' },
+      { title: 'Moteur de recherche', slug: 'search' },
+      { title: 'Opérateur', slug: 'operator' },
+      { title: 'Documentation de référence', slug: 'reference' },
+      { title: 'Exemples', slug: 'examples' },
+    ],
+  },
 ];
 
 const slugger = new Slugger();
@@ -182,11 +194,14 @@ export default function DocumentationPage({ slug }) {
         {ALL_PAGES.map((page) => (
           <React.Fragment key={page.title}>
             {!page.hide && (
-              <MenuItem
-                key={page.slug}
-                title={page.title}
-                href={`/documentation/${page.slug}`}
-              />
+              <>
+                { page.separator && <hr /> }
+                <MenuItem
+                  key={page.slug}
+                  title={page.title}
+                  href={`/documentation/${page.slug}`}
+                />
+              </>
             )}
 
             {page.submenus?.map((submenu) => (
