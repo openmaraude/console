@@ -2,66 +2,58 @@ import InfoBox from '../../../components/InfoBox';
 
 #### Introduction
 
-Bienvenue sur la documentation de l'API [le.taxi](https://le.taxi/).
-
-L'API le.taxi permet aux clients d'utiliser une application de mobilité partenaire afin d'arrêter un artisan taxi disponible à proximité.
-
+Cette documentation technique détaille le fonctionnement de l'API le.taxi. Elle est destinée aux opérateurs ainsi qu'aux
+moteurs de recherche souhaitant se connecter sur l'API.
 
 <InfoBox title="Définitions">
   <ul>
-    <li><strong>Applicatif client (ou moteur de recherche) :</strong> client de l'API souhaitant mettre en relation ses usagers avec des taxis.</li>
-    <li><strong>Applicatif chauffeur (ou opérateur):</strong> client de l'API fournnissant la disponibilité et la géolocalisation en temps réel des véhicules en maraude, et recevant les demandes de courses effectuées par les usagers d'un applicatif client.</li>
-    <li><strong>Gestionnaire de flotte:</strong> compte d'un prestataire technique gérant les flottes de plusieurs applicatifs chauffeur.</li>
-    <li><strong>LOM</strong>: loi d'orientation des mobilités. C'est <a href="https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000039784232/2020-12-27">dans le cadre de l'article L3121-11-1</a> que s'inscrit le.taxi, le registre de disponibilité des taxis.</li>
+    <li><strong>Opérateur</strong> : acteur fournissant les informations de taxis et leur géolocalisation en temps réel à l'API.</li>
+    <li><strong>Moteur de recherche</strong> : acteur proposant une application de mise en relation entre des utilisateurs et les taxis représentés sur l'API.</li>
   </ul>
 </InfoBox>
 
-#### Inscription
+Nous mettons à disposition un environnement de développement pour permettre de tester l'intégration de votre solution
+avec l'API. Cet environnement, disponible dans la section [Intégration](https://console.dev.api.taxi/integration/) de la console de développement,
+nécessite d'être authentifié. La création de compte se fait après validation de votre dossier.
 
-L'accès à l'API est restreint et demande de vous inscrire sur [api.gouv.fr](https://api.gouv.fr/les-api/le-taxi).
+##### Requêtes
 
-Une fois votre inscription validée, vous obtenez un compte sur la console de gestion. La clé d'API disponible sur la section "Mon compte" vous permet d'authentifier vos requêtes. Celle-ci doit rester secrète.
-
-
-#### Environnements
-
-Nous avons mis en place deux environnements afin de répondre à vos besoins.
-
-* [console.api.taxi](https://console.api.taxi) est un environnement de productions utilisé par nos partenaires. Il n'est pas permis d'effectuer vos tests sur cet environnement. Les courses créées doivent correspondre à des courses réellement effectuées, et pas à des tests.
-* [console.dev.api.taxi](https://console.dev.api.taxi) est un environnement de développement exactement similaire à l'environnement de production. Vous pouvez y effectuer vos tests.
+Tous les appels à l'API doivent se faire avec les headers HTTP suivants :
 
 
-
-#### REST
-
-
-REST
--> on suit globalement le REST mais pour des raison de backward compat pas complètement
-
-opensource : lien vers github
-
-documentation de référence générée à partir du code
-
-liste des roles
+| Nom du header | Valeur                                       |
+|---------------|----------------------------------------------|
+| X-Api-Key     | Clé d'API, disponible sur la page Mon Compte |
 
 
+Les requêtes de modifications (POST, PUT, PATCH) nécessitent de fournir le header suivant :
 
-# Applicatif client
-
-définition : mise en relation avec vos usagers
-
-intro : déroulement
-    l'usager cherche un taxi, on liste les taxis proches de lui
-    ensuite on sélectionne un taxi et on effectue une demande
+| Nom du header | Valeur             |
+|---------------|--------------------|
+| Content-Type  | *application/json* |
 
 
-
-1/ lister les taxis autour avec get /taxis
-
-2/ get /taxis/:id? dispo? utile?
+Toutes les réponses de l'API sont contenues dans le champ data. Par exemple :
 
 
-3/ reserver une course
+```shell
 
+$> curl 'https://dev.api.taxi/taxis/?lon=2.3500013351440434&lat=48.85999989664685' \
+      -H 'X-Api-Key: XXX' | jq .
+{
+  "data": [
+    {
+      "id": "..."
+    },
+    ...
+  ]
+}
+```
 
+La section "documentation de référence" vous permet de lister et tester simplement tous les endpoints de l'API.
 
+##### Légende
+
+Les conventions utilisées sur les schémas côté opérateur et moteur de recherche&nbsp;:
+
+![légende](/images/doc/legend.png)
