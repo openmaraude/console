@@ -333,7 +333,7 @@ function HailDetailActions({ hail }) {
                 </Button>
 
                 <p>
-                  Mettre le statut à <strong>customer_on_baord</strong> pour
+                  Mettre le statut à <strong>customer_on_board</strong> pour
                   signaler que le client est à bord.
                 </p>
               </CardContent>
