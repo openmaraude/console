@@ -47,7 +47,7 @@ export function Layout({ children }) {
         }
 
         {
-          (hasRole(user, 'admin'))
+          (hasRole(user, 'admin') || hasRole(user, 'operateur') || hasRole(user, 'moteur'))
             && <MenuItem title="Liste des ZUPC" href="/dashboards/zupc" />
         }
       </Menu>

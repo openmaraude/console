@@ -29,8 +29,10 @@ function ZUPC({ zupc }) {
         <Tooltip offset={[0, 20]} opacity={1}>
           <p>
             <strong>{zupc.nom}</strong>
-            <br />
-            <i>{zupc.stats.total}</i> taxis connectés
+            {zupc.stats.total !== undefined && <>
+                <br />
+                <i>{zupc.stats.total}</i> taxis connectés
+            </>}
           </p>
         </Tooltip>
       </GeoJSON>
