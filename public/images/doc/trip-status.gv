@@ -52,7 +52,7 @@ digraph {
     accepted_by_customer -> incident_customer;
     customer_on_board -> incident_customer;
 
-    edge [color=9]; // after taxi status update
+    edge [color=2]; // after taxi status update
     accepted_by_customer -> customer_on_board [weight=8];
     customer_on_board -> finished [weight=8];
 
