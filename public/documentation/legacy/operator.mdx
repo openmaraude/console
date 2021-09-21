@@ -191,6 +191,9 @@ Les latitude et longitude sont aussi acceptées au format numérique.
 L'endpoint répondra avec un code 200 si toutes les positions de taxi ont été mises à jour. Si une seule position est en
 erreur (ID de taxi inconnu, coordonnée non valide...), toute la requête est rejetée avec le détail de l'erreur.
 
+N'envoyez que les positions des taxis libres (statut `free`). Les taxis avec une télémétrie récente seront affichés
+comme disponibles pour les moteurs de recherche.
+
 <InfoBox>
 Historiquement, l'API utilisait un serveur UDP pour remonter la localisation. Si ce serveur reste actif, son usage est
 déconseillé et n'est plus documenté. Format différent du reste de l'API, absence de réponse en cas d'erreur de
