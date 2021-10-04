@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
+import Link from 'next/link';
 
 import { fade, makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -46,7 +47,7 @@ export default function HailCard({ hail }) {
           )}
           variant="subtitle1"
         >
-          Hail {hail.id}
+          Hail <Link href={`/dashboards/hails/${hail.id}`} passHref>{hail.id}</Link>
         </Typography>
         <dl>
           <dt>Date</dt>
