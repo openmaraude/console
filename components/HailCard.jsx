@@ -47,7 +47,7 @@ export default function HailCard({ hail }) {
           )}
           variant="subtitle1"
         >
-          Hail <Link href={`/dashboards/hails/${hail.id}`} passHref>{hail.id}</Link>
+          Hail <Link href={`/dashboards/hails/${hail.id}`} passHref><a>{hail.id}</a></Link>
         </Typography>
         <dl>
           <dt>Date</dt>
