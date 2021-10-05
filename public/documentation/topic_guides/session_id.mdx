@@ -1,0 +1,27 @@
+##### De l'utilité du session_id dans le parcours client
+
+L'endpoint `POST /hails` permet de créer une course.
+
+Vous recevez un `session_id` de type UUID4 dans la ressource renvoyée en réponse :
+
+```json
+{
+  "data": [
+    {
+      [...]
+      "session_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      [...]
+    }
+  ]
+}
+```
+
+De quoi s'agit-il ?
+
+L'API considère les créations de course d'un même client comme faisant partie de la même session utilisateur quand elles sont assez proches dans le temps.
+
+L'idée est que le client peut demander à plusieurs taxis avant de voir sa demande de course acceptée. Plusieurs "hails" sont créés mais il s'agit du même client au même endroit qui veut se rendre à la même destination. Pour regrouper ces hails ensemble, nous avons introduit la notion de session.
+
+La première requête se fait sans `session_id` et initie la session utilisateur. C'est l'API qui assigne le `session_id` en le fournissant dans la réponse. L'application fournit ensuite ce `session_id` dans les demandes de courses suivantes de la même session utilisateur. l'API vérifiera que cet ID existe et correspond bien à ce client, mais il est à la discrétion de l'application de déterminer quand envoyer un nouvel UUID4 si une nouvelle session a démarré de son point de vue.
+
+Par souci de rétrocompatibilité, si le client envoie une nouvelle demande de course sans `session_id`, l'API détecte automatiquement les requêtes espacées de moins de 5 minutes pour les assigner à la même session. Ce champ pourrait être rendu obligatoire dans une future version de l'API.
