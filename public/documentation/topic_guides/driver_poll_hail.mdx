@@ -1,0 +1,38 @@
+##### Application chauffeur : l'importance de régulièrement poll le statut de la course
+
+Comme présenté dans le tutoriel pour créer une application chauffeur, l'API le.taxi stocke le statut du chauffeur.
+Ce statut est utilisé pour filtrer les taxis disponibles autour du client.
+
+Mais ce statut peut être modifié à tout moment par notre API pour préserver la qualité du service. Pourquoi ?
+
+Par exemple si le chauffeur ne répond pas à une demande de course (`received_by_taxi`) après 30 secondes, le taxi est passé en `off` et devient invisible pour éviter de dégrader le service.
+
+Si le client ne confirme pas dans les délais après acceptation de la course par le chauffeur, le taxi est à nouveau disponible pour un autre client.
+
+Puisque votre système d'information gère déjà ce statut, cela signifie que les deux systèmes peuvent entrer en incohérence.
+Un chauffeur pourtant déclaré comme disponible dans son application ne recevrait plus de courses de notre part.
+
+Il importe donc de vérifier que le statut du taxi corresponde à l'état de l'application, et que le chauffeur ne reste pas invisible à son insu, par exemple avec une notification pour lui signaler de revenir en ligne s'il est disponible sur son application mais `off` sur le.taxi.
+
+``GET /taxis/:taxi_id``
+
+Exemple d'appel :
+
+```shell
+$> curl -H 'X-API-KEY: XXX' 'https://dev.api.taxi/taxis/:taxi_id/'
+{
+    "data": [
+        {
+            [...]
+            "status": "free",
+            [...]
+        }
+    ]
+}
+```
+
+Les statuts possibles sont :
+- free : le taxi est disponible et peut recevoir des demandes de courses
+- occupied : le taxi est déjà en course avec un client
+- off : le taxi n'est pas disponible, pause ou fin de service
+- oncoming : ce statut est automatiquement donné au taxi lorsque celui-ci a reçu une course avec le statut `accepted_by_customer`

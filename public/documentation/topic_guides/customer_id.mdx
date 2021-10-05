@@ -1,0 +1,12 @@
+##### L'importance du customer_id dans le parcours client
+
+Le tutoriel de création d'application client montre comment utiliser l'API pour héler un taxi, en utilisant le `customer_id` du client.
+Mais quelle forme doit prendre cet ID et pourquoi est-il important pour l'API ?
+
+`customer_id` est votre identifiant pour chaque client. Il doit être unique et stable. Mais l'API n'a pas besoin de connaître le vrai
+identifiant de l'utilisateur de votre application. Vous pouvez le substituer pour un hash UUID4 par exemple, tant qu'il ne change plus ensuite
+et que vous pouvez retraduire ce hash en identifiant utilisateur dans votre système d'information.
+
+Vous pouvez par exemple ajouter une colonne "Identifiant le.taxi" à votre table des utilisateurs.
+
+Tant qu'il est unique et stable, l'API pourra fonctionner comme attendu et faire appliquer les CGU.

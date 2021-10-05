@@ -79,8 +79,24 @@ const ALL_PAGES = [
       { title: 'Créer une application client', slug: 'create_client_app' },
     ],
   },
-  { title: 'Guides thématiques', slug: 'topic_guides' },
-  { title: 'Guides de référence', slug: 'reference_guides' },
+  {
+    title: 'Guides thématiques',
+    slug: 'topic_guides',
+    submenus: [
+      { title: 'Importance de poll le statut de la course', slug: 'poll_hail' },
+      { title: 'Importance du customer_id dans le parcours client', slug: 'customer_id' },
+      { title: 'Utilité du session_id dans le parcours client', slug: 'session_id' },
+      { title: 'Cadre de la LOM', slug: 'legal_lom' },
+      { title: 'Glossaire', slug: 'glossary' },
+    ],
+  },
+  {
+      title: 'Guides de référence',
+      slug: 'reference_guides',
+      submenus: [
+        { title: 'Glossaire', slug: 'glossary' },
+      ],
+  },
   { title: 'Guides pratiques', slug: 'howto_guides' },
   {
     title: 'Documentation legacy',
