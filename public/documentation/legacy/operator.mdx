@@ -230,6 +230,40 @@ Les statuts possibles sont:
 * *off*
 * *oncoming*: ce statut est aussi automatiquement donné au taxi lorsque celui-ci a reçu une course avec le statut accepted_by_customer. Référez-vous à la documentation des moteurs de recherche pour plus d'informations.
 
+#### Rayon de visibilité du taxi
+
+<InfoBox>Nouveau !</InfoBox>
+
+Le chauffeur peut ajuster le rayon dans lequel il est visible par un client en recherche de taxi.
+En conformité avec le décret d'application, ce rayon est compris entre 150 et 500 mètres inclus.
+Il est par défaut de la valeur maximum. Une fois changé, il est conservé quand le chauffeur se déconnecte.
+
+La mise à jour du rayon se fait sur le même endpoint que le statut et peut être changé en même temps ou indépendamment.
+
+Exemple d'appel :
+
+```shell
+$> curl 'https://dev.api.taxi/taxis/:taxi_id/' \
+      -X PUT \
+      -H 'Content-Type: application/json' \
+      -H 'X-API-KEY: XXX' \
+      -d '
+{
+  "data": [
+    {
+      "radius": 250
+    }
+  ]
+}'
+```
+
+Le chauffeur peut par exemple sur son application choisir rapidement un rayon parmi une liste de choix au moment de se rendre
+disponible en ligne.
+
+Un *GET* sur cet endpoint retourne la valeur actuelle du statut et du rayon.
+
+Pour revenir à la valeur par défaut, il faut envoyer la valeur `null`.
+
 ##### Recevoir une course
 
 Vous devez mettre en place une API REST acceptant les requêtes POST de la part de nos serveurs. Cette API recevra les
