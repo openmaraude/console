@@ -112,6 +112,11 @@ function Taxis({ lon, lat }) {
           position={[taxi.position?.lat, taxi.position?.lon]}
           icon={taxiIcon}
         >
+          <Circle
+            center={taxi.position}
+            radius={taxi.radius || 500}
+            pathOptions={{ color: '#edd400' }}
+          />
           <Popup>
             <dl>
               <dt>Taxi ID</dt>
@@ -122,6 +127,9 @@ function Taxis({ lon, lat }) {
 
               <dt>Statut</dt>
               <dd>{taxi.status}</dd>
+
+              <dt>Rayon</dt>
+              <dd>{taxi.radius && <>{taxi.radius} mètres</> || <i>par défaut</i>}</dd>
 
               <dt>Dernière géolocalisation</dt>
               <dd>{formatDate(new Date(taxi.last_update * 1000))}</dd>

@@ -26,7 +26,7 @@ import faker from 'faker/locale/fr';
 
 import APIErrorAlert from '@/components/APIErrorAlert';
 import APIListTable from '@/components/APIListTable';
-import { formatDate } from '@/src/utils';
+import { formatDate, formatLoc } from '@/src/utils';
 import { request, requestOne, requestList } from '@/src/api';
 import { TextLink } from '@/components/LinksRef';
 import { UserContext } from '@/src/auth';
@@ -38,6 +38,10 @@ const useStyles = makeStyles((theme) => ({
   },
 
   statusFormControl: {
+    minWidth: 200,
+  },
+
+  radiusFormControl: {
     minWidth: 200,
   },
 
@@ -99,13 +103,9 @@ function TaxiSetNewStatus({ taxi }) {
 
   return (
     <section className={classes.section}>
-      <Typography variant="subtitle2">Changer le statut du taxi</Typography>
+      <p>Le statut a le statut <strong>{taxi.status}</strong>.</p>
 
-      <p>
-        Le taxi a le statut <strong>{taxi.status}</strong>. Seuls les taxis
-        avec le statut <i>free</i> peuvent apparaitre lors d'une
-        recherche.
-      </p>
+      <p><em>Seuls les taxis avec le statut <>free</> peuvent apparaitre lors d'une recherche.</em></p>
 
       <FormControl className={classes.statusFormControl}>
         <InputLabel id="setTaxiStatus">Changer le statut</InputLabel>
@@ -133,6 +133,73 @@ TaxiSetNewStatus.propTypes = {
   }).isRequired,
 };
 
+// Section to change taxi visibility radius
+function TaxiSetNewRadius({ taxi }) {
+    const classes = useStyles();
+    const userContext = React.useContext(UserContext);
+    const [error, setError] = React.useState();
+
+    async function onTaxiRadiusChange(e) {
+        setError(null);
+        try {
+            await requestOne(`/taxis/${taxi.id}`, {
+                token: userContext.user.apikey,
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Logas': process.env.INTEGRATION_ACCOUNT_EMAIL,
+                },
+                body: JSON.stringify({
+                    data: [{
+                        radius: e.target.value === "null" ? null : e.target.value,
+                    }],
+                }),
+            });
+        } catch (err) {
+            setError(err);
+        }
+    }
+
+    const initialValue = taxi.radius === null ? "null" : taxi.radius;
+
+    return (
+        <section className={classes.section}>
+            <p>Le taxi est visible dans {taxi.radius && <strong>un rayon de {taxi.radius} mètres</strong> || <strong>le rayon par défaut</strong>}.</p>
+
+            <p><em>Ce rayon concerne le taxi, le client final demande toujours les taxis disponibles dans un rayon de 500 mètres.</em></p>
+
+            <FormControl className={classes.radiusFormControl}>
+                <InputLabel id="setTaxiRadius">Changer le rayon</InputLabel>
+                <Select
+                    labelId="setTaxiRadius"
+                    value={initialValue}
+                    onChange={onTaxiRadiusChange}
+                >
+                    <MenuItem value="null">par défaut</MenuItem>
+                    <MenuItem value="150">150 mètres</MenuItem>
+                    <MenuItem value="200">200 mètres</MenuItem>
+                    <MenuItem value="250">250 mètres</MenuItem>
+                    <MenuItem value="300">300 mètres</MenuItem>
+                    <MenuItem value="350">350 mètres</MenuItem>
+                    <MenuItem value="400">400 mètres</MenuItem>
+                    <MenuItem value="450">450 mètres</MenuItem>
+                    <MenuItem value="500">500 mètres</MenuItem>
+                </Select>
+            </FormControl>
+
+            {error && <APIErrorAlert error={error} />}
+        </section>
+    )
+};
+
+TaxiSetNewRadius.propTypes = {
+    taxi: PropTypes.shape({
+        id: PropTypes.string,
+        radius: PropTypes.number,
+    }).isRequired,
+};
+
+// Section to change taxi location
 function TaxiSetNewLocation({ taxi }) {
   const classes = useStyles();
   const userContext = React.useContext(UserContext);
@@ -180,8 +247,6 @@ function TaxiSetNewLocation({ taxi }) {
 
   return (
     <section className={classes.section}>
-      <Typography variant="subtitle2">Mise à jour de la géolocalisation</Typography>
-
       <p>
         Renseignez les coordonnées où vous souhaitez déplacer le taxi. Seuls
         les taxis ayant une géolocalisation mise à jour il y a moins de deux
@@ -703,7 +768,16 @@ function Taxi({ taxi }) {
           <TableBody>
             <TableRow>
               <TableCell variant="head">Statut</TableCell>
-              <TableCell>{data.status}</TableCell>
+              <TableCell>
+                <TaxiSetNewStatus key={`status-${taxi.id}`} taxi={data} />
+              </TableCell>
+            </TableRow>
+
+            <TableRow>
+              <TableCell variant="head">Rayon</TableCell>
+              <TableCell>
+                <TaxiSetNewRadius key={`radius-${taxi.id}`} taxi={data} />
+              </TableCell>
             </TableRow>
 
             <TableRow>
@@ -712,20 +786,17 @@ function Taxi({ taxi }) {
             </TableRow>
 
             <TableRow>
-              <TableCell variant="head">Longitude</TableCell>
-              <TableCell>{data.position?.lon}</TableCell>
+              <TableCell variant="head">Géolocalisation</TableCell>
+              <TableCell>
+                {data.position?.lon && `${formatLoc(data.position.lon)}, ${formatLoc(data.position.lat)}` || <i>aucune géolocalisation</i>}
+                <TaxiSetNewLocation key={`location-${taxi.id}`} taxi={data} />
+              </TableCell>
             </TableRow>
 
-            <TableRow>
-              <TableCell variant="head">Latitude</TableCell>
-              <TableCell>{data.position?.lat}</TableCell>
-            </TableRow>
           </TableBody>
         </Table>
       </TaxiSection>
 
-      <TaxiSetNewStatus key={`status-${taxi.id}`} taxi={data} />
-      <TaxiSetNewLocation key={`location-${taxi.id}`} taxi={data} />
       <TaxiHailsList key={`hails-${taxi.id}`} taxi={data} />
     </>
   );
@@ -823,19 +894,6 @@ export default function IntegrationOperatorPage() {
       sortable: false,
     },
     {
-      field: 'operator',
-      headerName: 'Opérateur',
-      flex: 1,
-      sortable: false,
-    },
-    {
-      field: 'vehicle',
-      headerName: 'Immatriculation',
-      flex: 2,
-      sortable: false,
-      valueFormatter: (cell) => cell.value.licence_plate,
-    },
-    {
       field: 'ads',
       headerName: 'Code INSEE de l\'ADS',
       flex: 2,
@@ -854,6 +912,13 @@ export default function IntegrationOperatorPage() {
       headerName: 'Statut',
       flex: 1,
       sortable: false,
+    },
+    {
+      field: 'radius',
+      headerName: 'Rayon',
+      flex: 1,
+      sortable: false,
+      valueFormatter: (cell) => `${cell.value || ""}`,
     },
     {
       field: 'actions',
