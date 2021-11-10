@@ -102,7 +102,7 @@ function TaxiSetNewStatus({ taxi }) {
       <Typography variant="subtitle2">Changer le statut du taxi</Typography>
 
       <p>
-        Le statut a le statut <strong>{taxi.status}</strong>. Seuls les taxis
+        Le taxi a le statut <strong>{taxi.status}</strong>. Seuls les taxis
         avec le statut <i>free</i> peuvent apparaitre lors d'une
         recherche.
       </p>
