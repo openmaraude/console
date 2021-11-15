@@ -83,7 +83,7 @@ const ALL_PAGES = [
     title: 'Guides thématiques',
     slug: 'topic_guides',
     submenus: [
-      { title: 'Importance de poll le statut de la course', slug: 'poll_hail' },
+      { title: 'Importance de poll le statut de la course', slug: 'driver_poll_hail' },
       { title: 'Importance du customer_id dans le parcours client', slug: 'customer_id' },
       { title: 'Utilité du session_id dans le parcours client', slug: 'session_id' },
       { title: 'Cadre de la LOM', slug: 'legal_lom' },
