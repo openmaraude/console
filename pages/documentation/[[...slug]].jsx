@@ -87,15 +87,14 @@ const ALL_PAGES = [
       { title: 'Importance du customer_id dans le parcours client', slug: 'customer_id' },
       { title: 'Utilité du session_id dans le parcours client', slug: 'session_id' },
       { title: 'Cadre de la LOM', slug: 'legal_lom' },
-      { title: 'Glossaire', slug: 'glossary' },
     ],
   },
   {
-      title: 'Guides de référence',
-      slug: 'reference_guides',
-      submenus: [
-        { title: 'Glossaire', slug: 'glossary' },
-      ],
+    title: 'Guides de référence',
+    slug: 'reference_guides',
+    submenus: [
+      { title: 'Glossaire', slug: 'glossary' },
+    ],
   },
   { title: 'Guides pratiques', slug: 'howto_guides' },
   {
