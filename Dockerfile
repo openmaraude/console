@@ -1,4 +1,4 @@
-FROM node AS builder
+FROM node:lts AS builder
 
 # Image must be built with --build-arg=<sentry token> to inform sentry of the
 # new release.
