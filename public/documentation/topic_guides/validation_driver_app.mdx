@@ -30,8 +30,9 @@ L'application effectue régulièrement du polling sur le statut du taxi ([GET /t
 
 ##### Envoi de la géolocalisation du véhicule
 
-L'application envoie régulièrement (< 10 secondes) les informations de géolocalisation du véhicule, à minima lorsque le statut de celui-ci est *free* ([POST /geotaxi](https://dev.api.taxi/doc/#/default/post_geotaxi_)).
-
+L'application envoie les informations de géolocalisation du véhicule à vos serveurs. Vous devez régulièrement (< 10
+secondes) envoyer à nos serveurs les dernières géolocalisations, à minima lorsque le statut du taxi est *free*
+([POST /geotaxi](https://dev.api.taxi/doc/#/default/post_geotaxi_)).
 
 ##### Réception d'une course
 
