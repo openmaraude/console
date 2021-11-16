@@ -87,6 +87,7 @@ const ALL_PAGES = [
       { title: '[moteur de recherche] Importance de poll le statut de la course', slug: 'client_poll_hail' },
       { title: 'Importance du customer_id dans le parcours client', slug: 'customer_id' },
       { title: 'Utilité du session_id dans le parcours client', slug: 'session_id' },
+      { title: 'Modifier le rayon de visibilité du taxi', slug: 'radius' },
       { title: 'Cadre de la LOM', slug: 'legal_lom' },
     ],
   },

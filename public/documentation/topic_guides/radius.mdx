@@ -1,0 +1,38 @@
+##### Modifier le rayon de visibilité du taxi
+
+Une mise à jour récente autorise l'opérateur à modifier le rayon de visibilité du taxi.
+
+Le chauffeur peut ainsi sur son application ajuster le rayon dans lequel il est visible par un client en recherche de taxi.
+En conformité avec le décret d'application, ce rayon est compris entre 150 et 500 mètres inclus.
+
+Le client demande toujours la liste des taxis disponibles dans un rayon 500 mètres, mais si le chauffeur a réglé son rayon sur 150 et qu'il est à 151 mètres du client, il ne sera pas visible sur l'application du client.
+
+Le rayon est par défaut de la valeur maximum. Une fois changé, il est conservé quand le chauffeur se déconnecte.
+
+La mise à jour du rayon se fait sur le même endpoint que le statut et peut être changé en même temps ou indépendamment.
+
+Exemple d'appel :
+
+```shell
+$> curl 'https://dev.api.taxi/taxis/:taxi_id/' \
+      -X PUT \
+      -H 'Content-Type: application/json' \
+      -H 'X-API-KEY: XXX' \
+      -d '
+{
+  "data": [
+    {
+      "radius": 250
+    }
+  ]
+}'
+```
+
+Le chauffeur peut par exemple sur son application choisir rapidement un rayon parmi une liste de choix au moment de se rendre
+disponible en ligne.
+
+Un *GET* sur cet endpoint retourne la valeur actuelle du statut et du rayon.
+
+Pour revenir à la valeur par défaut, il faut envoyer la valeur `null`.
+
+Vous pouvez tester le rayon dans la section Intégration, Simuler application opérateur, là où on peut déjà changer le statut et la position du taxi sélectionné.
