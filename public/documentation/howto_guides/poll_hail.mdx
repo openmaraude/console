@@ -1,0 +1,30 @@
+#### Récupérer le statut d'une course
+
+<SideNote>
+Utile pour un applicatif client ou un applicatif chauffeur
+</SideNote>
+
+Lorsqu'une course est en cours, il est nécessaire de régulièrement récupérer son statut, par exemple toutes les cinq secondes, afin d'être notifié d'un possible changement de statut.
+
+```shell
+$> curl 'api.taxi/hails/<hail id>'  \
+  -H "X-API-KEY: <votre clé d'API>"
+```
+
+La réponse retourne le statut de la course. Si le taxi accepte de la prendre en charge, son numéro de téléphone est aussi disponible.
+
+```json
+{
+  "data": [
+    {
+      "session_id": "eda39f39-4191-495a-8963-c1f7c0263aae",
+      "status": "accepted_by_taxi",
+      "taxi_phone_number": "0607080910",
+    }
+  ]
+}
+```
+
+<SideNote>
+Les champs superflus ont été cachés de la réponse
+</SideNote>

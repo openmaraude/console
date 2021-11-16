@@ -98,7 +98,17 @@ const ALL_PAGES = [
       { title: 'Glossaire', slug: 'glossary' },
     ],
   },
-  { title: 'Guides pratiques', slug: 'howto_guides' },
+  {
+    title: 'Guides pratiques',
+    slug: 'howto_guides',
+    submenus: [
+      { title: "Lister les taxis autour d'un point", slug: 'search_taxis' },
+      { title: 'Effectuer une demande de course', slug: 'create_hail' },
+      { title: "Récupérer le statut d'une course", slug: 'poll_hail' },
+      { title: "Changer le statut de la course", slug: 'status_hail' },
+      { title: "Changer le statut d'un taxi", slug: 'status_taxi' },
+    ],
+  },
   {
     title: 'Documentation legacy',
     slug: 'legacy',
@@ -133,7 +143,7 @@ Heading.propTypes = {
 function SideNote({ children }) {
   const classes = useStyles();
   return (
-    <p className={classes.sideNote}>{ children }</p>
+    <p className={classes.sideNote}>{children}</p>
   );
 }
 
@@ -161,7 +171,7 @@ CenteredImage.propTypes = {
 
 function InlineCode({ children }) {
   const classes = useStyles();
-  return <code className={classes.inlineCode}>{ children }</code>;
+  return <code className={classes.inlineCode}>{children}</code>;
 }
 
 InlineCode.propTypes = {
@@ -212,7 +222,7 @@ export default function DocumentationPage({ slug }) {
           <React.Fragment key={page.title}>
             {!page.hide && (
               <>
-                { page.separator && <hr /> }
+                {page.separator && <hr />}
                 <MenuItem
                   key={page.slug}
                   title={page.title}

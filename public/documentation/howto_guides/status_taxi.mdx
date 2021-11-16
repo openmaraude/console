@@ -1,0 +1,23 @@
+#### Changer le statut d'un taxi
+
+<SideNote>
+Utile pour un applicatif chauffeur
+</SideNote>
+
+La requête suivante permet de signaler à l'API le changement de statut d'un taxi.
+
+
+```shell
+$> curl 'api.taxi/taxis/:taxi_id'       \
+    -X PUT                              \
+    -H "Content-Type: application/json" \
+    -H "X-API-KEY: <votre clé d'API>"   \
+    -d '
+{
+  "data": [{
+    "status": "free"
+  }]
+}'
+```
+
+Le paramètre `status` doit être `free`, `occupied` ou `off`.

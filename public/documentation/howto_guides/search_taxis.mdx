@@ -1,0 +1,40 @@
+#### Lister les taxis autour d'un point
+
+<SideNote>
+Utile pour un applicatif client
+</SideNote>
+
+La requête suivante permet de lister les taxis disponibles autour d'un point :
+
+```shell
+$> curl 'api.taxi/taxis/?lat=48.8&lon=2.3' \
+  -H "X-API-KEY: <votre clé d'API>"
+```
+
+La réponse contient une liste de taxis, leurs positions, la distance par rapport au client, ainsi que les informations sur le véhicule.
+
+```json
+{
+  "data": [
+    {
+      "crowfly_distance": 452.0475,
+      "id": "JeSqYLp",
+      "operator": "neotaxi",
+      "position": {
+        "lat": 48.853727691275765,
+        "lon": 2.3524609208106995
+      },
+      "status": "free",
+      "vehicle": {
+        "color": "",
+        "constructor": "CITROEN",
+        "licence_plate": "DF-025-AX",
+      }
+    }
+  ]
+}
+```
+
+<SideNote>
+Les champs superflus ont été cachés de la réponse
+</SideNote>

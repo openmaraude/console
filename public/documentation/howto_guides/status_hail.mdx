@@ -1,0 +1,23 @@
+#### Changer le statut de la course
+
+<SideNote>
+Utile pour un applicatif client ou un applicatif chauffeur
+</SideNote>
+
+La requête suivante permet de changer le statut d'une course.
+
+
+```shell
+$> curl 'api.taxi/hails/:hail_id'       \
+    -X PUT                              \
+    -H "Content-Type: application/json" \
+    -H "X-API-KEY: <votre clé d'API>"   \
+    -d '
+{
+  "data": [{
+    "status": "accepted_by_customer"
+  }]
+}'
+```
+
+Référez vous à la documentation pour connaitre les statuts possibles en fonction de l'état de la course.
