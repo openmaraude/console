@@ -89,6 +89,8 @@ const ALL_PAGES = [
       { title: 'Utilité du session_id dans le parcours client', slug: 'session_id' },
       { title: 'Modifier le rayon de visibilité du taxi', slug: 'radius' },
       { title: 'Cadre de la LOM', slug: 'legal_lom' },
+      { title: 'Validation d\'une application client', slug: 'validation_client_app' },
+      { title: 'Validation d\'une application chauffeur', slug: 'validation_driver_app' },
     ],
   },
   {

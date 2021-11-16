@@ -1,0 +1,84 @@
+#### Validation d'une application chauffeur
+
+Avant de fournir les accès à la plateforme de production, l'équipe le.taxi teste votre application afin de vérifier que les fonctionnalités principales sont correctement implémentées. Voici une liste régulièrement mise à jour des tests que nous effectuons.
+
+
+##### Informations du compte à jour
+
+Les informations de votre compte doivent être à jour : l'email et le téléphone du référent technique sont définis dans la section ["mon compte"](/account).
+
+
+##### Enregistrement d'un chauffeur
+
+Une fois l'application installée, le chauffeur peut s'inscrire en fournissant :
+
+* les informations de l'ADS : numéro code INSEE de la commune ([POST /ads](https://dev.api.taxi/doc/#/default/post_ads))
+* les informations du chauffeur : licence professionnelle et département ([POST /drivers](https://dev.api.taxi/doc/#/default/post_drivers))
+* les informations du véhicule : plaque d'immatriculation ([POST /vehicles](https://dev.api.taxi/doc/#/default/post_vehicles))
+
+Un appel à [POST /taxis](https://dev.api.taxi/doc/#/default/post_taxis) est ensuite effectué pour créer l'objet.
+
+Les erreurs renvoyées par l'API sont correctement affichées. Par exemple, si le département n'existe pas, l'API retourne une erreur HTTP/400 qui est affichée sur l'application.
+
+
+##### Changement et synchronisation du statut
+
+Le chauffeur peut changer son statut afin d'être libre ou occupé ([PUT /taxis/:id](https://dev.api.taxi/doc/#/default/put_taxis__taxi_id_)).
+
+L'application effectue régulièrement du polling sur le statut du taxi ([GET /taxis/:id](https://dev.api.taxi/doc/#/default/get_taxis__taxi_id_)) : si l'API le.taxi change le statut du taxi pour le mettre à *off*, l'application doit le détecter.
+
+
+##### Envoi de la géolocalisation du véhicule
+
+L'application envoie régulièrement (< 10 secondes) les informations de géolocalisation du véhicule, à minima lorsque le statut de celui-ci est *free* ([POST /geotaxi](https://dev.api.taxi/doc/#/default/post_geotaxi_)).
+
+
+##### Réception d'une course
+
+Lorsqu'un client demande une course au chauffeur, la demande s'affiche sur l'application.
+
+###### Acceptation
+
+Le chauffeur doit pouvoir accepter la demande.
+
+###### Refus
+
+Le chauffeur doit pouvoir refuser la course.
+
+###### Délai dépassé
+
+Si le chauffeur n'effectue aucune action dans le temps imparti, l'API le.taxi annule la demande et passe le taxi à *off*. L'application doit afficher un message, et proposer au taxi de passer son statut à *free* en effectuant une application manuelle.
+
+
+##### Acceptation du client
+
+Le chauffeur est notifié lorsque le client confirme sa demande ([GET /hails/:id](https://dev.api.taxi/doc/#/default/get_hails__hail_id_)). Le chauffeur se dirige vers le client.
+
+##### Refus du client
+
+La course est mise à jour si le client ne confirme pas sa demande ([GET /hails/:id](https://dev.api.taxi/doc/#/default/get_hails__hail_id_)).
+
+##### Délai dépassé pour le client
+
+La course est mise à jour si le client ne confirme pas sa demande dans le temps imparti ([GET /hails/:id](https://dev.api.taxi/doc/#/default/get_hails__hail_id_)).
+
+###### Déclarer le client à bord
+
+Le chauffeur peut déclarer que le client est à bord ([PUT /hails/:id](https://dev.api.taxi/doc/#/default/put_hails__hail_id_)).
+
+###### Incident
+
+Le chauffeur peut déclarer un incident : il ne peut pas aller chercher le client, et souhaite annuler la course ([PUT /hails/:id](https://dev.api.taxi/doc/#/default/put_hails__hail_id_)).
+
+
+##### Course en cours
+
+Le client est à bord, le chauffeur se rend vers la destination du client.
+
+###### Terminer la course
+
+Le chauffeur doit pouvoir déclarer la course comme terminée ([PUT /hails/:id](https://dev.api.taxi/doc/#/default/put_hails__hail_id_)).
+
+###### Déclarer un incident
+
+À tout moment, le chauffeur peut déclarer un incident ([PUT /hails/:id](https://dev.api.taxi/doc/#/default/put_hails__hail_id_)).
