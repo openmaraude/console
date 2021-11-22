@@ -53,9 +53,9 @@ router.get('/', function(req, res, next) {
 });
 ```
 
-Remplacez ensuite le contenu du fichier `views/index.jade` par le formulaire suivant:
+Remplacez ensuite le contenu du fichier `views/index.pug` par le formulaire suivant:
 
-```jade
+```pug
 extends layout
 
 block content
@@ -159,7 +159,7 @@ $> API_KEY=<votre clé API> npx nodemon
 
 ##### Création de la page pour lister les taxis
 
-Créez le fichier `views/search_taxis.jade` avec le contenu suivant :
+Créez le fichier `views/search_taxis.pug` avec le contenu suivant :
 
 ```html
 extends layout
@@ -239,7 +239,7 @@ Explications :
 * Les informations du formulaire précédent sont disponible dans l'objet `req.query`.
 * L'API le.taxi expose un endpoint `https://dev.api.taxi/taxis?lon=x&lat=y` qui retourne la liste des taxis disponibles.
 * L'appel nécessite de fournir le token d'API dans le header HTTP `X-Api-Key`.
-* Le template `search_taxis.jade` retourné peut lister les taxis via la variable `taxis` (ou `error` en cas d'erreur de l'API).
+* Le template `search_taxis.pug` retourné peut lister les taxis via la variable `taxis` (ou `error` en cas d'erreur de l'API).
 
 Rafraichissez la page : vous devriez obtenir un tableau vide, car aucun taxi n'est actuellement disponible.
 
@@ -287,9 +287,9 @@ Nous allons implémenter la commande du taxi en deux étapes :
 
 ##### Page d'erreur
 
-Créez la page `views/order.jade` avec le contenu suivant :
+Créez la page `views/order.pug` avec le contenu suivant :
 
-```jade
+```pug
 extends layout
 
 block content
@@ -357,9 +357,9 @@ En passant le statut du taxi à `occupied` depuis le menu **simuler une applicat
 ##### Page de détails de la course
 
 
-Créez le fichier `views/hail_info.jade` avec le contenu suivant :
+Créez le fichier `views/hail_info.pug` avec le contenu suivant :
 
-```jade
+```pug
 extends layout
 
 block content
@@ -453,9 +453,9 @@ Lorsque la course a le statut `accepted_by_taxi`, le client peut mettre le statu
 
 Lorsqu'une course en cours a un statut autre, par exemple `received_by_operator` ou `customer_on_board`, le client peut à tout moment déclarer un incident en mettant la course à `incident_customer` afin de forcer la fin de celle-ci. Bien qu'il soit préférable qu'un client qui demande une course et confirme celle-ci attende le taxi qui est en route pour le chercher, nous laissons la possibilité d'annuler la course afin de prévenir le taxi le plus rapidement possible que le client ne souhaite plus effectuer la course.
 
-Ajoutez le code suivant à la fin du fichier de template `views/hail_info.jade`, sous code pour afficher le tableau :
+Ajoutez le code suivant à la fin du fichier de template `views/hail_info.pug`, sous code pour afficher le tableau :
 
-```jade
+```pug
     if hail.status === 'accepted_by_taxi'
       form(action=`/hail_info?id=${hail.id}`, method='post')
         div.formfield
