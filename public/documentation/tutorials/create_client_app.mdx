@@ -22,11 +22,11 @@ Les commandes suivantes permettent d'initialiser un projet vierge.
 ```shell
 $> mkdir simple-client-app
 $> cd simple-client-app
-$> npx express-generator --git
+$> npx express-generator --git --view=pug
 $> npm install
 $> npx nodemon
 ```
-* `npx express-generator --git` permet de créer le squelette de l'application.
+* `npx express-generator --git` permet de créer le squelette de l'application (pug remplace le moteur de template jade).
 * `npm install` installe les dépendances du fichier package.json.
 * `npx nodemon` permet de démarrer le serveur web sur le poort 3000, et redémarre l'application en cas de changement d'un fichier source. Il est possible d'écouter les connexions sur un port alternatif avec `PORT=3001 npx nodemon`.
 
@@ -53,7 +53,7 @@ router.get('/', function(req, res, next) {
 });
 ```
 
-Remplacez ensuite le contenu du fichier `views/index.pug` par le formulaire suivant:
+Remplacez ensuite le contenu du fichier `views/index.pug` par le formulaire suivant :
 
 ```pug
 extends layout
@@ -202,7 +202,7 @@ block content
 
 Ce template présente un tableau avec les taxis disponibles passés en paramètre. Il est désormais nécessaire de faire la route qui va appeler l'API le.taxi pour récupérer cette liste.
 
-Ajoutez en haut du fichier `index/routes.js` l'import à axios :
+Ajoutez en haut du fichier `routes/index.js` l'import à axios :
 
 ```javascript
 var axios = require('axios');
