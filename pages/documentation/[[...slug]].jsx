@@ -75,8 +75,9 @@ const ALL_PAGES = [
     title: 'Tutoriels',
     slug: 'tutorials',
     submenus: [
-      { title: 'Créer une application chauffeur', slug: 'create_driver_app' },
       { title: 'Créer une application client', slug: 'create_client_app' },
+      { title: 'Créer une application opérateur', slug: 'create_operator_app' },
+      { title: 'Créer une application chauffeur', slug: 'create_driver_app' },
     ],
   },
   {
