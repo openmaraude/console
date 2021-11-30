@@ -1,0 +1,472 @@
+import InfoBox from '@/components/InfoBox';
+
+### Créer une application chauffeur
+
+En suivant ce tutoriel pas à pas, vous allez créer une application permettant d'inscrire les taxis de votre flotte sur l'API le.taxi.
+
+<InfoBox title="Prérequis">
+  <ul>
+    <li>Avoir un compte opérateur sur la plateforme de développement <a href="https://dev.api.taxi">dev.api.taxi</a></li>
+    <li>Un serveur accessible par notre plateforme de développement, le tutorial ne peut être fait sur votre ordinateur personnel à moins de mettre en place un tunnel ou autre redirection de port qui sort du cadre de ce tutoriel.</li>
+    <li>Une version récente de npm doit être installée.</li>
+  </ul>
+</InfoBox>
+
+L'application sera développée en Node.js en utilisant le framework [express](https://expressjs.com/). Le code est intégralement disponible sur [github](https://github.com/openmaraude/tutorials/tree/master/simple-driver-app).
+
+Nous vous recommandons de suivre ce tutoriel et ce même dans le cas où vous souhaitez développer votre application dans un langage différent, car il vous permettra de comprendre un cas d'utilisation simple de l'API le.taxi.
+
+Inversement ce tutoriel prend des raccourcis qui rendent l'application inapte à un déploiement en production.
+
+#### Initialisation
+
+Les commandes suivantes permettent d'initialiser un projet vierge.
+
+```shell
+$> mkdir simple-driver-app
+$> cd simple-driver-app
+$> npx express-generator --git --view=pug
+$> npm install
+$> npx nodemon
+```
+* `npx express-generator --git` permet de créer le squelette de l'application (pug remplace le moteur de template jade).
+* `npm install` installe les dépendances du fichier package.json.
+* `npx nodemon` permet de démarrer le serveur web sur le poort 3000, et redémarre l'application en cas de changement d'un fichier source. Il est possible d'écouter les connexions sur un port alternatif avec `PORT=3001 npx nodemon`.
+
+Rendez-vous sur [http://localhost:3000](http://localhost:3000) (ou le port choisi) afin de voir la page d'accueil par défaut.
+
+<CenteredImage src="/images/doc/tutorials/create_client_app/express_homepage.png" alt="Page d'accueil express.js" />
+
+#### Premiers pas
+
+Cette application montre les étapes pour enregistrer un taxi qui est, du point de vue de l'API et de la législation, la combinaison d'un chauffeur, d'une autorisation de stationnement et d'un véhicule.
+
+Ces taxis nous serviront ensuite pour le tutoriel d'application chauffeur.
+
+ Éditez le fichier `routes/index.js` pour changer l'appel à `router.get` existant pour enlever les variables de template que nous n'allons pas utiliser :
+
+```javascript
+router.get('/', function(req, res) {
+  res.render('index');
+});
+```
+
+Remplacez ensuite le contenu du fichier `views/index.pug` par le formulaire suivant :
+
+```pug
+extends layout
+
+block content
+  h1 Application opérateur
+  ul
+    li
+      a(href='/driver') Déclarer un chauffeur
+    li
+      a(href='/vehicle') Déclarer un véhicule
+    li
+      a(href='/ads') Déclarer une ADS
+    li
+      a(href='/taxi') Déclarer un taxi
+
+  fieldset
+    legend RAPPEL
+    blockquote Un taxi est la combinaison d'un chauffeur, d'un véhicule et d'une ADS, vous aurez besoin des trois avant de créer un taxi fonctionnel.
+```
+
+Pour améliorer le style par défaut de ce formulaire et des pages à venir, ajoutez à la fin du fichier `public/stylesheets/style.css` (généré par express) les styles suivants :
+
+```css
+.message {
+  color: #eeeeec;
+  background-color:#204a87;
+  padding: 20px;
+  margin-top: 30px;
+}
+
+.error {
+  background-color:#a40000;
+  padding: 20px;
+  margin-top: 30px;
+}
+
+table, th, td {
+  border-collapse: collapse;
+  border: 1px solid black;
+  padding: 10px;
+  margin-top: 30px;
+}
+
+.formfield {
+  margin-top: 20px;
+}
+
+.formfield label {
+  color: #222;
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.formfield input {
+  display: block;
+}
+```
+
+Vous pouvez recharger la page pour voir le formulaire apparaitre :
+
+<CenteredImage src="/images/doc/tutorials/create_operator_app/operator_homepage.png" alt="Page d'accueil opérateur" />
+
+
+#### Déclarer un chauffeur
+
+Cliquez sur le premier lien, vous obtenez une erreur puisque nous n'avons pas encore créé cette vue.
+
+Dans `routes/index.js`, rajoutez le code suivant :
+
+router.get('/driver', function (req, res) {
+  res.render('driver');
+});
+
+Cette vue va simplement afficher le template `views/driver.pug` que voici :
+
+```pug
+extends layout
+
+block content
+  if message
+    blockquote.message= message
+
+  if error
+    blockquote.error
+      p L'API le.taxi a répondu l'erreur suivante :
+      code= JSON.stringify(error)
+
+  a(href='/') Retour vers la page d'accueil
+
+  h1 Déclarer un chauffeur
+
+  form(action='/driver', method='POST')
+    div.formfield
+      label Prénom*
+      input(name='first_name', value=body ? body.first_name : '', required)
+    div.formfield
+      label Nom*
+      input(name='last_name', value=body ? body.last_name: '', required)
+    div.formfield
+      label Licence professionnelle*
+      input(name='professional_licence', value=body ? body.professional_licence: '' required)
+    div.formfield
+      label Département*
+      input(name='departement', value=body ? body.departement : '', required)
+    div.formfield
+      label Date de naissance (YYYY-MM-DD)
+      input(name='birth_date', value=body ? body.birth_date: '')
+    div.formfield
+      button(type='submit') Valider
+```
+
+Le résultat :
+
+<CenteredImage src="/images/doc/tutorials/create_operator_app/driver_form.png" alt="Déclarer un chauffeur" />
+
+Validez le formulaire avec les données d'un chauffeur, seule la date de naissance est optionnelle.
+
+La validation du formulaire renvoie vers une page d'erreur 404. Nous devons maintenant créer une nouvelle page pour en effectuer le traitement et c'est à partir de maintenant que nous allons travailler avec l'API le.taxi.
+
+##### Récupérer la clé d'API
+
+Rendez-vous sur la section [Mon Compte](https://console.dev.api.taxi/account) de la console de développement accessible sur https://dev.api.taxi et prenez note de votre clé d'API.
+
+<InfoBox title="Note de sécurité" type="warning">
+Votre clé d'API doit rester secrète. Dans la suite de ce tutoriel, elle sera stockée dans l'environnement. Comme tout autre mot de passe, il est vivement recommandé de ne jamais stocker votre clé directement dans un fichier source.
+
+Si vous avez besoin de changer votre clé d'API, contactez notre équipe sur equipe@le.taxi.
+</InfoBox>
+
+Arrêtez le serveur node.js, et relancez-le avec la commande `API_KEY=<votre clé API> npx nodemon` qui va rendre la clé disponible dans les variables d'environnement.
+
+
+##### Installation des dépendances
+
+Nous utiliserons dans l'étape suivante le module [`axios`](https://www.npmjs.com/package/axios) pour effectuer des requêtes sur l'API le.taxi.
+
+Installez `axios` avec la commande suivante, avant de relancer le serveur :
+
+```shell
+$> npm install axios
+$> API_KEY=<votre clé API> npx nodemon
+```
+
+##### Création de la route pour POSTer des données
+
+Ajoutez en haut du fichier `routes/index.js` l'import à axios :
+
+```javascript
+var axios = require('axios');
+```
+
+Quelque part entre les imports et les routes, des constantes pour chaque requête à l'API :
+
+```javascript
+const API_URL = 'https://dev.api.taxi'
+const headers = {
+  'Content-Type': 'application/json',
+  'X-Api-Key': process.env.API_KEY,
+}
+```
+
+Puis ajoutez la route à la fin du fichier :
+
+```javascript
+router.post('/driver', function (req, res) {
+  axios(`${API_URL}/drivers`, {
+    method: 'post',
+    headers,
+    data: {
+      data: [{
+        ...req.body,
+        departement: {
+          numero: req.body.departement,
+        },
+        birth_date: req.body.birth_date || null,
+      }]
+    }
+  }).then(() => {
+    res.render('driver', { message: "Chauffeur déclaré avec succès" });
+  }).catch(({ response }) => {
+    res.render('driver', { error: response.data, body: req.body });
+  });
+})
+```
+
+Explications :
+
+* Nous allons faire un POST sur l'endpoint `/drivers` de l'API de développement.
+* Le corps de la requête est au format `application/json` comme indiqué par les _headers_.
+* La clé d'API doit être présente dans chaque requête à l'API, même sur un GET.
+* `...req.body` est un raccourci Javascript pour réutiliser le contenu d'un Object (comme un tableau associatif ou dictionnaire dans d'autres langages), il fonctionne parce que nous avons utilisé les mêmes noms de champs dans le formulaire que ceux attendus par l'API.
+* Exception faite du département qui est attendu dans une sous-section, et de la date de naissance qui ne peut pas être une chaîne vide si elle n'est pas renseignée.
+* Distinguez bien le `data` qui est l'argument de la fonction `axios()` et le `data` qui fait partie de la structure de données attendue par l'API le.taxi.
+
+Validez à nouveau le formulaire et cette fois vous obtiendrez le message `Chauffeur déclaré avec succès` en haut de la page.
+
+Revenez vers la page d'accueil, c'est maintenant au tour de déclarer le véhicule.
+
+#### Déclarer un véhicule
+
+Maintenant que les bases sont posées, nous allons accélérer un peu.
+
+Copiez directement les deux vues dans `routes/index.js` :
+
+```javascript
+router.get('/vehicle', function (req, res) {
+  res.render('vehicle');
+});
+
+router.post('/vehicle', function (req, res) {
+  axios(`${API_URL}/vehicles`, {
+    method: 'post',
+    headers,
+    data: {
+      data: [{
+        ...req.body,
+      }]
+    }
+  }).then(() => {
+    res.render('vehicle', { message: "Véhicule déclaré avec succès" });
+  }).catch(({ response }) => {
+    res.render('vehicle', { error: response.data, body: req.body });
+  });
+})
+```
+
+et le template `views/vehicle.pug` :
+
+```pug
+extends layout
+
+block content
+  if message
+    blockquote.message= message
+
+  if error
+    blockquote.error
+      p L'API le.taxi a répondu l'erreur suivante :
+      code= JSON.stringify(error)
+
+  a(href='/') Retour vers la page d'accueil
+
+  h1 Déclarer un véhicule
+
+  form(action='/vehicle', method='POST')
+    div.formfield
+      label Plaque d'immatriculation*
+      input(name='licence_plate', value=body ? body.licence_plate : '', required)
+    div.formfield
+      button(type='submit') Valider
+```
+
+Le résultat :
+
+<CenteredImage src="/images/doc/tutorials/create_operator_app/vehicle_form.png" alt="Déclarer un véhicule" />
+
+Rien de nouveau par rapport à la création du chauffeur, nous utilisons le même raccourci `...req.body` en utilisant le nom des champs de l'API le.taxi. Le formulaire est réduit à sa plus simple expression en ne demandant que les champs obligatoires, mais en production les clients pourraient apprécier de connaître le nombre de places du véhicule ou les prestations à bord pour choisir leur taxi.
+
+Déclarez le véhicule du chauffeur précédemment envoyé.
+
+#### Déclarer une ADS
+
+La déclaration de l'autorisation de stationnement n'est pas différente, ni dans `routes/index.js` :
+
+```javascript
+router.get('/ads', function (req, res) {
+  res.render('ads');
+});
+
+router.post('/ads', function (req, res) {
+  axios(`${API_URL}/ads`, {
+    method: 'post',
+    headers,
+    data: {
+      data: [{
+        ...req.body,
+      }]
+    }
+  }).then(() => {
+    res.render('ads', { message: "ADS déclarée avec succès" });
+  }).catch(({ response }) => {
+    res.render('ads', { error: response.data, body: req.body });
+  });
+})
+```
+
+Ni dans `views/ads.pug` :
+
+```pug
+extends layout
+
+block content
+  if message
+    blockquote.message= message
+
+  if error
+    blockquote.error
+      p L'API le.taxi a répondu l'erreur suivante :
+      code= JSON.stringify(error)
+
+  a(href='/') Retour vers la page d'accueil
+
+  h1 Déclarer une ADS
+
+  form(action='/ads', method='POST')
+    div.formfield
+      label Numéro d'ADS*
+      input(name='numero', value=body ? body.numero : '', required)
+    div.formfield
+      label Code INSEE de la commune*
+      input(name='insee', value=body ? body.insee : '', required)
+    div.formfield
+      button(type='submit') Valider
+```
+
+Le résultat :
+
+<CenteredImage src="/images/doc/tutorials/create_operator_app/ads_form.png" alt="Déclarer une ADS" />
+
+Il s'agit bien ici du code commune attribué par l'INSEE et non du code postal. Par exemple, le code INSEE de Paris est 75056 et les mairies d'arrondissement n'entrent pas en compte.
+
+#### Déclarer un taxi
+
+Nous avons maintenant tous les éléments pour déclarer le taxi qui nous servira pour tutoriel de l'application chauffeur.
+
+Les deux vues à ajouter dans `routes/index.js` :
+
+```javascript
+router.get('/taxi', function (req, res) {
+  res.render('taxi');
+});
+
+router.post('/taxi', function (req, res) {
+  axios(`${API_URL}/taxis`, {
+    method: 'post',
+    headers,
+    data: {
+      data: [{
+        driver: {
+          professional_licence: req.body.professional_licence,
+          departement: req.body.departement,
+        },
+        vehicle: {
+          licence_plate: req.body.licence_plate,
+        },
+        ads: {
+          numero: req.body.numero,
+          insee: req.body.insee,
+        }
+      }]
+    }
+  }).then(() => {
+    res.render('taxi', { message: "Taxi déclaré avec succès" });
+  }).catch(({ response }) => {
+    res.render('taxi', { error: response.data, body: req.body });
+  });
+})
+```
+
+```pug
+extends layout
+
+block content
+  if message
+    blockquote.message= message
+
+  if error
+    blockquote.error
+      p L'API le.taxi a répondu l'erreur suivante :
+      code= JSON.stringify(error)
+
+  a(href='/') Retour vers la page d'accueil
+
+  h1 Déclarer un taxi
+
+  form(action='/taxi', method='POST')
+    fieldset
+      legend Chauffeur
+      div.formfield
+        label Licence professionnelle*
+        input(name='professional_licence', value=body ? body.professional_licence: '' required)
+      div.formfield
+        label Département*
+        input(name='departement', value=body ? body.departement : '', required)
+    fieldset
+      legend Véhicule
+      div.formfield
+        label Plaque d'immatriculation*
+        input(name='licence_plate', value=body ? body.licence_plate : '', required)
+    fieldset
+      legend ADS
+      div.formfield
+        label Numéro d'ADS*
+        input(name='numero', value=body ? body.numero : '', required)
+      div.formfield
+        label Code INSEE de la commune*
+        input(name='insee', value=body ? body.insee : '', required)
+      div.formfield
+        button(type='submit') Valider
+```
+
+Le résultat :
+
+<CenteredImage src="/images/doc/tutorials/create_operator_app/taxi_form.png" alt="Déclarer un taxi" />
+
+On notera juste la structure attendue par l'API qui reflète ce que nous disions sur l'objet taxi qui est la combinaison de plusieurs objets.
+
+#### Conclusion
+
+Vous avez maintenant les bases pour déclarer vos chauffeurs dans l'environnement de développement et commencer vos premiers tests.
+
+Dans des conditions réelles, il manquerait de nombreux à côtés, à commencer par l'authentification des utilisateurs de ce back-office, ou même une automatisation de la synchronisation avec votre SI existant.
+
+Nous n'avons pas non plus couvert les demandes de courses qui font partie de l'application chauffeur et du tutoriel idoine.
+
+Si vous remarquez une erreur ou vous avez des remarques concernant ce tutoriel, n'hésitez pas à nous contacter sur equipe@le.taxi.

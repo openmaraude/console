@@ -1,3 +1,191 @@
-Cette page n'est pas encore disponible. Elle contiendra un tutorial que vous pourrez suivre pour créer une application chauffeur.
+import InfoBox from '@/components/InfoBox';
 
-En attendant, vous pouvez consulter les anciennes versions de la documentation sous l'onglet "Documentation legacy".
+### Créer une application chauffeur
+
+En suivant ce tutoriel pas à pas, vous allez créer une application chauffeur permettant de mettre en relation vos chauffeurs avec l'API le.taxi.
+
+<InfoBox title="Prérequis">
+  <ul>
+    <li>Avoir un compte opérateur sur la plateforme de développement <a href="https://dev.api.taxi">dev.api.taxi</a></li>
+    <li>Un serveur accessible par notre plateforme de développement, le tutorial ne peut être fait sur votre ordinateur personnel à moins de mettre en place un tunnel ou autre redirection de port qui sort du cadre de ce tutoriel.</li>
+    <li>Une version récente de npm doit être installée.</li>
+  </ul>
+</InfoBox>
+
+L'application sera développée en Node.js en utilisant le framework [express](https://expressjs.com/). Le code est intégralement disponible sur [github](https://github.com/openmaraude/tutorials/tree/master/simple-driver-app).
+
+Nous vous recommandons de suivre ce tutoriel et ce même dans le cas où vous souhaitez développer votre application dans un langage différent, car il vous permettra de comprendre un cas d'utilisation simple de l'API le.taxi.
+
+Inversement ce tutoriel prend des raccourcis qui rendent l'application inapte à un déploiement en production.
+
+#### Initialisation
+
+Les commandes suivantes permettent d'initialiser un projet vierge.
+
+```shell
+$> mkdir simple-driver-app
+$> cd simple-driver-app
+$> npx express-generator --git --view=pug
+$> npm install
+$> npx nodemon
+```
+* `npx express-generator --git` permet de créer le squelette de l'application (pug remplace le moteur de template jade).
+* `npm install` installe les dépendances du fichier package.json.
+* `npx nodemon` permet de démarrer le serveur web sur le poort 3000, et redémarre l'application en cas de changement d'un fichier source. Il est possible d'écouter les connexions sur un port alternatif avec `PORT=3001 npx nodemon`.
+
+Rendez-vous sur [http://localhost:3000](http://localhost:3000) (ou le port choisi) afin de voir la page d'accueil par défaut.
+
+<CenteredImage src="/images/doc/tutorials/create_driver_app/express_homepage.png" alt="Page d'accueil express.js" />
+
+ #### Premiers pas
+
+ Une application chauffeur réelle devrait utiliser le GPS du smartphone pour envoyer sa position à vos serveurs, puis vos serveurs envoient les dernières positions par lot à l'API le.taxi (ce qui évite de dévoiler votre clé d'API secrète dans chaque copie de l'application).
+
+ Pour les besoins du tutoriel, nous allons simplifier en laissant un formulaire permettre de rentrer manuellement la position du véhicule et en embarquant la clé d'API dans l'application web.
+
+ Éditez le fichier `routes/index.js` pour changer l'appel à `router.get` existant pour enlever les variables de template que nous n'allons pas utiliser :
+
+```javascript
+router.get('/', function(req, res, next) {
+  res.render('index');
+});
+```
+
+Remplacez ensuite le contenu du fichier `views/index.pug` par le formulaire suivant :
+
+```pug
+extends layout
+
+block content
+  h1 Renseignez les informations du chauffeur
+
+  form(action='/update', method='POST')
+    div.formfield
+      label(for='taxi_id') Taxi ID
+      input(id='taxi_id', name='taxi_id', type='text', placeholder='ID taxi', value="" required)
+
+    div.formfield
+      label Statut
+      input(id='status_free', type='radio', name='status', value='free')
+      label(for='status_free') Free
+      input(id='status_off', type='radio', name='status', value='off')
+      label(for='status_off') Off
+
+    div.formfield
+      label(for='lon') Longitude du véhicule
+      input(id='lon', name='lon', type='number', placeholder='Longitude', step=".0000001" required)
+
+    div.formfield
+      label(for='lat') Latitude du véhicule
+      input(id='lat', name='lat', type='number', placeholder='Latitude', step=".0000001" required)
+
+    div.formfield
+      input(type='submit', value='OK')
+```
+
+Pour améliorer le style par défaut de ce formulaire et des pages à venir, ajoutez à la fin du fichier `public/stylesheets/style.css` (généré par express) les styles suivants :
+
+```css
+.error {
+  background-color: rgba(255, 0, 0, .3);
+  padding: 20px;
+  margin-top: 30px;
+}
+
+table, th, td {
+  border-collapse: collapse;
+  border: 1px solid black;
+  padding: 10px;
+  margin-top: 30px;
+}
+
+.formfield {
+  margin-top: 20px;
+}
+
+.formfield label {
+  color: #222;
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.formfield input {
+  display: block;
+}
+
+.formfield .inline {
+  display: inline;
+  margin-right: 5px;
+}
+```
+
+Vous pouvez rafraichir votre navigateur pour voir le formulaire apparaitre.
+
+#### Remonter la position du taxi
+
+Validez le formulaire de l'étape précédente avec les valeurs d'exemple suivantes :
+
+* **Taxi ID** : l'identifiant d'un de vos taxis déclarés sur l'environnement de dev. Ce tutoriel ne couvre pas la déclaration de taxis ou de chauffeurs.
+* **Statut** : N'oubliez pas que seuls les taxis "free" et géolocalisés récemment sont visibles par les clients.
+* **Longitude** 2.35 et **latitude** 48.86 : il s'agit d'un point pris au hasard dans le centre de Paris.
+
+La validation du formulaire renvoie vers une page d'erreur 404.  Nous devons maintenant créer une nouvelle page pour en effectuer le traitement.
+
+##### Récupérer la clé d'API
+
+Rendez-vous sur la section [Mon Compte](https://console.dev.api.taxi/account) de la console de développement accessible sur https://dev.api.taxi et prenez note de votre clé d'API.
+
+<InfoBox title="Note de sécurité" type="warning">
+Votre clé d'API doit rester secrète. Dans la suite de ce tutoriel, elle sera stockée dans l'environnement. Comme tout autre mot de passe, il est vivement recommandé de ne jamais stocker votre clé directement dans un fichier source.
+
+Si vous avez besoin de changer votre clé d'API, contactez notre équipe sur equipe@le.taxi.
+</InfoBox>
+
+Arrêtez le serveur node.js, et relancez le avec la commande `API_KEY=<votre clé API> npx nodemon`.
+
+
+##### Installation des dépendances
+
+Nous utiliserons dans l'étape suivante le module [`axios`](https://www.npmjs.com/package/axios) pour effectuer des requêtes sur l'API le.taxi.
+
+Installez `axios` avec la commande suivante, avant de relancer le serveur :
+
+```shell
+$> npm install axios
+$> API_KEY=<votre clé API> npx nodemon
+```
+
+##### Création de la route pour mettre à jour les données du taxi
+
+Ajoutez en haut du fichier `routes/index.js` l'import à axios :
+
+```javascript
+var axios = require('axios');
+```
+
+Puis ajoutez la route à la fin du fichier :
+
+```javascript
+router.get('/index', function(req, res, next) {
+  axios(`https://dev.api.taxi/taxis?lon=${req.query.lon}&lat=${req.query.lat}`, {
+    headers: {
+      'X-Api-Key': process.env.API_KEY,
+    },
+  }).then(({ data }) => {
+    res.render('search_taxis', {
+      taxis: data.data,
+      client: {
+        ...req.query
+      },
+    });
+  }).catch(({ response }) => {
+    res.render('search_taxis', {
+      error: response.data,
+      client: {
+        ...req.query,
+      },
+    });
+  });
+});
+```
