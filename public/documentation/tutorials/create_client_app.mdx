@@ -64,7 +64,7 @@ block content
   form(action='/search_taxis')
     div.formfield
       label(for='customer_id') Customer id
-      input(id='customer_id', name='customer_id', type='text', placeholder='Id client', value="#{parseInt(Math.random() * 1000000)}" required)
+      input(id='customer_id', name='customer_id', type='text', placeholder='Id client', value=parseInt(Math.random() * 1000000) required)
 
     div.formfield
       label(for='phone_number') Numéro de téléphone du client
@@ -171,7 +171,7 @@ block content
   if error
     div.error
       p L'API le.taxi a répondu l'erreur suivante :
-      code #{JSON.stringify(error)}
+      code= JSON.stringify(error)
 
   if taxis
     table
@@ -186,17 +186,17 @@ block content
 
       for taxi in taxis
         tr
-          td #{taxi.id}
-          td #{taxi.operator}
-          td #{taxi.vehicle.licence_plate}
-          td #{taxi.position.lon.toFixed(5)}
-          td #{taxi.position.lat.toFixed(5)}
+          td= taxi.id
+          td= taxi.operator
+          td= taxi.vehicle.licence_plate
+          td= taxi.position.lon.toFixed(5)
+          td= taxi.position.lat.toFixed(5)
           td #{taxi.crowfly_distance} mètres
           td
             form(action='/order', method="post")
-              input(name='taxi_id', type='hidden', value="#{taxi.id}")
-              input(name='operator', type='hidden', value="#{taxi.operator}")
-              input(name='client', type='hidden', value="#{JSON.stringify(client)}")
+              input(name='taxi_id', type='hidden', value=taxi.id)
+              input(name='operator', type='hidden', value=taxi.operator)
+              input(name='client', type='hidden', value=JSON.stringify(client))
               input(type="submit", value="Commander")
 ```
 
@@ -299,7 +299,7 @@ block content
   if error
     div.error
       p L'API le.taxi a répondu l'erreur suivante :
-      code #{JSON.stringify(error)}
+      code= JSON.stringify(error)
 ```
 
 Ajoutez ensuite la route suivante dans le fichier `routes/index.js` :
@@ -369,7 +369,7 @@ block content
   if error
     div.error
       p L'API le.taxi a répondu l'erreur suivante :
-      code #{JSON.stringify(error)}
+      code= JSON.stringify(error)
 
   if hail
     table
