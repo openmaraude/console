@@ -8,6 +8,7 @@ En suivant ce tutoriel pas à pas, vous allez créer une application chauffeur p
   <ul>
     <li>Avoir un compte opérateur sur la plateforme de développement <a href="https://dev.api.taxi">dev.api.taxi</a></li>
     <li>Un serveur accessible par notre plateforme de développement, le tutorial ne peut être fait sur votre ordinateur personnel à moins de mettre en place un tunnel ou autre redirection de port qui sort du cadre de ce tutoriel.</li>
+    <li>Avoir déjà déclaré les taxis sur l'API le.taxi, par exemple en suivant le tutoriel précédent.</li>
     <li>Une version récente de npm doit être installée.</li>
   </ul>
 </InfoBox>
@@ -16,7 +17,9 @@ L'application sera développée en Node.js en utilisant le framework [express](h
 
 Nous vous recommandons de suivre ce tutoriel et ce même dans le cas où vous souhaitez développer votre application dans un langage différent, car il vous permettra de comprendre un cas d'utilisation simple de l'API le.taxi.
 
-Inversement ce tutoriel prend des raccourcis qui rendent l'application inapte à un déploiement en production.
+Inversement ce tutoriel prend des raccourcis qui rendent l'application inapte à un déploiement en production. Elle prend en charge une partie du travail dévolu au _backend_ sur vos serveurs pour simplifier le code.
+
+Nous n'abordons pas cet aspect, toujours dans un souci de simplicité, mais vous voudrez protéger d'une façon ou d'une autre cette application accessible par internet, même temporaire, elle utilise votre clé d'API de la plateforme de développement.
 
 #### Initialisation
 
@@ -29,24 +32,25 @@ $> npx express-generator --git --view=pug
 $> npm install
 $> npx nodemon
 ```
+
 * `npx express-generator --git` permet de créer le squelette de l'application (pug remplace le moteur de template jade).
 * `npm install` installe les dépendances du fichier package.json.
 * `npx nodemon` permet de démarrer le serveur web sur le poort 3000, et redémarre l'application en cas de changement d'un fichier source. Il est possible d'écouter les connexions sur un port alternatif avec `PORT=3001 npx nodemon`.
 
 Rendez-vous sur [http://localhost:3000](http://localhost:3000) (ou le port choisi) afin de voir la page d'accueil par défaut.
 
-<CenteredImage src="/images/doc/tutorials/create_driver_app/express_homepage.png" alt="Page d'accueil express.js" />
+<CenteredImage src="/images/doc/tutorials/create_client_app/express_homepage.png" alt="Page d'accueil express.js" />
 
  #### Premiers pas
 
- Une application chauffeur réelle devrait utiliser le GPS du smartphone pour envoyer sa position à vos serveurs, puis vos serveurs envoient les dernières positions par lot à l'API le.taxi (ce qui évite de dévoiler votre clé d'API secrète dans chaque copie de l'application).
+ Une application chauffeur réelle devrait utiliser le GPS du smartphone pour envoyer sa position à vos serveurs, puis vos serveurs envoient les dernières positions par lot à l'API le.taxi (ce qui évite de dupliquer votre clé d'API secrète dans chaque copie de l'application).
 
- Pour les besoins du tutoriel, nous allons simplifier en laissant un formulaire permettre de rentrer manuellement la position du véhicule et en embarquant la clé d'API dans l'application web.
+ Pour les besoins du tutoriel, nous allons simplifier en laissant un formulaire permettre de rentrer manuellement la position du véhicule et en déclarant la clé d'API dans l'environnement de déploiement de l'application web.
 
  Éditez le fichier `routes/index.js` pour changer l'appel à `router.get` existant pour enlever les variables de template que nous n'allons pas utiliser :
 
 ```javascript
-router.get('/', function(req, res, next) {
+router.get('/', function(req, res) {
   res.render('index');
 });
 ```
@@ -57,27 +61,12 @@ Remplacez ensuite le contenu du fichier `views/index.pug` par le formulaire suiv
 extends layout
 
 block content
-  h1 Renseignez les informations du chauffeur
+  h1 Connexion à l'application
 
-  form(action='/update', method='POST')
+  form(action='/status')
     div.formfield
       label(for='taxi_id') Taxi ID
-      input(id='taxi_id', name='taxi_id', type='text', placeholder='ID taxi', value="" required)
-
-    div.formfield
-      label Statut
-      input(id='status_free', type='radio', name='status', value='free')
-      label(for='status_free') Free
-      input(id='status_off', type='radio', name='status', value='off')
-      label(for='status_off') Off
-
-    div.formfield
-      label(for='lon') Longitude du véhicule
-      input(id='lon', name='lon', type='number', placeholder='Longitude', step=".0000001" required)
-
-    div.formfield
-      label(for='lat') Latitude du véhicule
-      input(id='lat', name='lat', type='number', placeholder='Latitude', step=".0000001" required)
+      input(id='taxi_id', name='taxi_id', type='text', placeholder='ID taxi', required)
 
     div.formfield
       input(type='submit', value='OK')
@@ -120,72 +109,321 @@ table, th, td {
 }
 ```
 
-Vous pouvez rafraichir votre navigateur pour voir le formulaire apparaitre.
+Vous pouvez rafraichir votre navigateur pour voir le formulaire apparaitre :
 
-#### Remonter la position du taxi
+<CenteredImage src="/images/doc/tutorials/create_driver_app/driver_homepage.png" alt="Page d'accueil chauffeur" />
 
-Validez le formulaire de l'étape précédente avec les valeurs d'exemple suivantes :
+Il va nous permettre de choisir quel taxi utiliser pour la suite de ce tutoriel. Aucune connexion à l'API à cette étape, le taxi sera simplement en paramètre d'URL des vues suivantes.
 
-* **Taxi ID** : l'identifiant d'un de vos taxis déclarés sur l'environnement de dev. Ce tutoriel ne couvre pas la déclaration de taxis ou de chauffeurs.
-* **Statut** : N'oubliez pas que seuls les taxis "free" et géolocalisés récemment sont visibles par les clients.
-* **Longitude** 2.35 et **latitude** 48.86 : il s'agit d'un point pris au hasard dans le centre de Paris.
+#### Connecter un chauffeur
 
-La validation du formulaire renvoie vers une page d'erreur 404.  Nous devons maintenant créer une nouvelle page pour en effectuer le traitement.
+La première chose à faire pour un connecter un chauffeur est de récuperer son état actuel du point de vue de l'API le.taxi. Pour faciliter l'usage de cette application nous réutilisons aussi sa dernière position connue, mais en conditions réelles c'est la position du GPS qui fait foi.
 
-##### Récupérer la clé d'API
-
-Rendez-vous sur la section [Mon Compte](https://console.dev.api.taxi/account) de la console de développement accessible sur https://dev.api.taxi et prenez note de votre clé d'API.
-
-<InfoBox title="Note de sécurité" type="warning">
-Votre clé d'API doit rester secrète. Dans la suite de ce tutoriel, elle sera stockée dans l'environnement. Comme tout autre mot de passe, il est vivement recommandé de ne jamais stocker votre clé directement dans un fichier source.
-
-Si vous avez besoin de changer votre clé d'API, contactez notre équipe sur equipe@le.taxi.
-</InfoBox>
-
-Arrêtez le serveur node.js, et relancez le avec la commande `API_KEY=<votre clé API> npx nodemon`.
-
-
-##### Installation des dépendances
-
-Nous utiliserons dans l'étape suivante le module [`axios`](https://www.npmjs.com/package/axios) pour effectuer des requêtes sur l'API le.taxi.
-
-Installez `axios` avec la commande suivante, avant de relancer le serveur :
-
-```shell
-$> npm install axios
-$> API_KEY=<votre clé API> npx nodemon
-```
-
-##### Création de la route pour mettre à jour les données du taxi
-
-Ajoutez en haut du fichier `routes/index.js` l'import à axios :
+Ajoutons la vue qui affiche l'état actuel du taxi dans `routes/index.js` :
 
 ```javascript
-var axios = require('axios');
-```
-
-Puis ajoutez la route à la fin du fichier :
-
-```javascript
-router.get('/index', function(req, res, next) {
-  axios(`https://dev.api.taxi/taxis?lon=${req.query.lon}&lat=${req.query.lat}`, {
-    headers: {
-      'X-Api-Key': process.env.API_KEY,
-    },
+router.get('/status', function (req, res) {
+  var taxi_id = req.query.taxi_id;
+  // Refresh taxi status
+  axios(`${API_URL}/taxis/${taxi_id}`, {
+    headers,
   }).then(({ data }) => {
-    res.render('search_taxis', {
-      taxis: data.data,
-      client: {
-        ...req.query
-      },
-    });
+    res.render('status', { taxi: data.data[0], hail });
   }).catch(({ response }) => {
-    res.render('search_taxis', {
-      error: response.data,
-      client: {
-        ...req.query,
-      },
-    });
+    var message = `error on GET ${response.request.path}`;
+    res.render('error', { message, status: response.status, error: response.data });
   });
 });
 ```
+
+et le template correspondant dans `views/status.pug` :
+
+```pug
+extends layout
+
+block content
+  h1= `${taxi.driver.first_name} ${taxi.driver.last_name}`
+
+  form(action='/status?taxi_id=' + taxi.id, method='POST')
+    div.formfield
+      label Statut
+      input.inline(id='status_free', type='radio', name='status', value='free', checked=taxi.status == 'free')
+      label.inline(for='status_free') Free
+      input.inline(id='status_off', type='radio', name='status', value='off', checked=taxi.status != 'free')
+      label.inline(for='status_off') Off
+
+    div.formfield
+      label(for='lon') Longitude du véhicule
+      input(id='lon', name='lon', type='number', placeholder='Longitude', step=".0000001" value=taxi.position.lon, required)
+
+    div.formfield
+      label(for='lat') Latitude du véhicule
+      input(id='lat', name='lat', type='number', placeholder='Latitude', step=".0000001" value=taxi.position.lat, required)
+
+    div.formfield
+      input(type='submit', value='OK')
+```
+
+Pour actualiser l'état du taxi, il suffit d'actualiser la page. En conditions réelles, il faudrait _poll_ régulièrement l'endpoint `/taxis/:taxi_id` car l'API pourrait changer le statut du chauffeur pour les raisons détaillées dans les guides thématiques.
+
+#### Changer sa disponibilité et envoyer sa position
+
+Le template ci-dessus fait référence à une vue POST pour changer le statut et la position du taxi. Pour tester le parcours client, il nous faudra manuellement envoyer cette position car seuls les taxis disponibles et ayant une position fraîche de moins de deux minutes apparaissent dans l'API. Et bien sûr il faudra que le taxi soit dans sa zone de prise en charge (commune ou service commun).
+
+Ajoutez cette vue dans `routes/index.js` :
+
+```javascript
+router.post('/status', function (req, res) {
+  var taxi_id = req.query.taxi_id;
+  axios(`${API_URL}/taxis/${taxi_id}`, {
+    method: 'put',
+    headers,
+    data: {
+      data: [{
+        status: req.body.status,
+      }]
+    }
+  }).then(({ data }) => {
+    axios(`${API_URL}/geotaxi`, {
+      method: 'post',
+      headers,
+      data: {
+        data: [{
+          positions: [
+            { taxi_id, lon: req.body.lon, lat: req.body.lat },
+          ]
+        }],
+      }
+    }).then(() => {
+      res.redirect(`/status?taxi_id=${taxi_id}`);
+    }).catch(({ response }) => {
+      var message = `error on POST ${response.request.path}`
+      res.render('error', { message, status: response.status, error: response.data });
+    })
+  }).catch(({ response }) => {
+    var message = `error on PUT ${response.request.path}`
+    res.render('error', { message, status: response.status, error: response.data });
+  });
+});
+```
+
+Cette vue est un peu plus complexe que nécessaire car elle doit assurer deux tâches qui sont indépendantes en conditions réelles :
+- signaler sa disponibilité, ce qui est déjà implémenté dans une application chauffeur existante, ou peut être automatisé avec le contrôle du lumineux ;
+- envoyer sa position, ce qui est fait de façon transparente en arrière-plan, puis ce sont vos serveurs qui envoient les dernières positions de la flotte à l'API le.taxi.
+
+Et ce sont donc deux endpoints séparés de l'API. Pour la simplicité du tutoriel, cette application chauffeur fonctionne sans serveur en _backend_.
+
+La vue se contente de réafficher la page de statut, ce qui nous donne une boucle pour actualiser le statut et la position du taxi.
+
+#### Accepter une course
+
+Finissons avec la partie la plus intéressante ! Ici encore, l'application chauffeur va être son propre _backend_ et c'est pourquoi nous avons besoin de l'héberger sur un serveur accessible depuis nos propres serveurs.
+
+Commençons par déclarer ce vrai-faux _backend_. Rendez-vous sur la [console de développement](https://console.dev.api.taxi/account), section `Mon compte` où vous avez obtenu la clé d'API, et dans la partie API renseignez l'URL où vous hébergez ce tutoriel, mais assurez-vous de terminer cette URL par `/hail` pour les besoins de ce qui va suivre. Si nécessaire vous pouvez ajouter un header pour authentifier que la requête vient bien de nous mais ce n'est pas illustré par la suite.
+
+Ajoutons maintenant la vue que l'API le.taxi va appeler dans `routers/index.js` :
+
+```javascript
+var hail = undefined;
+
+router.post('/hail', function (req, res) {
+  hail = req.body.data[0];
+  res.json({});
+});
+```
+
+Elle se contente d'enregistrer la demande de course dans une variable globale, ce qui n'est évidemment pas une bonne pratique en production ! Ce qui importe de retenir ici, c'est que l'API le.taxi attend en retour une réponse au format JSON valide, pas juste un status 200 ou 201.
+
+Mais ce n'est pas suffisant pour implémenter la demande de course ? Non bien sûr. J'avais caché une partie du code en attendant de créer cette variable globale `hail`.
+
+La vraie vue `/status` ressemble à ceci :
+
+```javascript
+router.get('/status', function (req, res) {
+  var taxi_id = req.query.taxi_id;
+  // Refresh taxi status
+  axios(`${API_URL}/taxis/${taxi_id}`, {
+    headers,
+  }).then(({ data }) => {
+    // Refresh hail status if any
+    if (hail) {
+      axios(`${API_URL}/hails/${hail.id}`, {
+        headers,
+      }).then(({ data }) => {
+        hail = data.data[0];
+      });
+      // Simulate the operator backend and pretend it was sent to the driver app
+      // Must happen under 10 seconds after the hail is `received_by_operator`
+      if (hail.status == 'received_by_operator') {
+        update_hail_status('received_by_taxi');
+      }
+    }
+    res.render('status', { taxi: data.data[0], hail });
+  }).catch(({ response }) => {
+    if (response) {
+      var message = `error on GET ${response.request.path}`;
+      res.render('error', { message, status: response.status, error: response.data });
+    } else {
+      res.render('error', { message: JSON.stringify(response), status: 0, error: "no response" });
+    }
+  });
+});
+```
+
+Elle appelle une fonction `update_hail_status` que nous allons réutiliser :
+
+```javascript
+function update_hail_status(status, taxi_phone_number = null) {
+  var data = {
+    data: [{
+      status: status
+    }]
+  };
+  if (taxi_phone_number) {
+    data.data[0]['taxi_phone_number'] = taxi_phone_number;
+  }
+
+  axios(`${API_URL}/hails/${hail.id}`, {
+    method: 'put',
+    headers,
+    data,
+  }).then(({ data }) => {
+    // Received the updated hail
+    hail = data.data[0];
+  });
+}
+```
+
+Rien d'inhabituel, nous envoyons un `PUT` pour mettre à jour le statut. Le numéro de téléphone sera utilisé plus tard.
+
+La page de statut doit maintenant à la fois actualiser le statut du taxi et le statut d'une demande de cours en cours. Comme cette demande va changer de statut rapidement à mesure que le client envoie puis confirme sa demande, il faudra _poll_ l'endpoint de l'API régulièrement pour rester à jour, disons toutes les secondes. Ce poll sera fait de préférence du côté de vos serveurs, et l'application chauffeur n'aura besoin d'une notification _push_ (ou autre méthode de votre choix) en cas de changement.
+
+<InfoBox>
+Ici le tutoriel simule votre _backend_ en s'occupant lui-même de confirmer la notification de la course à l'application chauffeur au moment d'afficher la page. Et comme l'API le.taxi attend une confirmation relativement rapide, il faudra s'assurer d'avoir rechargé la page après avoir envoyé la demande de course. Nous y reviendrons.
+</InfoBox>
+
+Et le vrai template de statut doit aussi afficher la demande de course :
+
+```pug
+
+  if hail
+    h2 Course en cours !
+      table
+        tr
+          th ID
+          td= hail.id
+        tr
+          th Statut
+          td= hail.status
+        tr
+          th Adresse
+          td= hail.customer_address
+        tr
+          td
+          td
+            form(action='/update_hail', method='POST')
+              input(type='hidden', name='taxi_id', value=taxi.id)
+              if hail.status == 'received_by_taxi'
+                p Le client attend 30 secondes votre acceptation de sa demande de course
+                button(type='submit', name='action', value='accept') Accepter
+                button(type='submit', name='action', value='decline') Refuser
+              else if hail.status == 'accepted_by_taxi'
+                p Le client a 30 secondes pour confirmer sa demande de course...
+                button(type='submit', name='action', value='declare_incident') Signaler un incident
+              else if hail.status == 'accepted_by_customer'
+                button(type='submit', name='action', value='declare_on_board') Déclarer le client à bord
+                button(type='submit', name='action', value='declare_incident') Signaler un incident
+              else if hail.status == 'customer_on_board'
+                button(type='submit', name='action', value='finish') Terminer la course
+                button(type='submit', name='action', value='declare_incident') Signaler un incident
+              else
+                button(type='submit', name='action', value='reset') Reset for developement
+  else
+    em Pas de demande de course
+```
+
+à rajouter sous le contenu existant. En cas de doute, consultez la [version finale](https://github.com/openmaraude/tutorials/tree/master/simple-driver-app).
+
+Le template met en avant les actions possibles en fonction du statut de la course. Seul le bouton `reset` est spécifique à ce tutoriel pour nettoyer l'objet global `hail`.
+
+Le formulaire renvoie vers une vue `/update_hail` que voici :
+
+```javascript
+router.post('/update_hail', function (req, res) {
+  var taxi_id = req.body.taxi_id;
+  switch (req.body.action) {
+    case 'accept':
+      // taxi_phone_number is required at one step or another before the hail can be accepted
+      update_hail_status('accepted_by_taxi', '0123456789');
+      break;
+    case 'decline':
+      update_hail_status('declined_by_taxi');
+      break;
+    case 'declare_incident':
+      update_hail_status('incident_taxi');
+      break;
+    case 'declare_on_board':
+      update_hail_status('customer_on_board');
+      break;
+    case 'finish':
+      update_hail_status('finished');
+      break;
+    case 'reset':
+      hail = null;
+      break;
+  }
+  res.redirect(`/status?taxi_id=${taxi_id}`);
+});
+```
+
+En fonction du choix du chauffeur, nous mettons à jour le statut de la course puis réaffichons la page de statut. Le _reset_ d'une demande de course en cours va conduire l'API le.taxi à la déclarer en _timeout_.
+
+Le seul cas spécial pour mettre à jour le statut de la course est l'acceptation, qui demande le numéro de téléphone du taxi, et qui sera envoyé au client. Il est également possible de l'envoyer dès la confirmation de la récéption de la course par le taxi, et l'acceptation n'aura pas besoin de l'envoyer. C'est à votre choix.
+
+### Simuler un parcours client
+
+Nous avons maintenant toutes les briques pour simuler un parcours client. Toujours sur la [console de développement](https://console.dev.api.taxi/), rendez-vous cette fois dans la section `Intégration`, puis `Simuler application client`. Gardez à côté votre application chauffeur, par exemple chacun sur une moitié d'écran.
+
+Commencez par rendre le taxi disponible et le placer à des coordonnées compatibles avec son ADS, sinon il ne sera pas visible sur l'application du client.
+
+<InfoBox>
+Attention à l'outil utilisé pour trouver les coordonnées, ils n'utilisent pas forcément le même système de coordonnées. L'API le.taxi utilise le standard WGS 84 EPSG 4326, le même que le GPS et l'erreur de conversion entre deux systèmes de coordonnées peut faire sortir le taxi de sa zone de prise en charge. [OpenStreetMap](https://www.openstreetmap.org/) devrait donner la réponse attendue.
+</InfoBox>
+
+Côté client, rentrez les mêmes coordonnées ou assez proches pour rester dans un rayon de 500 m, le taxi devrait être listé. Cliquez sur la flèche bleue dans la ligne du taxi pour ouvrir les détails. L'adresse actuelle n'a aucune importance, une application client réelle se chargera de traduire les coordonnées en adresse (_reverse geocoding_). Cliquez simplement sur `Envoyer la demande de course`. Si vous avez laissé passer deux minutes, l'API le.taxi signalera que le taxi n'est plus en ligne, il faudra renvoyer les coordonnées côté chauffeur avant de réessayer.
+
+Une fois la demande partie, rechargez la page de l'application chauffeur. Si vous êtes assez rapide, vous devriez voir toutes les étapes :
+
+- `received` quand l'API le.taxi enregistre la demande de course ;
+- `received_by_operator` quand la vue `/hail` de notre application a répondu ;
+- `received_by_taxi` quand notre application a simulé la notification au chauffeur ;
+
+<CenteredImage src="/images/doc/tutorials/create_driver_app/hail_received.png" alt="received" />
+<CenteredImage src="/images/doc/tutorials/create_driver_app/hail_received_by_operator.png" alt="received_by_operator" />
+<CenteredImage src="/images/doc/tutorials/create_driver_app/hail_received_by_taxi.png" alt="received_by_taxi" />
+
+La page de statut affiche maintenant le bouton pour que le chauffeur accepte la course, confirmez (nous vous laissons tester les autres issues possibles à une demande de course). La page est rechargée et vous voyez la course passer dans l'état `accepted_by_taxi`.
+
+Côté client, acceptez la course avant l'expiration du délai pour confirmer (notre outil d'intégration ne confirme pas les courses automatiquement mais certaines applications de mobilité pourraient choisir de le faire) :
+
+<CenteredImage src="/images/doc/tutorials/create_driver_app/hail_customer_confirm.png" alt="" />
+
+Rechargez la page de taxi et le chauffeur peut voir que le client a confirmé sa demande de course. À cette étape, le chauffeur est en route pour prendre en charge le client. Ce qu'il peut confirmer en déclarant le client à bord :
+
+<CenteredImage src="/images/doc/tutorials/create_driver_app/hail_accepted_by_customer.png" alt="accepted_by_customer" />
+
+Une fois la course terminée, le chauffeur peut déclarer la course terminée :
+
+<CenteredImage src="/images/doc/tutorials/create_driver_app/hail_customer_on_board.png" alt="customer_on_board" />
+
+Une course `finished` est dans son état final et ne peut plus changer :
+
+<CenteredImage src="/images/doc/tutorials/create_driver_app/hail_finished.png" alt="finished" />
+
+
+<InfoBox>
+À noter que pendant tout ce temps, le chauffeur était dans un statut "occupé" pour l'API et donc invisible pour d'autres clients.
+Une fois la course terminée, il repasse dans le statut "disponible et réapparaît, du moins si la course ne l'a pas fait sortir de sa zone de prise en charge.
+</InfoBox>
+
+Encore une fois nous vous laissons tester les autres issues possibles pour une course avant d'intégrer l'API le.taxi dans votre infrastructure.
