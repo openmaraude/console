@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 
 import clsx from 'clsx';
 
-import { fade, makeStyles } from '@material-ui/core/styles';
+import { alpha, makeStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 import BaseLayout from '@/components/layouts/BaseLayout';
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
   activeMenuItem: {
     border: `1px solid ${theme.palette.divider}`,
-    backgroundColor: fade(theme.palette.info.light, 0.15),
+    backgroundColor: alpha(theme.palette.info.light, 0.15),
   },
 
   secondaryMenuItem: {

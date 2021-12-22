@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Link from 'next/link';
 
-import { fade, makeStyles } from '@material-ui/core/styles';
+import { alpha, makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
@@ -22,10 +22,10 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
   },
   hailSuccessTitle: {
-    backgroundColor: fade(theme.palette.success.light, 0.35),
+    backgroundColor: alpha(theme.palette.success.light, 0.35),
   },
   hailFailureTitle: {
-    backgroundColor: fade(theme.palette.error.light, 0.35),
+    backgroundColor: alpha(theme.palette.error.light, 0.35),
   },
 }));
 

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
 
-import { fade, makeStyles } from '@material-ui/core/styles';
+import { alpha, makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -14,17 +14,17 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
   },
   typeInfo: {
-    backgroundColor: fade(theme.palette.info.light, 0.15),
+    backgroundColor: alpha(theme.palette.info.light, 0.15),
     borderTop: `1px solid ${theme.palette.info.main}`,
     borderBottom: `1px solid ${theme.palette.info.main}`,
   },
   typeWarning: {
-    backgroundColor: fade(theme.palette.warning.light, 0.15),
+    backgroundColor: alpha(theme.palette.warning.light, 0.15),
     borderTop: `1px solid ${theme.palette.warning.main}`,
     borderBottom: `1px solid ${theme.palette.warning.main}`,
   },
   typeError: {
-    backgroundColor: fade(theme.palette.error.light, 0.15),
+    backgroundColor: alpha(theme.palette.error.light, 0.15),
     borderTop: `1px solid ${theme.palette.error.main}`,
     borderBottom: `1px solid ${theme.palette.error.main}`,
   },
