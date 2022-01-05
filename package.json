@@ -10,13 +10,13 @@
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@mdx-js/loader": "^1.6.22",
     "@mdx-js/react": "^1.6.22",
-    "@next/mdx": "^12.0.4",
+    "@next/mdx": "^12.0.7",
     "@sentry/cli": "^1.65.0",
     "@sentry/nextjs": "^6.5.1",
     "@sentry/tracing": "^6.5.1",
     "clsx": "^1.1.1",
     "eslint-import-resolver-alias": "^1.1.2",
-    "faker": "^5.4.0",
+    "faker": "^6.6.6",
     "github-slugger": "^1.3.0",
     "leaflet": "^1.7.1",
     "lodash": "^4.17.20",
@@ -28,8 +28,8 @@
     "react-dom": "^17.0.2",
     "react-leaflet": "^3.1.0",
     "react-syntax-highlighter": "^15.4.3",
-    "react-toastify": "^7.0.1",
-    "swr": "^0.4.2"
+    "react-toastify": "^8.1.0",
+    "swr": "^1.1.2"
   },
   "scripts": {
     "dev": "next -p 5103",
@@ -40,8 +40,8 @@
     "lint": "eslint \"./components/**\" \"./pages/**\" \"./src/**\""
   },
   "devDependencies": {
-    "eslint": "^7.18.0",
-    "eslint-config-airbnb": "^18.2.1",
+    "eslint": "^8.6.0",
+    "eslint-config-airbnb": "^19.0.4",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.22.0",
