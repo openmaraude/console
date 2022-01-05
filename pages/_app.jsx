@@ -4,6 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -37,6 +38,7 @@ export default function ConsoleApp({ Component, pageProps }) {
   }, []);
 
   const [user, setUser] = React.useState();
+  const router = useRouter();
 
   const authenticate = async (form) => setUser(await login(form));
   const logout = () => setUser(doLogout());
@@ -45,6 +47,7 @@ export default function ConsoleApp({ Component, pageProps }) {
   React.useEffect(() => {
     const currentUser = getCurrentUser();
     setUser(currentUser);
+    router.push(router.asPath);
   }, []);
 
   return (
