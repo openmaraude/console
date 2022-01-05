@@ -17,9 +17,11 @@ L'application sera développée en Node.js en utilisant le framework [express](h
 
 Nous vous recommandons de suivre ce tutoriel et ce même dans le cas où vous souhaitez développer votre application dans un langage différent, car il vous permettra de comprendre un cas d'utilisation simple de l'API le.taxi.
 
-Inversement ce tutoriel prend des raccourcis qui rendent l'application inapte à un déploiement en production. Elle prend en charge une partie du travail dévolu au _backend_ sur vos serveurs pour simplifier le code.
+Vous devez protéger d'une façon ou d'une autre cette application accessible par internet, même temporaire, elle utilise votre clé d'API de la plateforme de développement.
 
-Nous n'abordons pas cet aspect, toujours dans un souci de simplicité, mais vous voudrez protéger d'une façon ou d'une autre cette application accessible par internet, même temporaire, elle utilise votre clé d'API de la plateforme de développement.
+<InfoBox title="Avertissement avant de commencer">
+Pour éviter de complexifier ce tutoriel, notre application de démonstration sera à la fois le back-office connecté à l'API le.taxi et l'application finale utilisée par le chauffeur. En conditions réelles, le back-office sera hébergé sur un de vos serveurs en ligne, et l'application sera uniquement connectée à votre back-office. Seul le back-office doit connaître votre clé d'API le.taxi.
+</InfoBox>
 
 #### Initialisation
 
