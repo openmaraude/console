@@ -6,7 +6,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Box from '@material-ui/core/Box';
-import { DataGrid, GridOverlay } from '@material-ui/data-grid';
+import { DataGrid, GridOverlay } from '@mui/x-data-grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { makeStyles } from '@material-ui/core/styles';
 
