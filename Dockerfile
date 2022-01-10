@@ -1,3 +1,17 @@
+##### DEV IMAGE #####
+
+FROM node:lts AS devenv
+
+WORKDIR /git/console
+
+ADD devenv/entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]
+
+CMD ["npm", "run", "dev"]
+
+
+##### PROD IMAGE #####
+
 FROM node:lts AS builder
 
 # Image must be built with --build-arg=<sentry token> to inform sentry of the
