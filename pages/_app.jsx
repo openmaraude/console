@@ -4,7 +4,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -38,7 +37,6 @@ export default function ConsoleApp({ Component, pageProps }) {
   }, []);
 
   const [user, setUser] = React.useState();
-  const router = useRouter();
 
   const authenticate = async (form) => setUser(await login(form));
   const logout = () => setUser(doLogout());
@@ -47,15 +45,6 @@ export default function ConsoleApp({ Component, pageProps }) {
   React.useEffect(() => {
     const currentUser = getCurrentUser();
     setUser(currentUser);
-    // Redirect to the protected page after login
-    // Since the root page is an alias to /dashboards (not a redirect) they are equivalent
-    // Or else we'll enter a loop of redirections between / and /dashboards
-    // Maybe an actual redirect would be cleaner, not having the same page on two URLs
-    let pathname = router.pathname == '/' ? '/dashboards' : router.pathname
-    let asPath = router.asPath == '/' ? '/dashboards' : router.asPath
-    if (asPath != pathname) {
-      router.replace(asPath);
-    }
   }, []);
 
   return (
