@@ -14,10 +14,9 @@ graphs:
 
 build: graphs
 ifndef SENTRY_AUTH_TOKEN
-	@echo "	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" >&2
-	@echo "	! Please set the environment variable SENTRY_AUTH_TOKEN !" >&2
-	@echo "	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" >&2
-	@exit 1
+	@echo "	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" >&2
+	@echo "	! WARNING, SENTRY_AUTH_TOKEN IS NOT SET !" >&2
+	@echo "	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" >&2
 endif
 	docker build --target devenv -t ${DOCKER_IMAGE_DEVENV}:${RELEASE} .
 	docker build --build-arg SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN} -t ${DOCKER_IMAGE}:${RELEASE} .

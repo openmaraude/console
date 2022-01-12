@@ -44,4 +44,6 @@ module.exports = withMDX({
   pageExtensions: ['js', 'jsx', 'md', 'mdx'],
 });
 
-module.exports = withSentryConfig(module.exports, {silent: true});
+if (process.env.SENTRY_AUTH_TOKEN) {
+  module.exports = withSentryConfig(module.exports, {silent: true});
+}
