@@ -738,14 +738,14 @@ function Taxi({ taxi }) {
   );
 
   // Avoid code duplication.
-  const TaxiSection = ({ children }) => (
+  const TaxiSection = React.useCallback(({ children }) => (
     <section ref={sectionRef} className={classes.section}>
       <Typography variant="h5">Détails du taxi {taxi.id}</Typography>
 
       {error && <APIErrorAlert error={error} />}
       {children}
     </section>
-  );
+  ), []);
 
   TaxiSection.propTypes = {
     children: PropTypes.node.isRequired,

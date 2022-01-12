@@ -552,7 +552,7 @@ function Taxi({ taxi }) {
     },
   );
 
-  const TaxiSection = ({ children }) => (
+  const TaxiSection = React.useCallback(({ children }) => (
     <section className={classes.section}>
       <Typography variant="h5">Détails du taxi {taxi.id}</Typography>
 
@@ -570,7 +570,7 @@ function Taxi({ taxi }) {
 
       { children }
     </section>
-  );
+  ), []);
 
   TaxiSection.propTypes = {
     children: PropTypes.node.isRequired,
