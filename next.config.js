@@ -36,9 +36,11 @@ module.exports = withMDX({
   },
 
   async exportPathMap(defaultPathMap, { dev, dir, outDir, distDir, buildId }) {
-    return {
-      '/': { page: '/dashboards' },
-    }
+    // Redirect / to /dashboards
+    defaultPathMap['/'] = {
+      page: '/dashboards',
+    };
+    return defaultPathMap;
   },
 
   pageExtensions: ['js', 'jsx', 'md', 'mdx'],
