@@ -745,7 +745,7 @@ function Taxi({ taxi }) {
       {error && <APIErrorAlert error={error} />}
       {children}
     </section>
-  ), []);
+  ), [taxi]);
 
   TaxiSection.propTypes = {
     children: PropTypes.node.isRequired,
