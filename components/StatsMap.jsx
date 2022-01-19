@@ -24,19 +24,19 @@ const MID_FRANCE = [46.23, 2.20];
 
 function ZUPC({ zupc }) {
   return (
-    <>
-      <GeoJSON key={zupc.id} data={zupc.geojson}>
-        <Tooltip offset={[0, 20]} opacity={1}>
-          <p>
-            <strong>{zupc.nom}</strong>
-            {zupc.stats.total !== undefined && <>
-                <br />
-                <i>{zupc.stats.total}</i> taxis connectés
-            </>}
-          </p>
-        </Tooltip>
-      </GeoJSON>
-    </>
+    <GeoJSON key={zupc.id} data={zupc.geojson}>
+      <Tooltip offset={[0, 20]} opacity={1}>
+        <p>
+          <strong>{zupc.nom}</strong>
+          {zupc.stats.total !== undefined && (
+            <>
+              <br />
+              <i>{zupc.stats.total}</i> taxis connectés
+            </>
+          )}
+        </p>
+      </Tooltip>
+    </GeoJSON>
   );
 }
 

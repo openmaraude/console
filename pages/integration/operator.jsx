@@ -79,7 +79,7 @@ function TaxiSetNewStatus({ taxi }) {
   const userContext = React.useContext(UserContext);
   const [error, setError] = React.useState();
 
-  async function onTaxiStatusChange(e) {
+  const onTaxiStatusChange = async (e) => {
     try {
       await requestOne(`/taxis/${taxi.id}`, {
         token: userContext.user.apikey,
@@ -97,7 +97,7 @@ function TaxiSetNewStatus({ taxi }) {
     } catch (err) {
       setError(err);
     }
-  }
+  };
 
   const initialValue = ['free', 'occupied', 'off'].indexOf(taxi.status) >= 0 ? taxi.status : "";
 
@@ -105,7 +105,9 @@ function TaxiSetNewStatus({ taxi }) {
     <section className={classes.section}>
       <p>Le statut a le statut <strong>{taxi.status}</strong>.</p>
 
-      <p><em>Seuls les taxis avec le statut <>free</> peuvent apparaitre lors d'une recherche.</em></p>
+      <p>
+        <em>Seuls les taxis avec le statut free peuvent apparaitre lors d'une recherche.</em>
+      </p>
 
       <FormControl className={classes.statusFormControl}>
         <InputLabel id="setTaxiStatus">Changer le statut</InputLabel>
@@ -135,68 +137,79 @@ TaxiSetNewStatus.propTypes = {
 
 // Section to change taxi visibility radius
 function TaxiSetNewRadius({ taxi }) {
-    const classes = useStyles();
-    const userContext = React.useContext(UserContext);
-    const [error, setError] = React.useState();
+  const classes = useStyles();
+  const userContext = React.useContext(UserContext);
+  const [error, setError] = React.useState();
 
-    async function onTaxiRadiusChange(e) {
-        setError(null);
-        try {
-            await requestOne(`/taxis/${taxi.id}`, {
-                token: userContext.user.apikey,
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Logas': process.env.INTEGRATION_ACCOUNT_EMAIL,
-                },
-                body: JSON.stringify({
-                    data: [{
-                        radius: e.target.value === "null" ? null : e.target.value,
-                    }],
-                }),
-            });
-        } catch (err) {
-            setError(err);
-        }
+  const onTaxiRadiusChange = async (e) => {
+    setError(null);
+    try {
+      await requestOne(`/taxis/${taxi.id}`, {
+        token: userContext.user.apikey,
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Logas': process.env.INTEGRATION_ACCOUNT_EMAIL,
+        },
+        body: JSON.stringify({
+          data: [{
+            radius: e.target.value === "null" ? null : e.target.value,
+          }],
+        }),
+      });
+    } catch (err) {
+      setError(err);
     }
+  };
 
-    const initialValue = taxi.radius === null ? "null" : taxi.radius;
+  const initialValue = taxi.radius === null ? "null" : taxi.radius;
 
-    return (
-        <section className={classes.section}>
-            <p>Le taxi est visible dans {taxi.radius && <strong>un rayon de {taxi.radius} mètres</strong> || <strong>le rayon par défaut</strong>}.</p>
+  return (
+    <section className={classes.section}>
+      <p>
+        {taxi.radius ? (
+          <>Le taxi est visible dans <strong>un rayon de {taxi.radius} mètres</strong></>
+        ) : (
+          <>Le taxi est visible dans <strong>le rayon par défaut</strong></>
+        )}
+      </p>
 
-            <p><em>Ce rayon concerne le taxi, le client final demande toujours les taxis disponibles dans un rayon de 500 mètres.</em></p>
+      <p>
+        <em>
+          Ce rayon concerne le taxi, le client final demande toujours
+          les taxis disponibles dans un rayon de 500 mètres.
+        </em>
+      </p>
 
-            <FormControl className={classes.radiusFormControl}>
-                <InputLabel id="setTaxiRadius">Changer le rayon</InputLabel>
-                <Select
-                    labelId="setTaxiRadius"
-                    value={initialValue}
-                    onChange={onTaxiRadiusChange}
-                >
-                    <MenuItem value="null">par défaut</MenuItem>
-                    <MenuItem value="150">150 mètres</MenuItem>
-                    <MenuItem value="200">200 mètres</MenuItem>
-                    <MenuItem value="250">250 mètres</MenuItem>
-                    <MenuItem value="300">300 mètres</MenuItem>
-                    <MenuItem value="350">350 mètres</MenuItem>
-                    <MenuItem value="400">400 mètres</MenuItem>
-                    <MenuItem value="450">450 mètres</MenuItem>
-                    <MenuItem value="500">500 mètres</MenuItem>
-                </Select>
-            </FormControl>
+      <FormControl className={classes.radiusFormControl}>
+        <InputLabel id="setTaxiRadius">Changer le rayon</InputLabel>
+        <Select
+          labelId="setTaxiRadius"
+          value={initialValue}
+          onChange={onTaxiRadiusChange}
+        >
+          <MenuItem value="null">par défaut</MenuItem>
+          <MenuItem value="150">150 mètres</MenuItem>
+          <MenuItem value="200">200 mètres</MenuItem>
+          <MenuItem value="250">250 mètres</MenuItem>
+          <MenuItem value="300">300 mètres</MenuItem>
+          <MenuItem value="350">350 mètres</MenuItem>
+          <MenuItem value="400">400 mètres</MenuItem>
+          <MenuItem value="450">450 mètres</MenuItem>
+          <MenuItem value="500">500 mètres</MenuItem>
+        </Select>
+      </FormControl>
 
-            {error && <APIErrorAlert error={error} />}
-        </section>
-    )
-};
+      {error && <APIErrorAlert error={error} />}
+    </section>
+  );
+}
 
 TaxiSetNewRadius.propTypes = {
-    taxi: PropTypes.shape({
-        id: PropTypes.string,
-        radius: PropTypes.number,
-    }).isRequired,
+  taxi: PropTypes.shape({
+    id: PropTypes.string,
+    radius: PropTypes.number,
+  }).isRequired,
 };
 
 // Section to change taxi location
@@ -210,12 +223,12 @@ function TaxiSetNewLocation({ taxi }) {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState();
 
-  function updateField(e) {
+  const updateField = (e) => {
     setValues({
       ...values,
       [e.target.name]: e.target.value,
     });
-  }
+  };
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -531,7 +544,7 @@ function HailDetail({ hailId, onBackClicked }) {
     [hailId],
   );
 
-  const HailDetailLayout = ({ children }) => (
+  const HailDetailLayout = React.useCallback(({ children }) => (
     <>
       <Box ref={sectionRef} marginBottom={2}>
         <Typography variant="h5">Détails du hail</Typography>
@@ -541,7 +554,7 @@ function HailDetail({ hailId, onBackClicked }) {
 
       {children}
     </>
-  );
+  ), [error]);
 
   HailDetailLayout.propTypes = {
     children: PropTypes.node.isRequired,
@@ -788,7 +801,7 @@ function Taxi({ taxi }) {
             <TableRow>
               <TableCell variant="head">Géolocalisation</TableCell>
               <TableCell>
-                {data.position?.lon && `${formatLoc(data.position.lon)}, ${formatLoc(data.position.lat)}` || <i>aucune géolocalisation</i>}
+                {data.position?.lon ? `${formatLoc(data.position.lon)}, ${formatLoc(data.position.lat)}` : <i>aucune géolocalisation</i>}
                 <TaxiSetNewLocation key={`location-${taxi.id}`} taxi={data} />
               </TableCell>
             </TableRow>
@@ -826,7 +839,7 @@ export default function IntegrationOperatorPage() {
 
   // Create new taxi: POST /ads, POST /drivers, POST /vehicles, POST /taxis.
   // Let SWR refresh the table after refreshInterval seconds.
-  async function createIntegrationTaxi() {
+  const createIntegrationTaxi = async () => {
     // Helper to send POST request.
     function doPOSTRequest(endpoint, data) {
       return requestOne(endpoint, {
@@ -884,7 +897,7 @@ export default function IntegrationOperatorPage() {
     } catch (err) {
       setError(err);
     }
-  }
+  };
 
   const columns = [
     {

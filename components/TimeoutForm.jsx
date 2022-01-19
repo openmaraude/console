@@ -30,7 +30,7 @@ export function TimeoutGroup({ onSubmit, children }) {
   React.useEffect(() => {
     // Timeout not enabled, do nothing
     if (!timeoutRef.current) {
-      return () => {};
+      return () => { };
     }
 
     // When timeout is reached, disable it and call onSubmit.
@@ -51,8 +51,10 @@ export function TimeoutGroup({ onSubmit, children }) {
     setValues({ ...values, [name]: value });
   };
 
+  const providerValue = React.useCallback(updateValue, []);
+
   return (
-    <TimeoutContext.Provider value={updateValue}>
+    <TimeoutContext.Provider value={providerValue}>
       {children}
     </TimeoutContext.Provider>
   );

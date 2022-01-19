@@ -47,6 +47,10 @@ export default function ConsoleApp({ Component, pageProps }) {
     setUser(currentUser);
   }, []);
 
+  const providerValue = React.useMemo(() => (
+    { user, authenticate, logout }
+  ), [user, authenticate, logout]);
+
   return (
     <>
       <Head>
@@ -66,7 +70,7 @@ export default function ConsoleApp({ Component, pageProps }) {
           pauseOnHover
         />
 
-        <UserContext.Provider value={{ user, authenticate, logout }}>
+        <UserContext.Provider value={providerValue}>
           <Menu />
           {
             user || pageProps.optionalAuth

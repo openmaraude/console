@@ -73,13 +73,11 @@ export default function APIListTable({
       )}
 
       {filters && (
-        <>
-          <Box marginTop={2} marginBottom={2} className={classes.filters}>
-            <TimeoutGroup onSubmit={updateFilters}>
-              {filters}
-            </TimeoutGroup>
-          </Box>
-        </>
+        <Box marginTop={2} marginBottom={2} className={classes.filters}>
+          <TimeoutGroup onSubmit={updateFilters}>
+            {filters}
+          </TimeoutGroup>
+        </Box>
       )}
 
       {!hideTable && (

@@ -3,24 +3,22 @@ import React from 'react';
 import Tooltip from '@material-ui/core/Tooltip';
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-    },
+const useStyles = makeStyles(() => ({
+  root: {},
 }));
 
-export default function Legend({ title, children }) {
-    const classes = useStyles();
-    return (
-        <div className={classes.root}>
-            <Tooltip title={
-                <React.Fragment>
-                    <img src="/images/doc/legend.png" />
-                </React.Fragment>
-            } placement="left">
-                <Button>Légende</Button>
-            </Tooltip>
-        </div>
-    );
+export default function Legend() {
+  const classes = useStyles();
+  return (
+    <div className={classes.root}>
+      <Tooltip
+        title={<img src="/images/doc/legend.png" alt="Légende des graphes" />}
+        placement="left"
+      >
+        <Button color="primary">Ouvrir la légende</Button>
+      </Tooltip>
+    </div>
+  );
 }
 
 /*

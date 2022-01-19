@@ -128,7 +128,7 @@ const ALL_PAGES = [
 
 const slugger = new Slugger();
 
-const Heading = ({ variant, children }) => {
+function Heading({ variant, children }) {
   const slug = slugger.slug(children);
   return (
     <Typography variant={variant} id={slug}>
@@ -136,7 +136,7 @@ const Heading = ({ variant, children }) => {
       <a href={`#${slug}`} title="Permalink" className="headinglink">¶</a>
     </Typography>
   );
-};
+}
 
 Heading.propTypes = {
   variant: PropTypes.string.isRequired,

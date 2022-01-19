@@ -291,7 +291,7 @@ function HailDetail({ hailId, onBackClicked }) {
     },
   );
 
-  const HailDetailLayout = ({ children }) => (
+  const HailDetailLayout = React.useCallback(({ children }) => (
     <>
       <Box marginBottom={2}><Typography variant="h5">Détails du hail</Typography></Box>
 
@@ -299,7 +299,7 @@ function HailDetail({ hailId, onBackClicked }) {
 
       {children}
     </>
-  );
+  ), [error]);
 
   HailDetailLayout.propTypes = {
     children: PropTypes.node.isRequired,
@@ -424,12 +424,12 @@ function HailRequestForm({ taxi, onRequest }) {
     }
   }
 
-  function updateField(e) {
+  const updateField = (e) => {
     setHailRequest({
       ...hailRequest,
       [e.target.name]: e.target.value,
     });
-  }
+  };
 
   return (
     <>
@@ -568,7 +568,7 @@ function Taxi({ taxi }) {
         ) : <APIErrorAlert error={error} />
       )}
 
-      { children }
+      {children}
     </section>
   ), []);
 

@@ -99,9 +99,9 @@ export default function DashboardSession() {
     (url, token) => requestList(url, page, { token }),
   );
 
-  function handleChangePage(event, newPage) {
+  const handleChangePage = (event, newPage) => {
     setPage(newPage);
-  }
+  };
 
   return (
     <Layout>

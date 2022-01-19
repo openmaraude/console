@@ -58,12 +58,12 @@ export default function AccountPage() {
     || data.password === data.passwordConfirm
   );
 
-  async function updateField(e) {
+  const updateField = async (e) => {
     mutate(
       { ...data, [e.target.name]: e.target.value },
       false,
     );
-  }
+  };
 
   async function onSubmit(e) {
     // Remove confirmPassword from parameters sent to updateUserAccount.

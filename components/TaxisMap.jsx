@@ -129,7 +129,7 @@ function Taxis({ lon, lat }) {
               <dd>{taxi.status}</dd>
 
               <dt>Rayon</dt>
-              <dd>{taxi.radius && <>{taxi.radius} mètres</> || <i>par défaut</i>}</dd>
+              <dd>{taxi.radius ? (<>{taxi.radius} mètres</>) : (<i>par défaut</i>)}</dd>
 
               <dt>Dernière géolocalisation</dt>
               <dd>{formatDate(new Date(taxi.last_update * 1000))}</dd>
