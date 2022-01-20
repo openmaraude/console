@@ -299,7 +299,7 @@ function HailDetail({ hailId, onBackClicked }) {
 
       {children}
     </>
-  ), [error]);
+  ), [hailId]);
 
   HailDetailLayout.propTypes = {
     children: PropTypes.node.isRequired,
@@ -570,7 +570,7 @@ function Taxi({ taxi }) {
 
       {children}
     </section>
-  ), []);
+  ), [taxi]);
 
   TaxiSection.propTypes = {
     children: PropTypes.node.isRequired,

@@ -554,7 +554,7 @@ function HailDetail({ hailId, onBackClicked }) {
 
       {children}
     </>
-  ), [error]);
+  ), [hailId]);
 
   HailDetailLayout.propTypes = {
     children: PropTypes.node.isRequired,
