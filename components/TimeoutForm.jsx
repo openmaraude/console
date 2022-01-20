@@ -51,7 +51,7 @@ export function TimeoutGroup({ onSubmit, children }) {
     setValues({ ...values, [name]: value });
   };
 
-  const providerValue = React.useCallback(updateValue, []);
+  const providerValue = React.useCallback(updateValue, [values]);
 
   return (
     <TimeoutContext.Provider value={providerValue}>
