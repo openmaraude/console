@@ -58,8 +58,8 @@ export default function APIListTable({
     (filter) => request.filters?.[filter.props.name],
   ).every((v) => v);
 
-  const handlePageChange = (param) => {
-    setRequest({ ...request, page: param.page });
+  const handlePageChange = (page) => {
+    setRequest({ ...request, page });
   };
 
   const updateFilters = (newFilters) => {
@@ -86,7 +86,6 @@ export default function APIListTable({
           disableColumnMenu
           rowsPerPageOptions={[]}
           hideFooterSelectedRowCount
-          hideFooterRowCount
           columns={columns}
           rows={data?.data || []}
           // Most of list endpoints are paginated, and return an attribute "meta"
