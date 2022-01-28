@@ -25,7 +25,7 @@ Les erreurs renvoyées par l'API sont correctement affichées. Par exemple, si l
 
 Le chauffeur peut changer son statut afin d'être libre ou occupé ([PUT /taxis/:id](https://dev.api.taxi/doc/#/default/put_taxis__taxi_id_)).
 
-L'application effectue régulièrement du polling sur le statut du taxi ([GET /taxis/:id](https://dev.api.taxi/doc/#/default/get_taxis__taxi_id_)) : si l'API le.taxi change le statut du taxi pour le mettre à *off*, l'application doit le détecter.
+L'application effectue régulièrement du polling sur le statut du taxi ([GET /taxis/:id](https://dev.api.taxi/doc/#/default/get_taxis__taxi_id_)) : si l'API le.taxi change le statut du taxi pour le mettre à *off* (voir *Délai dépassé* ci-dessous), l'application doit le détecter.
 
 
 ##### Envoi de la géolocalisation du véhicule
