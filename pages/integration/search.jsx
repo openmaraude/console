@@ -440,6 +440,8 @@ function HailRequestForm({ taxi, onRequest }) {
           label="Longitude du client"
           name="lon"
           type="number"
+          // There is an issue with Safari using this step as the valid pattern, 6 decimal places
+          // but a lat/lon can use more digits, and Safari will refuse to submit the form.
           inputProps={{ step: 0.000001 }}
           margin="normal"
           value={hailRequest.lon}
