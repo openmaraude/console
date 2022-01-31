@@ -1,6 +1,17 @@
 version: 2.1
 
+orbs:
+  node: circleci/node@5.0.0
+
 jobs:
+  lint:
+    docker:
+      - image: cimg/node:16.13.2
+    steps:
+      - checkout
+      - node/install-packages
+      - run: npm run lint
+
   build:
     docker:
       - image: circleci/buildpack-deps:stretch
@@ -22,6 +33,10 @@ jobs:
 
 workflows:
   version: 2
+
+  lint:
+    jobs:
+      - lint
 
   # Build artifacts, only run for tags.
   artifacts:
