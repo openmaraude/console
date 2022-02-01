@@ -355,7 +355,7 @@ router.post('/update_hail', function (req, res) {
   var taxi_id = req.body.taxi_id;
   switch (req.body.action) {
     case 'accept':
-      // taxi_phone_number is required at one step or another before the hail can be accepted
+      // taxi_phone_number is required for the hail to be accepted
       update_hail_status('accepted_by_taxi', '0123456789');
       break;
     case 'decline':
