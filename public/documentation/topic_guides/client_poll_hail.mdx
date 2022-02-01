@@ -1,8 +1,14 @@
+import Legend from '@/components/Legend';
+
 ##### Application client : l'importance de régulièrement poll le statut de la course
 
 Comme présenté dans le tutoriel pour créer une application client, le statut de la course évolue à mesure que le chauffeur reçoit puis accepte la demande de course.
 
 Il importe donc de récupérer régulièrement le statut de la course puisqu'une fois celle-ci acceptée par le chauffeur, le client aura trente secondes pour confirmer sa demande de course. Le décompte commence quand nos serveurs ont enregistré le statut `accepted_by_taxi`, donc tenez compte des délai réseau !
+
+<Legend/>
+
+![status de la course pour applicatif client](/images/doc/trip-status-search.png)
 
 Inversement, si le chauffeur doit refuser la demande de course, il importe tout autant d'en informer le client qui peut alors solliciter un autre taxi.
 
@@ -24,3 +30,11 @@ $> curl -H 'X-API-KEY: XXX' 'https://dev.api.taxi/hails/:hail_id/'
 ```
 
 Un appel par seconde devrait être suffisant pour permettre au client d'être réactif pendant que le chauffeur attend la confirmation.
+
+Ce sera ensuite au client de confirmer sa demande, à moins que vous mettiez en place une confirmation automatique.
+
+Le parcours complet d'une course :
+
+<Legend/>
+
+![status de la course](/images/doc/trip-status.png)

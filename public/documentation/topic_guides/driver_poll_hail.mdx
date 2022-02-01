@@ -1,3 +1,5 @@
+import Legend from '@/components/Legend';
+
 ##### Application chauffeur : l'importance de régulièrement poll le statut de la course
 
 Comme présenté dans le tutoriel pour créer une application chauffeur, l'API le.taxi stocke le statut du chauffeur.
@@ -36,3 +38,9 @@ Les statuts possibles sont :
 - occupied : le taxi est déjà en course avec un client
 - off : le taxi n'est pas disponible, pause ou fin de service
 - oncoming : ce statut est automatiquement donné au taxi lorsque celui-ci a reçu une course avec le statut `accepted_by_customer`
+
+Le parcours complet d'une course :
+
+<Legend/>
+
+![status de la course](/images/doc/trip-status.png)
