@@ -388,8 +388,8 @@ function HailRequestForm({ taxi, onRequest }) {
   const classes = useStyles();
   const userContext = React.useContext(UserContext);
   const [hailRequest, setHailRequest] = React.useState({
-    lon: taxi.position?.lon,
-    lat: taxi.position?.lat,
+    lon: taxi.position?.lon, // FIXME this is the position of the taxi, not the customer
+    lat: taxi.position?.lat, // but carrying costumer position up here proved difficult
     customer_address: '20 Avenue de Ségur, 75007 Paris',
     customer_phone_number: '0607080910',
     customer_id: (Math.random() * 100000000).toFixed(0).toString(),
