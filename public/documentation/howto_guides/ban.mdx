@@ -1,0 +1,86 @@
+import InfoBox from '@/components/InfoBox';
+
+#### Bannir un client qui abuse du service
+
+Il pourra arriver que des personnes indélicates demandent des courses mais ne se présentent jamais
+quand le chauffeur arrive à destination, ou posent d'autres problèmes.
+
+En tant qu'opérateur de taxi, vous disposez d'un outil pour exclure temporairement ces utilisateurs,
+les empêchant non seulement de héler un autre de vos taxis, mais tout taxi visible sur le registre.
+
+(Pour les opérateurs de mobilité, voyez en fin de page pour un outil dédié.)
+
+<InfoBox>N'abusez pas vous-même de ce système !</InfoBox>
+
+Vous pouvez signaler un utilisateur à partir de l'endpoint d'un hail `PUT /hails/{hail_id}`
+en envoyant le champ `reporting_customer` avec une valeur vraie,  et le motif dans le
+champ `reporting_customer_reason` :
+
+```json
+{
+  "data": [
+    {
+      "reporting_customer": true,
+      "reporting_customer_reason": "no_show"
+    }
+  ]
+}
+```
+
+Les différents motifs sont :
+
+* *payment* : il y a eu un problème avec le paiement.
+* *courtesy* : le client n'était pas courtois.
+* *route* : le client demandait une adresse de destination introuvable.
+* *cleanliness* : le client n'était pas propre.
+* *late* : le client était en retard.
+* *aggressive* : le client était agressif.
+* *no_show* : le client ne s'est pas présenté.
+
+L'exclusion dure 24 heures à partir du moment de la requête.
+Chaque exclusion supplémentaire qui intervient pendant ce temps double la période
+d'exclusion (48, 96, etc.). Une fois la période d'exclusion terminée, le compteur est
+remis à zéro et une éventuelle prochaine exclusion serait à nouveau de 24 h.
+
+##### Annuler un ban
+
+Pour terminer une exclusion avant son terme, ou annuler une erreur, envoyez simplement
+`false` au lieu de `true` sur le même endpoint :
+
+```json
+{
+  "data": [
+    {
+      "reporting_customer": false,
+    }
+  ]
+}
+```
+
+Le registre ne garde pas d'historique des exclusions.
+
+##### Exclure un client pour une période donnée
+
+Les opérateurs de mobilité ont un endpoint dédié pour gérer plus finement l'exclusion
+de leurs clients.
+
+L'endpoint `PUT ​/customers​/{customer_id}` permet d'exclure pour une période de votre choix :
+
+```json
+{
+  "data": [
+    {
+      "ban_begin": "2022-02-01T00:00:00",
+      "ban_end": "2022-03-01T00:00:00"
+    }
+  ]
+}
+```
+
+Cet exemple exclut l'utilisateur pour tout le mois de février 2022.
+
+Pour annuler le ban, vous pouvez mettre une date de fin dans le passé ou simplement envoyer `null` à la place pour
+écraser la valeur.
+
+Votre application dispose sans doute déjà d'un système de modération et l'utilisation
+de cet endpoint n'a rien d'obligatoire.

@@ -110,6 +110,7 @@ const ALL_PAGES = [
       { title: "Récupérer le statut d'une course", slug: 'poll_hail' },
       { title: "Changer le statut de la course", slug: 'status_hail' },
       { title: "Changer le statut d'un taxi", slug: 'status_taxi' },
+      { title: "Bannir un client qui abuse du service", slug: 'ban' },
     ],
   },
   {
