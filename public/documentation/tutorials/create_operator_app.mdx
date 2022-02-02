@@ -227,11 +227,13 @@ router.post('/driver', function (req, res) {
     headers,
     data: {
       data: [{
-        ...req.body,
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        birth_date: req.body.birth_date || null,
+        professional_licence: req.body.professional_licence,
         departement: {
           numero: req.body.departement,
         },
-        birth_date: req.body.birth_date || null,
       }]
     }
   }).then(() => {
@@ -247,7 +249,6 @@ Explications :
 * Nous allons faire un POST sur l'endpoint `/drivers` de l'API de développement.
 * Le corps de la requête est au format `application/json` comme indiqué par les _headers_.
 * La clé d'API doit être présente dans chaque requête à l'API, même sur un GET.
-* `...req.body` est un raccourci Javascript pour réutiliser le contenu d'un Object (comme un tableau associatif ou dictionnaire dans d'autres langages), il fonctionne parce que nous avons utilisé les mêmes noms de champs dans le formulaire que ceux attendus par l'API.
 * Exception faite du département qui est attendu dans une sous-section, et de la date de naissance qui ne peut pas être une chaîne vide si elle n'est pas renseignée.
 * Distinguez bien le `data` qui est l'argument de la fonction `axios()` et le `data` qui fait partie de la structure de données attendue par l'API le.taxi.
 
@@ -272,7 +273,7 @@ router.post('/vehicle', function (req, res) {
     headers,
     data: {
       data: [{
-        ...req.body,
+        licence_plate: req.body.licence_plate,
       }]
     }
   }).then(() => {
@@ -313,7 +314,7 @@ Le résultat :
 
 <CenteredImage src="/images/doc/tutorials/create_operator_app/vehicle_form.png" alt="Déclarer un véhicule" />
 
-Rien de nouveau par rapport à la création du chauffeur, nous utilisons le même raccourci `...req.body` en utilisant le nom des champs de l'API le.taxi. Le formulaire est réduit à sa plus simple expression en ne demandant que les champs obligatoires, mais en production les clients pourraient apprécier de connaître le nombre de places du véhicule ou les prestations à bord pour choisir leur taxi.
+Rien de nouveau par rapport à la création du chauffeur. Le formulaire est réduit à sa plus simple expression en ne demandant que les champs obligatoires, mais en production les clients pourraient apprécier de connaître le nombre de places du véhicule ou les prestations à bord pour choisir leur taxi.
 
 Déclarez le véhicule du chauffeur précédemment envoyé.
 
@@ -332,7 +333,8 @@ router.post('/ads', function (req, res) {
     headers,
     data: {
       data: [{
-        ...req.body,
+        numero: req.body.numero,
+        insee: req.body.insee,
       }]
     }
   }).then(() => {
