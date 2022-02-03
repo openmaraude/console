@@ -24,13 +24,15 @@ import Typography from '@material-ui/core/Typography';
 
 import faker from 'faker/locale/fr';
 
-import APIErrorAlert from '@/components/APIErrorAlert';
-import APIListTable from '@/components/APIListTable';
+import { Layout } from './index';
 import { formatDate, formatLoc } from '@/src/utils';
 import { request, requestOne, requestList } from '@/src/api';
-import { TextLink } from '@/components/LinksRef';
 import { UserContext } from '@/src/auth';
-import { Layout } from './index';
+import APIErrorAlert from '@/components/APIErrorAlert';
+import APIListTable from '@/components/APIListTable';
+import { TextLink } from '@/components/LinksRef';
+import SearchAddressDialog from '@/components/SearchAddressDialog';
+import { TimeoutTextField } from '@/components/TimeoutForm';
 
 const useStyles = makeStyles((theme) => ({
   section: {
@@ -836,6 +838,18 @@ export default function IntegrationOperatorPage() {
   );
   const [error, setError] = React.useState();
   const [selectedTaxi, setSelectedTaxi] = React.useState();
+  const [integrationTaxiRequest, setTaxiRequest] = React.useState({ insee: '75056', name: 'Paris' })
+  const [searchDialog, setSearchDialog] = React.useState(false);
+
+  const onSearch = (address) => {
+    if (address && address.properties && address.properties.citycode) {
+      setTaxiRequest({
+        insee: address.properties.citycode,
+        name: address.properties.city,
+      })
+    }
+    setSearchDialog(false);
+  };
 
   // Create new taxi: POST /ads, POST /drivers, POST /vehicles, POST /taxis.
   // Let SWR refresh the table after refreshInterval seconds.
@@ -876,7 +890,7 @@ export default function IntegrationOperatorPage() {
       });
 
       const ads = await doPOSTRequest('/ads', {
-        insee: '75056',
+        insee: integrationTaxiRequest.insee,
         numero: (Math.random() * 10 ** 9).toFixed(0).toString(),
       });
 
@@ -984,7 +998,10 @@ export default function IntegrationOperatorPage() {
           Vous pouvez aussi&nbsp;
           <Button variant="contained" color="primary" size="small" onClick={createIntegrationTaxi}>
             créer nouveau taxi
-          </Button>.
+          </Button>
+          &nbsp;dans la ville de&nbsp;
+          {integrationTaxiRequest.name} ou&nbsp;
+          <Button variant="contained" color="secondary" size="small" onClick={() => setSearchDialog(true)}>Changer la ville</Button>
         </p>
 
         {error && <APIErrorAlert error={error} />}
@@ -996,6 +1013,7 @@ export default function IntegrationOperatorPage() {
       </section>
 
       {selectedTaxi && <Taxi taxi={selectedTaxi} />}
+      <SearchAddressDialog open={searchDialog} onClose={onSearch} mapMode={false} />
     </Layout>
   );
 }

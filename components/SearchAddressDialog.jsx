@@ -62,7 +62,7 @@ Address.propTypes = {
   onClick: PropTypes.func.isRequired,
 };
 
-export default function SearchAddressDialog({ open, onClose }) {
+export default function SearchAddressDialog({ open, onClose, mapMode }) {
   const API_URL = 'https://api-adresse.data.gouv.fr';
   const [searchAddress, setSearchAddress] = React.useState();
 
@@ -97,9 +97,9 @@ export default function SearchAddressDialog({ open, onClose }) {
     <Dialog open={open} onClose={() => onClose(null)} aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title">Rechercher une adresse</DialogTitle>
       <DialogContent>
-        <DialogContentText>
+        {mapMode && <DialogContentText>
           Entrez une adresse pour positionner la carte à l'endroit voulu.
-        </DialogContentText>
+        </DialogContentText>}
         <TimeoutGroup onSubmit={search}>
           <TimeoutTextField
             autoFocus
@@ -132,4 +132,9 @@ export default function SearchAddressDialog({ open, onClose }) {
 SearchAddressDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  mapMode: PropTypes.bool,
+};
+
+SearchAddressDialog.defaultProps = {
+  mapMode: true
 };
