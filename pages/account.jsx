@@ -193,7 +193,7 @@ export default function AccountPage() {
               </div>
               <div className={classes.helpText}>
                 Lorsqu'un moteur de recherche effectue une demande de course à un
-                taxi connecté sur votre application, nous faisons un appel vers cet
+                taxi connecté sur votre application, nous faisons un POST vers cet
                 endpoint pour vous signaler cette demande. Référez-vous à la
                 documentation pour plus d'informations.
               </div>
