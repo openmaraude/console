@@ -838,14 +838,16 @@ export default function IntegrationOperatorPage() {
   );
   const [error, setError] = React.useState();
   const [selectedTaxi, setSelectedTaxi] = React.useState();
-  const [integrationTaxiRequest, setTaxiRequest] = React.useState({ insee: '75056', name: 'Paris' })
+  const [integrationTaxiRequest, setTaxiRequest] = React.useState({ insee: '75056', name: 'Paris (75)' })
   const [searchDialog, setSearchDialog] = React.useState(false);
 
   const onSearch = (address) => {
     if (address && address.properties && address.properties.citycode) {
+      const code_length = address.properties.citycode.substr(0, 2) === '97' ? 3 : 2;
+      const dep_code = address.properties.citycode.substr(0, code_length);
       setTaxiRequest({
         insee: address.properties.citycode,
-        name: address.properties.city,
+        name: `${address.properties.city} (${dep_code})`,
       })
     }
     setSearchDialog(false);
