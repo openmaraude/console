@@ -97,9 +97,11 @@ export default function SearchAddressDialog({ open, onClose, mapMode }) {
     <Dialog open={open} onClose={() => onClose(null)} aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title">Rechercher une adresse</DialogTitle>
       <DialogContent>
-        {mapMode && <DialogContentText>
-          Entrez une adresse pour positionner la carte à l'endroit voulu.
-        </DialogContentText>}
+        {mapMode && (
+          <DialogContentText>
+            Entrez une adresse pour positionner la carte à l'endroit voulu.
+          </DialogContentText>
+        )}
         <TimeoutGroup onSubmit={search}>
           <TimeoutTextField
             autoFocus
@@ -136,5 +138,5 @@ SearchAddressDialog.propTypes = {
 };
 
 SearchAddressDialog.defaultProps = {
-  mapMode: true
+  mapMode: true,
 };

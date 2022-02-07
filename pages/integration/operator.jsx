@@ -24,7 +24,6 @@ import Typography from '@material-ui/core/Typography';
 
 import faker from 'faker/locale/fr';
 
-import { Layout } from './index';
 import { formatDate, formatLoc } from '@/src/utils';
 import { request, requestOne, requestList } from '@/src/api';
 import { UserContext } from '@/src/auth';
@@ -32,7 +31,7 @@ import APIErrorAlert from '@/components/APIErrorAlert';
 import APIListTable from '@/components/APIListTable';
 import { TextLink } from '@/components/LinksRef';
 import SearchAddressDialog from '@/components/SearchAddressDialog';
-import { TimeoutTextField } from '@/components/TimeoutForm';
+import { Layout } from './index';
 
 const useStyles = makeStyles((theme) => ({
   section: {
@@ -838,17 +837,17 @@ export default function IntegrationOperatorPage() {
   );
   const [error, setError] = React.useState();
   const [selectedTaxi, setSelectedTaxi] = React.useState();
-  const [integrationTaxiRequest, setTaxiRequest] = React.useState({ insee: '75056', name: 'Paris (75)' })
+  const [integrationTaxiRequest, setTaxiRequest] = React.useState({ insee: '75056', name: 'Paris (75)' });
   const [searchDialog, setSearchDialog] = React.useState(false);
 
   const onSearch = (address) => {
     if (address && address.properties && address.properties.citycode) {
-      const code_length = address.properties.citycode.substr(0, 2) === '97' ? 3 : 2;
-      const dep_code = address.properties.citycode.substr(0, code_length);
+      const codeLength = address.properties.citycode.substr(0, 2) === '97' ? 3 : 2;
+      const depCode = address.properties.citycode.substr(0, codeLength);
       setTaxiRequest({
         insee: address.properties.citycode,
-        name: `${address.properties.city} (${dep_code})`,
-      })
+        name: `${address.properties.city} (${depCode})`,
+      });
     }
     setSearchDialog(false);
   };
