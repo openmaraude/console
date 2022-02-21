@@ -111,6 +111,7 @@ const ALL_PAGES = [
       { title: "Changer le statut de la course", slug: 'status_hail' },
       { title: "Changer le statut d'un taxi", slug: 'status_taxi' },
       { title: "Bannir un client qui abuse du service", slug: 'ban' },
+      { title: "Mettre à jour véhicule, chauffeur, ADS", slug: 'update' },
     ],
   },
   {

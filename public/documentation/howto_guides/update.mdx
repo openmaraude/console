@@ -1,0 +1,46 @@
+#### Mettre à jour un véhicule, un chauffeur, une ADS
+
+Si vous regardez <a href="https://dev.api.taxi/doc/">Swagger</a>, vous voyez les commandes
+`POST` pour déclarer un véhicule, un chauffeur, une ADS, puis un taxi qui va combiner les trois,
+mais pas de `PUT` comme sur d'autres endpoints.
+
+Chacune de ces ressources a un ou plusieurs champs obligatoires qui servent à les identifier.
+Si l'opérateur reposte les mêmes informations identifiantes, au lieu de répondre par
+une erreur ou un conflit, l'API met à jour la ressource existante avec le reste des informations
+fournies.
+
+Vous pouvez confirmer la mise à jour avec l'API qui va répondre `HTTP 200` (OK) au lieu
+de `201` (Created) la première fois.
+
+Nous détaillons ci-dessous chaque ressource.
+
+##### Mettre à jour un véhicule
+
+Le champ identifiant d'un véhicule est sa plaque d'immatriculation, le seul champ requis du schéma.
+Donc pour mettre à jour ou corriger un véhicule déjà déclaré dans le registre, il suffit de resoummettre
+la même plaque d'immatriculation avec les autres données à jour.
+
+##### Mettre à jour un chauffeur
+
+Le chaufffeur a deux champs identifiants : la combinaison du numéro de lience professionnelle
+et du département de délivrance. Si vous avez besoin de corriger une erreur dans le nom, il
+suffit de resoummettre la même combinaison avec les autres données à jour. Si l'erreur était
+dans le département, il faudra déclarer un nouveau chauffeur,
+et l'ancienne ressource sera effacée automatiquement.
+
+##### Mettre à jour une ADS
+
+Les champs identifiants d'une ADS sont le numéro et le code INSEE de la commune de délivrance.
+Vous pouvez donc soumettre la même paire avec des infos à jour ou corrigées. Attention à
+ne pas changer le format du numéro, l'API attend une chaîne de caractères, donc `1` et `00001`
+sont deux numéros différents.
+
+##### Mettre à jour un taxi
+
+La ressource taxi se base sur les ressources existantes, rien à faire une fois les
+informations de base mises à jour.
+
+Mais si une nouvelle ressource véhicule, chauffeur ou ADS a été créée, il faudra déclarer
+une nouvelle ressource taxi qui reprend les mêmes champs identifiants.
+L'ancienne sera effacée automatiquement et ne sera jamais visible des clients
+puisque vous n'allez pas l'utiliser.
