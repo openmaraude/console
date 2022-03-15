@@ -213,7 +213,7 @@ export default function AccountPage() {
               <div className={classes.helpText}>
                 Lorsque l'endpoint renseigné ci-dessus est appelé lors d'une
                 demande de course, nous fournissons un header HTTP vous permettant
-                de nous authentifier. Ce champs permet de configurer le nom de ce
+                de nous authentifier. Ce champ permet de configurer le nom de ce
                 header.
               </div>
             </div>
