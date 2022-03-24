@@ -223,12 +223,23 @@ function TaxiSetNewLocation({ taxi }) {
   });
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState();
+  const [searchDialog, setSearchDialog] = React.useState(false);
 
   const updateField = (e) => {
     setValues({
       ...values,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const onSearch = (address) => {
+    if (address && address.geometry && address.geometry.coordinates) {
+      setValues({
+        lon: address.geometry.coordinates[0],
+        lat: address.geometry.coordinates[1],
+      });
+    }
+    setSearchDialog(false);
   };
 
   async function onSubmit(e) {
@@ -292,15 +303,17 @@ function TaxiSetNewLocation({ taxi }) {
           required
         />
 
-        <Button type="submit" variant="contained" color="primary" disabled={loading}>
+        <Button type="submit" variant="contained" color="primary" size="small" disabled={loading}>
           Mettre à jour
         </Button>
+        <Button variant="contained" color="secondary" size="small" onClick={() => setSearchDialog(true)}>Chercher une adresse</Button>
+        <SearchAddressDialog open={searchDialog} onClose={onSearch} mapMode={false} />
       </form>
 
       <small>
         Attention ! L'ADS de ce taxi est limitée à la ZUPC avec le code
         INSEE <strong>{taxi.ads.insee}</strong>. Si vous déplacez le taxi en
-        dehors de cette zone, il ne sera pas visible lors d'une recherche.
+        dehors de sa zone de prise en charge, il ne sera pas visible lors d'une recherche.
       </small>
     </section>
   );

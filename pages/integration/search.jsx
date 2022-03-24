@@ -24,7 +24,8 @@ import APIListTable from '@/components/APIListTable';
 import { formatDate, formatLoc } from '@/src/utils';
 import { requestList, requestOne } from '@/src/api';
 import { TextLink } from '@/components/LinksRef';
-import { TimeoutTextField } from '@/components/TimeoutForm';
+import SearchAddressDialog from '@/components/SearchAddressDialog';
+import { TimeoutTextField, TimeoutContext } from '@/components/TimeoutForm';
 import { UserContext } from '@/src/auth';
 import { Layout } from './index';
 
@@ -650,6 +651,31 @@ Taxi.propTypes = {
   }).isRequired,
 };
 
+function AddressSearch() {
+  const updateValues = React.useContext(TimeoutContext);
+  const [searchDialog, setSearchDialog] = React.useState(false);
+  const [selectedCoords, setSelectedCoords] = React.useState([]);
+
+  const onSearch = (address) => {
+    if (address && address.geometry && address.geometry.coordinates) {
+      setSelectedCoords(address.geometry.coordinates);
+      updateValues({
+        lon: address.geometry.coordinates[0],
+        lat: address.geometry.coordinates[1],
+      });
+    }
+    setSearchDialog(false);
+  };
+
+  return (
+    <>
+      {selectedCoords && (<span>{selectedCoords.join(', ')}</span>)}
+      <Button variant="contained" color="secondary" size="small" onClick={() => setSearchDialog(true)}>Chercher une adresse</Button>
+      <SearchAddressDialog open={searchDialog} onClose={onSearch} mapMode={false} />
+    </>
+  );
+}
+
 export default function IntegrationSearchPage() {
   const classes = useStyles();
   const userContext = React.useContext(UserContext);
@@ -691,6 +717,7 @@ export default function IntegrationSearchPage() {
         type="number"
         inputProps={{ step: 0.000001 }}
       />
+      <AddressSearch />
     </>
   );
 

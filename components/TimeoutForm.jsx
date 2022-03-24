@@ -10,11 +10,11 @@ export const TimeoutContext = React.createContext();
  * changes.
  */
 export function TimeoutTextField({ ...props }) {
-  const updateValue = React.useContext(TimeoutContext);
+  const updateValues = React.useContext(TimeoutContext);
 
   const onChange = (e) => {
     e.preventDefault();
-    updateValue(e.target.name, e.target.value);
+    updateValues({ [e.target.name]: e.target.value });
   };
 
   return <TextField {...props} onChange={onChange} />;
@@ -46,12 +46,12 @@ export function TimeoutGroup({ onSubmit, children }) {
 
   // Called when an input field has been updated. Enable timeout and refresh
   // the group with new content.
-  const updateValue = (name, value) => {
+  const updateValues = ({ ...newValues }) => {
     timeoutRef.current = true;
-    setValues({ ...values, [name]: value });
+    setValues({ ...values, ...newValues });
   };
 
-  const providerValue = React.useCallback(updateValue, [values]);
+  const providerValue = React.useCallback(updateValues, [values]);
 
   return (
     <TimeoutContext.Provider value={providerValue}>

@@ -54,7 +54,9 @@ export default function APIListTable({
 
   // If hideUntilFiltersFilled is true at least one of the filters is not
   // defined, table should be hidden.
-  const hideTable = hideUntilFiltersFilled && !filters.props.children.map(
+  const hideTable = hideUntilFiltersFilled && !filters.props.children.filter(
+    (filter) => filter.props.name !== undefined,
+  ).map(
     (filter) => request.filters?.[filter.props.name],
   ).every((v) => v);
 
