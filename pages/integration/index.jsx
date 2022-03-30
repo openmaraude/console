@@ -89,7 +89,7 @@ export default function IntegrationPage() {
             </p>
 
             <p>
-              Le menu <Link href="/integration/operateur" passHref><TextLink>application opérateur</TextLink></Link> vous permet
+              Le menu <Link href="/integration/operator" passHref><TextLink>application opérateur</TextLink></Link> vous permet
               de créer des taxis de test, de changer leur localisation,
               d'accepter des courses et de changer les statuts de celles-ci.
             </p>
