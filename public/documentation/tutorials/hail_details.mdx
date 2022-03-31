@@ -1,0 +1,81 @@
+import InfoBox from '@/components/InfoBox';
+import Legend from '@/components/Legend';
+
+#### Déroulement d'une course
+
+Ce tutoriel détaille le déroulement d'une course, de la demande de prise en charge à sa conclusion. Les tutoriels [client](/documentation/tutorials/create_client_app) et [chauffeur](/documentation/tutorials/create_driver_app) montrent les étapes nécessaires mais nous prenons le temps ici d'expliquer en détails ces étapes et les autres issues possibles pour une demande de course.
+
+Il s'adresse à tout intégrateur quel que soit votre côté de la mise en relation car il peut être intéressant de comprendre ce qui se passe à l'autre bout de la chaîne quand on attend une réponse.
+
+Une demande de course commence par un [taxi disponible](/documentation/howto_guides/help_taxi_map). Le client (ou le [simulateur](/integration/search)) peut dans le rayon de visibilité du taxi le voir et envoyer une demande de course.
+
+##### Création de la demande de course (hail)
+
+L'application client envoie un `POST /hails` avec notamment la position du client et le taxi demandé, et nous acquittons la demande après vérification
+en créant un objet *Hail* dans le statut `received` et en retournant cet objet en réponse. Il contient le *hail ID* qui permettra de suivre l'avancée de la demande et de mettre à jour son état. Le taxi demandé est basculé dans l'état `answering` afin de lui éviter de recevoir d'autres demandes en même temps.
+
+Dans la foulée nous envoyons ce *hail* à l'opérateur du taxi à l'URL indiquée dans son compte client (champ « URL de votre API ») qui doit répondre au format JSON, même un simple `[]`. Une réponse positive passe le *hail* au statut `received_by_operator` qui doit maintenant envoyer la demande au taxi, typiquement par une notification push. L'opérateur aura 10 secondes pour confirmer la réception par le taxi en changeant le statut du *hail* en `received_by_taxi`.
+
+L'endpoint *PUT /hails/:hail_id* permet de mettre à jour ce statut. Exemple d'appel :
+
+```shell
+$> curl 'https://dev.api.taxi/hails/:hail_id/' \
+      -X PUT \
+      -H 'Content-Type: application/json' \
+      -H 'X-API-KEY: XXX' \
+      -d '
+{
+  "data": [
+    {
+      "status": "received_by_taxi"
+    }
+  ]
+}'
+```
+
+Le *hail_id* provient du champ `id` de l'objet *hail* que vous avez reçu. Les deux parties opérateur et client doivent sur la même URL faire un GET (toutes les 5 secondes par exemple) pour suivre l'avancée de cette demande.
+
+##### Accepter la course
+
+Le chauffeur a donc reçu la demande sur son application ou taximètre connecté et il se voit proposer d'accepter la course (il peut aussi la refuser dans les conditions prévues par la loi). Il a 30 secondes à partir du moment où le *hail* est passé `received_by_taxi` pour répondre avant que la course ne soit automatiquement annulée par notre API.
+
+Si le chauffeur accepte, l'opérateur doit changer le statut du *hail* en `accepted_by_taxi`.
+
+Si le chauffeur refuse, l'opérateur doit changer le statut du *hail* en `declined_by_taxi`.
+
+Si le statut du *hail* ne change pas dans un délai de 30 secondes, l'API passe le *hail* en `timeout_taxi` et le statut du taxi est basculé en `off` pour éviter de dégrader la qualité de service pour d'autres clients qui voudraient solliciter ce taxi. Le chauffeur doit être informé qu'il n'est plus visible dans le registre alors que son lumineux est peut-être au vert. Dans tous les cas l'application client informe le client de l'avancée de sa demande, et si elle n'a pas abouti, qu'il doit solliciter un autre taxi alentour.
+
+##### Confirmer la course
+
+Dans notre exemple, le chauffeur a accepté la course, l'application client détecte le nouveau statut du *hail* et c'est au tour du client de confirmer qu'il est toujours en demande d'un taxi.
+
+Si le client confirme, l'opérateur de mobilité doit changer le statut du *hail* en `accepted_by_customer`.
+
+Si le client annule, l'opérateur de mobilité doit changer le statut du *hail* en `declined_by_customer`.
+
+Si le statut du *hail* ne change pas dans un délai de 30 secondes, l'API passe le *hail* en `timeout_customer` et le taxi est à nouveau `free`. Le client est informé de l'annulation de sa demande. Il peut solliciter un autre taxi alentour avec [le même identifiant de session](/documentation/topic_guides/session_id). Un client qui abuserait du système sans honorer ses demandes s'expose à une [période d'exclusion du service](/documentation/howto_guides/ban) ou autres conséquences qui sortent du cadre de cette documentation.
+
+<InfoBox>
+Il est également possible de confirmer automatiquement une demande de course, tant que le client est informé du caractère irrévocable de toute demande qu'il émettra, et de sa responsabilité s'il n'honore pas ses demandes.
+</InfoBox>
+
+##### Prendre en charge le client
+
+Continuons notre exemple avec les deux parties qui ont confirmé la mise en relation, et le taxi se met en route vers la positon du client. Son statut dans l'API est maintenant `oncoming`. Il a 30 minutes pour déclarer le client à bord, ce que l'opérateur nous signale en changeant le statut du *hail* en `customer_on_board`.
+
+##### Terminer la course
+
+Le travail de mise en relation de l'API est virtuellement fini mais nous aimons savoir que tout s'est bien passé. Quand le chauffeur déclare la course comme terminée, l'opérateur n'a plus qu'à changer le statut du *hail* en `finished`. C'est un statut final, il n'est ensuite plus possible de le modifier.
+
+##### Cas d'incident
+
+Parce qu'un imprévu peut toujours arriver, il est possible autant pour le taxi que pour le client de signaler un incident empêchant la mise en relation de se conclure. Les parties peuvent changer le statut du *hail* respectivement en `incident_taxi` ou `incident_customer` et quand l'autre partie le détecte,
+informer l'utilisateur de l'application de cet événement. Un abus des incidents expose aux mêmes conséquences qu'un abus des refus de course pour le taxi ou qu'un abus des annulations de course pour un client.
+
+##### Résumé
+
+Ce graphique synthétise tout ce que nous venons de dire. Observez bien les couleurs des flèches par rapport à la légende pour identifier la partie qui vous concerne.
+
+<Legend/>
+
+![status de la course](/images/doc/trip-status.png)

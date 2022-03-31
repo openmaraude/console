@@ -78,6 +78,7 @@ const ALL_PAGES = [
       { title: 'Créer une application client', slug: 'create_client_app' },
       { title: 'Créer une application opérateur', slug: 'create_operator_app' },
       { title: 'Créer une application chauffeur', slug: 'create_driver_app' },
+      { title: "Déroulement d'une course", slug: 'hail_details' },
     ],
   },
   {
@@ -112,6 +113,7 @@ const ALL_PAGES = [
       { title: "Changer le statut d'un taxi", slug: 'status_taxi' },
       { title: "Bannir un client qui abuse du service", slug: 'ban' },
       { title: "Mettre à jour véhicule, chauffeur, ADS", slug: 'update' },
+      { title: "Mon taxi n'apparaît pas sur la carte !", slug: 'help_taxi_map' },
     ],
   },
   {

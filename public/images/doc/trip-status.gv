@@ -34,7 +34,9 @@ digraph {
     received_by_taxi -> declined_by_taxi;
     received_by_taxi -> incident_taxi;
     accepted_by_taxi -> incident_taxi;
+    accepted_by_customer -> customer_on_board [weight=8];
     accepted_by_customer -> incident_taxi;
+    customer_on_board -> finished [weight=8];
     customer_on_board -> incident_taxi;
 
     edge [color=8]; // timeouts
@@ -53,8 +55,6 @@ digraph {
     customer_on_board -> incident_customer;
 
     edge [color=2]; // after taxi status update
-    accepted_by_customer -> customer_on_board [weight=8];
-    customer_on_board -> finished [weight=8];
 
     // Trick to make the graph narrower
     { rank = same; sent_to_operator; failure; }

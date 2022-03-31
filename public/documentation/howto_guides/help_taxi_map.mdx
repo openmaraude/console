@@ -1,0 +1,21 @@
+#### À l'aide ! mon taxi n'apparaît pas sur la carte !
+
+Nous parlons ici de la [carte accessible depuis la console](/dashboards/map) mais aussi potentiellement de votre application de mobilité si vous êtes à la fois éditeur de l'application chauffeur et de l'application client.
+
+Nous listons les vérifications nécessaires avant de considérer un problème avec notre API.
+
+Le diagnostic principal à retenir est que la carte ne montre que les taxis en mesure de recevoir des demandes de courses, comme le ferait une application client.
+
+Ces vérifications s'appliquent aussi au [simulateur d'application client](https://console.dev.api.taxi/integration/search) qui ne listerait pas le taxi voulu.
+
+1. Mon taxi est-il bien [enregistré](/dashboards/taxis) sur le bon environnement, développement ou production ?
+1. Est-il disponible (statut `free`) dans notre API et pas seulement votre système d'information ? Ce statut est-il synchronisé chez nous ?
+1. Remonte-t-il une position depuis moins de deux minutes ? Il disparaît au bout de ce délai sinon.
+1. Est-il dans sa zone de prise en charge ? Son autorisation de stationnement lui permet-elle d'accepter un client qui le hélerait dans la rue ?
+1. Son [rayon de visibilité](/documentation/topic_guides/radius) lui permet-il d'être visible à cette distance ?
+1. Les longitude (x) et latitude (y) utilisées sont-elles dans le bon ordre ? assez précises ? trois chiffres après la virgule peuvent couvrir plusieurs centaines de mètres.
+1. L'application chauffeur à bord a-t'elle le service le.taxi ou équivalent d'activé dans les paramètres ?
+1. L'application chauffeur ou client communique-t'elle avec le bon environnement, développement ou production ?
+
+Si vous avez vérifié tous ces points et que le taxi n'apparaît toujours pas, vous pouvez
+nous contacter sur votre canal Slack pour que l'on diagnostique ensemble.
