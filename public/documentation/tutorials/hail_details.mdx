@@ -39,9 +39,9 @@ Le *hail_id* provient du champ `id` de l'objet *hail* que vous avez reçu. Les d
 
 Le chauffeur a donc reçu la demande sur son application ou taximètre connecté et il se voit proposer d'accepter la course (il peut aussi la refuser dans les conditions prévues par la loi). Il a 30 secondes à partir du moment où le *hail* est passé `received_by_taxi` pour répondre avant que la course ne soit automatiquement annulée par notre API.
 
-Si le chauffeur accepte, l'opérateur doit changer le statut du *hail* en `accepted_by_taxi`.
+Si le chauffeur accepte, l'opérateur doit changer le statut du *hail* en `accepted_by_taxi`, accompagné du numéro de téléphone auquel joindre le taxi (même un numéro écran) si le client en a besoin.
 
-Si le chauffeur refuse, l'opérateur doit changer le statut du *hail* en `declined_by_taxi`.
+Si le chauffeur refuse, l'opérateur doit changer le statut du *hail* en `declined_by_taxi`. L'API bascule le statut du taxi à `off`, attention à le signaler au chauffeur et à éviter l'incohérence avec un statut "disponible" dans l'application.
 
 Si le statut du *hail* ne change pas dans un délai de 30 secondes, l'API passe le *hail* en `timeout_taxi` et le statut du taxi est basculé en `off` pour éviter de dégrader la qualité de service pour d'autres clients qui voudraient solliciter ce taxi. Le chauffeur doit être informé qu'il n'est plus visible dans le registre alors que son lumineux est peut-être au vert. Dans tous les cas l'application client informe le client de l'avancée de sa demande, et si elle n'a pas abouti, qu'il doit solliciter un autre taxi alentour.
 
@@ -49,11 +49,11 @@ Si le statut du *hail* ne change pas dans un délai de 30 secondes, l'API passe 
 
 Dans notre exemple, le chauffeur a accepté la course, l'application client détecte le nouveau statut du *hail* et c'est au tour du client de confirmer qu'il est toujours en demande d'un taxi.
 
-Si le client confirme, l'opérateur de mobilité doit changer le statut du *hail* en `accepted_by_customer`.
+Si le client confirme, l'opérateur de mobilité doit changer le statut du *hail* en `accepted_by_customer`. L'API bascule le statut du taxi à `oncoming`.
 
-Si le client annule, l'opérateur de mobilité doit changer le statut du *hail* en `declined_by_customer`.
+Si le client annule, l'opérateur de mobilité doit changer le statut du *hail* en `declined_by_customer`. L'API bascule le statut du taxi à `free` et le chauffeur peut à nouveau recevoir des demandes de course.
 
-Si le statut du *hail* ne change pas dans un délai de 30 secondes, l'API passe le *hail* en `timeout_customer` et le taxi est à nouveau `free`. Le client est informé de l'annulation de sa demande. Il peut solliciter un autre taxi alentour avec [le même identifiant de session](/documentation/topic_guides/session_id). Un client qui abuserait du système sans honorer ses demandes s'expose à une [période d'exclusion du service](/documentation/howto_guides/ban) ou autres conséquences qui sortent du cadre de cette documentation.
+Si le statut du *hail* ne change pas dans un délai de 30 secondes, l'API passe le *hail* en `timeout_customer` et le taxi est à nouveau `free`. Le client doit être informé de l'annulation de sa demande. Il peut solliciter un autre taxi alentour avec [le même identifiant de session](/documentation/topic_guides/session_id). Un client qui abuserait du système sans honorer ses demandes s'expose à une [période d'exclusion du service](/documentation/howto_guides/ban) ou autres conséquences qui sortent du cadre de cette documentation.
 
 <InfoBox>
 Il est également possible de confirmer automatiquement une demande de course, tant que le client est informé du caractère irrévocable de toute demande qu'il émettra, et de sa responsabilité s'il n'honore pas ses demandes.
