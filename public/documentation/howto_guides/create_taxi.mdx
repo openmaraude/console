@@ -1,0 +1,131 @@
+import { TextLink } from '@/components/LinksRef';
+
+#### Création d'un taxi
+
+Pour l'API, un taxi est constitué de trois objets : un conducteur (driver), un véhicule (vehicle) et une autorisation de
+stationnement (ads). Ces objets doivent être créés afin de créer un nouveau taxi.
+
+Il est à votre charge de demander et vérifier les pièces justificatives permettant au taxi d'exercer :
+
+* Permis de conduire et carte d'identité ou passeport.
+* Carte professionnelle du chauffeur.
+* Carte grise du véhicule.
+* Autorisation de stationnement.
+
+##### Création du conducteur
+
+L'endpoint *POST /drivers* est utilisé pour créer un nouveau conducteur.
+
+Exemple d'appel :
+
+```shell
+$> curl 'https://dev.api.taxi/drivers/' \
+      -X POST \
+      -H 'Content-Type: application/json' \
+      -H 'X-API-KEY: XXX' \
+      -d '
+{
+  "data": [{
+    "departement": {
+      "numero": "75"
+    },
+    "first_name": "Jean",
+    "last_name": "Dupont",
+    "professional_licence": "123456"
+  }]
+}'
+```
+
+* *first_name* : prénom du chauffeur.
+* *last_name* : nom de famille du chauffeur.
+* *departement* : département de délivrance de la carte professionnelle du chauffeur.
+* *professional_licence* : numéro de la carte professionnelle du chauffeur.
+
+##### Création du véhicule
+
+L'endpoint *POST /vehicles* permet de créer un nouveau véhicule.
+
+Exemple d'appel :
+
+```shell
+$> curl 'https://dev.api.taxi/vehicles/' \
+      -X POST \
+      -H 'Content-Type: application/json' \
+      -H 'X-API-KEY: XXX' \
+      -d '
+{
+  "data": [
+    {
+      "licence_plate": "AA-123-BB",
+      "color": "bleu",
+      "nb_seats": 3,
+      "constructor": "Toyota",
+      "model": "Verso"
+      "pet_accepted": true,
+    }
+  ]
+}'
+```
+
+Le seul paramètre requis est *licence_plate*. Les autres sont optionnels mais permettent au client de retrouver plus facilement le taxi. Vous pouvez retrouver l'intégralité des champs optionnels dans la <TextLink target="_blank" href={process.env.REFERENCE_DOCUMENTATION_URL + '/#/operator/post_vehicles'}>documentation Swagger</TextLink>.
+
+##### Création de l'ADS
+
+L'endpoint *POST /ads* permet de créer une nouvelle autorisation de stationnement.
+
+```shell
+$> curl 'https://dev.api.taxi/ads/' \
+      -X POST \
+      -H 'Content-Type: application/json' \
+      -H 'X-API-KEY: XXX' \
+      -d '
+{
+  "data": [
+    {
+      "insee": "75056",
+      "numero": "1234",
+    }
+  ]
+}'
+```
+
+Paramètres principaux :
+
+* *insee* : code INSEE de la commune de l'ADS. Vous pouvez trouver ce code sur le site de l'INSEE.
+* *numero* : numéro de l'ADS.
+
+##### Création du taxi
+
+Il est possible de créer un taxi en faisant un *POST /taxis* en fournissant les mêmes informations sur le chauffeur, le véhicule
+et l'autorisation de stationnement que ci-dessus.
+
+Exemple d'appel :
+
+```shell
+$> curl 'https://dev.api.taxi/taxis/' \
+      -X POST \
+      -H 'Content-Type: application/json' \
+      -H 'X-API-KEY: XXX' \
+      -d '
+{
+  "data": [
+    {
+      "ads": {
+        "insee": "75056",
+        "numero": "1234"
+      },
+      "driver": {
+        "departement": "75",
+        "professional_licence": "123456"
+      },
+      "vehicle": {
+        "licence_plate": "AA-123-BB"
+      }
+    }
+  ]
+}'
+```
+
+L'identifiant `id` retourné doit être conservé afin de mettre à jour la position ou le statut du taxi.
+
+Cet identifiant est nommé `taxi_id` dans le reste de la documentation.

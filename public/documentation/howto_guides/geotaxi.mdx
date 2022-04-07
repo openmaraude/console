@@ -1,0 +1,41 @@
+import InfoBox from '@/components/InfoBox';
+
+#### Géolocalisation
+
+En tant qu'opérateur, vos serveurs doivent envoyer la géolocalisation des taxis en maraude (`free`) toutes les 5 secondes environ, à l'endpoint *POST
+/geotaxi*.
+
+Pour optimiser ce processus, l'endpoint accepte jusqu'à 50 taxis à chaque requête. Vous pouvez donc par exemple envoyer les positions qui ont changé depuis le dernier envoi.
+
+Le format attendu est minimal pour réduire les temps de réponse. Exemple d'appel :
+
+```shell
+$> curl 'https://dev.api.taxi/geotaxi/' \
+      -X POST \
+      -H 'Content-Type: application/json' \
+      -H 'X-API-KEY: XXX' \
+      -d '
+{
+  "data": [
+    {
+      "positions": [
+        {"taxi_id": "AAA111", "lon": "2.35", "lat": "48.86"},
+        {"taxi_id": "BBB222", "lon": "2.35", "lat": "48.86"},
+      ]
+    }
+  ]
+}'
+```
+
+Les latitude et longitude sont aussi acceptées au format numérique. Pour rappel, la latitude correspond à l'axe Y et la longitude à l'axe X.
+Typiquement, une inversion des valeurs en France métropolitaine va envoyer les taxis dans l'océan Indien.
+
+L'endpoint répondra avec un code 200 si toutes les positions de taxi ont été mises à jour. Si une seule position est en
+erreur (ID de taxi inconnu, coordonnée non valide...), toute la requête est rejetée avec le détail de l'erreur.
+Attention donc à être alerté des erreurs avec le détail dans votre infrastructure.
+
+N'envoyez que les positions des taxis libres (statut `free`). Les taxis avec une télémétrie récente et dans leur zone de prise en charge seront affichés comme disponibles pour les applications de mobilité.
+
+<InfoBox>
+Historiquement, l'API utilisait un serveur UDP pour remonter la localisation. Si ce serveur reste actif pour les partenaires qui l'utilisent, son usage est déconseillé et n'est plus documenté. Format différent du reste de l'API, absence de réponse en cas d'erreur de validation, impossibilité d'envoyer plus d'une localisation à la fois... le nouvel endpoint résout toutes ces limitations.
+</InfoBox>

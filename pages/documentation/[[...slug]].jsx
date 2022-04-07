@@ -100,12 +100,15 @@ const ALL_PAGES = [
     slug: 'reference_guides',
     submenus: [
       { title: 'Glossaire', slug: 'glossary' },
+      { title: "Référence de l'API (Swagger)", slug: 'reference' },
     ],
   },
   {
     title: 'Guides pratiques',
     slug: 'howto_guides',
     submenus: [
+      { title: "Déclarer un taxi", slug: 'create_taxi' },
+      { title: "Envoyer la géolocalisation des taxis", slug: 'geotaxi' },
       { title: "Lister les taxis autour d'un point", slug: 'search_taxis' },
       { title: 'Effectuer une demande de course', slug: 'create_hail' },
       { title: "Récupérer le statut d'une course", slug: 'poll_hail' },
@@ -114,18 +117,6 @@ const ALL_PAGES = [
       { title: "Bannir un client qui abuse du service", slug: 'ban' },
       { title: "Mettre à jour véhicule, chauffeur, ADS", slug: 'update' },
       { title: "Mon taxi n'apparaît pas sur la carte !", slug: 'help_taxi_map' },
-    ],
-  },
-  {
-    title: 'Documentation legacy',
-    slug: 'legacy',
-    separator: true,
-    submenus: [
-      { title: 'Introduction', slug: 'introduction' },
-      { title: 'Moteur de recherche', slug: 'search' },
-      { title: 'Opérateur', slug: 'operator' },
-      { title: 'Documentation de référence', slug: 'reference' },
-      { title: 'Exemples', slug: 'examples' },
     ],
   },
 ];

@@ -1,7 +1,6 @@
 Bienvenue sur la documentation de l'API [le.taxi](https://le.taxi).
 
-L'API le.taxi permet aux **clients** d'utiliser une **application de mobilité partenaire** afin d'**arrêter un
-artisan taxi disponible** situé à **proximité**.
+L'API le.taxi permet aux **clients** d'utiliser une **application de mobilité partenaire** afin de **héler un artisan taxi disponible** situé à **proximité**.
 
 Notre documentation est organisée en quatre sections :
 
@@ -10,4 +9,44 @@ Notre documentation est organisée en quatre sections :
 * Les **guides de référence** contiennent la documentation technique de l'API. Elles supposent que vous avez une compréhension préalable du fonctionnement général de l'API.
 * Les **guides pratiques** sont des recettes que vous pouvez appliquer pour résoudre les problèmes que vous pourriez rencontrer en utilisant l'API. Ils supposent que vous avez une compréhension préalable du fonctionnement de l'API.
 
-Si vous constatez un manque ou une erreur dans notre documentation, n'hésitez pas à contacter l'équipe par email sur [equipe@le.taxi](mailto:equipe@le.taxi?subject=Signalement%20d'un%20problème%20sur%20votre%20documentation).
+##### Intégration
+Nous mettons à disposition un environnement de développement pour permettre de tester l'intégration de votre solution
+avec l'API. Cet environnement, disponible dans la section [Intégration](https://console.dev.api.taxi/integration/) de la console de développement,
+nécessite d'être authentifié. La création de compte se fait après validation de votre dossier.
+
+##### Requêtes
+
+Tous les appels à l'API doivent se faire avec les headers HTTP suivants :
+
+
+| Nom du header | Valeur                                       |
+|---------------|----------------------------------------------|
+| X-Api-Key     | Clé d'API, disponible sur la page Mon Compte |
+
+
+Les requêtes de modifications (POST, PUT, PATCH) nécessitent de fournir le header suivant :
+
+| Nom du header | Valeur             |
+|---------------|--------------------|
+| Content-Type  | *application/json* |
+
+
+Toutes les réponses de l'API sont contenues dans le champ data de type liste à un élément. Par exemple :
+
+
+```shell
+
+$> curl 'https://dev.api.taxi/taxis/?lon=2.3500013351440434&lat=48.85999989664685' \
+      -H 'X-Api-Key: XXX' | jq .
+{
+  "data": [
+    {
+      "id": "..."
+    },
+    ...
+  ]
+}
+```
+
+
+Si vous constatez un manque ou une erreur dans notre documentation, n'hésitez pas à contacter l'équipe sur votre canal Slack ou par email sur [equipe@le.taxi](mailto:equipe@le.taxi?subject=Signalement%20d'un%20problème%20sur%20votre%20documentation).
