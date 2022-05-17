@@ -23,10 +23,17 @@ Les erreurs renvoyées par l'API sont correctement affichées. Par exemple, si l
 
 ##### Changement et synchronisation du statut
 
-Le chauffeur peut changer son statut afin d'être libre ou occupé ([PUT /taxis/:id](https://dev.api.taxi/doc/#/default/put_taxis__taxi_id_)).
+Le chauffeur peut changer son statut afin d'être libre ou occupé ([PUT /taxis/:id](https://dev.api.taxi/doc/#/default/put_taxis__taxi_id_)) dans l'application
+(ou directement connecté au taximètre).
+Ces changements de statut sont envoyés à l'API le.taxi pour synchroniser la visibilité dans les applications client.
 
-L'application effectue régulièrement du polling sur le statut du taxi ([GET /taxis/:id](https://dev.api.taxi/doc/#/default/get_taxis__taxi_id_)) : si l'API le.taxi change le statut du taxi pour le mettre à *off* (voir *Délai dépassé* ci-dessous), l'application doit le détecter.
+L'application effectue régulièrement du polling sur le statut du taxi ([GET /taxis/:id](https://dev.api.taxi/doc/#/default/get_taxis__taxi_id_)) (~ 2-5 min).
+Si l'API le.taxi change le statut du taxi pour le mettre à *off* (voir *Délai dépassé* ci-dessous), l'application doit le détecter et réagir :
+- prévenir le chaufeur qu'il a été déconnecté du registre et le reconnecter quand il ferme le message (resynchroniser avec le statut disponible ou occupé de l'application ou taximètre) ;
+- ou reconnecter le chauffeur automatiquement, tant qu'il n'y a pas d'abus sur le fait d'ignorer les demandes de course.
 
+Le statut le.taxi est décorrélé du statut de votre application ou taximètre et il vous appartient de réagir en cas de désynchronisation ou de laisser le chauffeur décider.
+Un taxi au luminaire vert doit être visible dans les applications client.
 
 ##### Envoi de la géolocalisation du véhicule
 
