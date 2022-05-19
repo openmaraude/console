@@ -23,17 +23,26 @@ Les erreurs renvoyées par l'API sont correctement affichées. Par exemple, si l
 
 ##### Changement et synchronisation du statut
 
-Le chauffeur peut changer son statut afin d'être libre ou occupé ([PUT /taxis/:id](https://dev.api.taxi/doc/#/default/put_taxis__taxi_id_)) dans l'application
-(ou directement connecté au taximètre).
-Ces changements de statut sont envoyés à l'API le.taxi pour synchroniser la visibilité dans les applications client.
+Le chauffeur peut changer son statut afin d'être libre ou occupé dans l'application (ou directement connecté au
+taximètre).
+Ces changements de statut doivent être envoyés à l'API le.taxi pour synchroniser la visibilité dans les applications
+client  ([PUT /taxis/:id](https://dev.api.taxi/doc/#/default/put_taxis__taxi_id_)).
 
-L'application effectue régulièrement du polling sur le statut du taxi ([GET /taxis/:id](https://dev.api.taxi/doc/#/default/get_taxis__taxi_id_)) (~ 2-5 min).
-Si l'API le.taxi change le statut du taxi pour le mettre à *off* (voir *Délai dépassé* ci-dessous), l'application doit le détecter et réagir :
-- prévenir le chaufeur qu'il a été déconnecté du registre et le reconnecter quand il ferme le message (resynchroniser avec le statut disponible ou occupé de l'application ou taximètre) ;
-- ou reconnecter le chauffeur automatiquement, tant qu'il n'y a pas d'abus sur le fait d'ignorer les demandes de course.
+Vos serveurs effectuent régulièrement du polling sur le statut du taxi ([GET
+/taxis/:id](https://dev.api.taxi/doc/#/default/get_taxis__taxi_id_)) (~ 2-5 min).
+Si vous détectez une incohérence entre le statut de l'application ou taximètre et le statut du registre,
+particulièrement si l'API le.taxi change le statut du taxi pour le mettre à *off* (voir *Délai dépassé* ci-dessous),
+vous devez le détecter et réagir :
+- soit prévenir le chaufeur qu'il n'est plus visible sur le registre suite à une demande de course ignorée, et lui
+  demander s'il est disponible ou non pour que le statut de l'application et du registre corresponde à la situation sur le
+  terrain (par exemple, il vient de prendre une course en maraude physique mais il a oublié de se mettre occupé sur l'application) ;
+- soit renvoyer automatiquement de vos serveurs le statut actuel, sans intervention du chauffeur, tant que ça ne conduit
+  pas le chauffeur à ignorer les demandes de courses le.taxi, alors qu'il a obligation d'honorer les courses en maraude.
 
-Le statut le.taxi est décorrélé du statut de votre application ou taximètre et il vous appartient de réagir en cas de désynchronisation ou de laisser le chauffeur décider.
-Un taxi au luminaire vert doit être visible dans les applications client.
+En résumé, le statut le.taxi est décorrélé du statut de votre application ou taximètre et il vous appartient de
+synchroniser ce dernier sur le registre, et de réagir en cas d'incohérence ou de laisser le chauffeur décider.  La règle
+de base étant qu'un taxi au luminaire vert doit envoyer sa position au registre et avoir le statut disponible pour être
+visible dans les applications client.
 
 ##### Envoi de la géolocalisation du véhicule
 
