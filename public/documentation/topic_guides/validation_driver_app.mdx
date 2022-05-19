@@ -41,7 +41,7 @@ vous devez le détecter et réagir :
 
 En résumé, le statut le.taxi est décorrélé du statut de votre application ou taximètre et il vous appartient de
 synchroniser ce dernier sur le registre, et de réagir en cas d'incohérence ou de laisser le chauffeur décider.  La règle
-de base étant qu'un taxi au luminaire vert doit envoyer sa position au registre et avoir le statut disponible pour être
+de base étant qu'un taxi au lumineux vert doit envoyer sa position au registre et avoir le statut disponible pour être
 visible dans les applications client.
 
 ##### Envoi de la géolocalisation du véhicule
@@ -64,7 +64,9 @@ Le chauffeur doit pouvoir refuser la course (cas légitimes).
 
 ###### Délai dépassé
 
-Si le chauffeur n'effectue aucune action dans le temps imparti, l'API le.taxi annule la demande et passe le taxi à *off*. L'application doit afficher un message, et proposer au taxi de passer son statut à *free* en effectuant une application manuelle.
+Si le chauffeur n'effectue aucune action dans le temps imparti, l'API le.taxi annule la demande et passe le statut du
+taxi à *off*. Ceci permet au client de renouveler sa demande à un autre taxi alentour. Vous devez réagir à ce changement
+de statut pour ne pas laisser le chauffeur dans cette situation.
 
 
 ##### Acceptation du client
