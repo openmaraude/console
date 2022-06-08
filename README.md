@@ -34,9 +34,10 @@ Console is available at http://localhost:5103.
 
 On Linux, performances should be fine and working with APITaxi_devel should be fine.
 
+
 ## Deployment
 
-To deploy to staging and production, set up the following remote and push on the master branches.
+To deploy to production, setup the following remote and push on the master branches.
 
 ```
 git remote add clever-dev git+ssh://git@push-n2-par-clevercloud-customers.services.clever-cloud.com/app_a3a512d9-fe86-449d-a448-bb4803b0c74f.git
@@ -48,7 +49,6 @@ To connect to containers, install [CleverCloud CLI](https://www.clever-cloud.com
 ```
 clever link app_a3a512d9-fe86-449d-a448-bb4803b0c74f
 clever link app_8ff05f72-5456-434b-ae0a-6083201f8061
-```
 
 # Outputs "dev-console" and "prod-console"
 clever applications
