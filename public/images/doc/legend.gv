@@ -12,7 +12,7 @@ digraph {
         a -> b [style=bold,label="Mise à jour par le.taxi"];
         c -> d [color=8,label="Mise à jour suite à un timeout"];
         e -> f [color=4,label="Mise à jour par l'opérateur"];
-        g -> h [color=10,label="Mise à jour par le moteur de recherche"];
+        g -> h [color=10,label="Mise à jour par la plateforme client"];
         i -> j [color=2, label="Mise à jour suite à une modification du statut du taxi"];
   }
 }
