@@ -115,9 +115,10 @@ export default function IntegrationPage() {
             </p>
 
             <p>
-              Le menu <Link href="/integration/search" passHref><TextLink>application client</TextLink></Link> vous
-              permet de lister les taxis autour d'un point, d'effectuer une demande de course et de simuler le parcours
-              client dans les différentes possibilités.
+              Le menu
+              <Link href="/integration/search" passHref><TextLink>application client</TextLink></Link>
+              vous permet de lister les taxis autour d'un point, d'effectuer une demande de course
+              et de simuler le parcours client dans les différentes possibilités.
             </p>
             <p>
               Vous pouvez ainsi développer votre application opérateur en
