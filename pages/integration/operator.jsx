@@ -339,7 +339,7 @@ function HailDetailActions({ hail }) {
   const [response, setApiResponse] = React.useState({});
   let actions;
 
-  function updateHailStatus(newStatus) {
+  function updateHailStatus(newStatus, taxiPhoneNumber = undefined) {
     return async () => {
       try {
         const resp = await requestOne(`/hails/${hail.id}`, {
@@ -352,6 +352,7 @@ function HailDetailActions({ hail }) {
           body: JSON.stringify({
             data: [{
               status: newStatus,
+              taxi_phone_number: taxiPhoneNumber,
             }],
           }),
         });
@@ -394,10 +395,45 @@ function HailDetailActions({ hail }) {
       break;
     case 'received_by_taxi':
       actions = (
-        <p>
-          La course a le statut <strong>{hail.status}</strong>. Le taxi
-          dispose de quelques secondes pour accepter ou refuser la course.
-        </p>
+        <>
+          <p>
+            La course a le statut <strong>{hail.status}</strong>. Le taxi
+            dispose de 30 secondes pour accepter ou refuser la course.
+            <br />
+            Sans réponse de votre part, le statut sera mis à <strong>timeout_taxi</strong>,
+            et le statut du taxi sera mis à <em>off</em>.
+          </p>
+
+          <div className={classes.actionsCards}>
+            <Card>
+              <CardContent>
+                <Button variant="contained" color="primary" onClick={updateHailStatus('accepted_by_taxi', '0607080910')}>
+                  Accepter la course
+                </Button>
+
+                <p>
+                  Mettre le statut à <strong>accepted_by_taxi</strong> pour
+                  accepter la demande de course.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent>
+                <Button variant="contained" color="primary" onClick={updateHailStatus('declined_by_taxi')}>
+                  Refuser la course
+                </Button>
+
+                <p>
+                  Mettre le statut à <strong>declined_by_taxi</strong> pour
+                  refuser la demande de course (mettra le statut du taxi à <em>off</em>).
+                </p>
+              </CardContent>
+            </Card>
+
+            {incidentTaxiCard}
+          </div>
+        </>
       );
       break;
     case 'accepted_by_taxi':
@@ -989,8 +1025,17 @@ export default function IntegrationOperatorPage() {
       </p>
 
       <p>
-        Cette page vous permet de simuler simplement une application opérateur.
+        Cette page vous permet de simuler simplement une application opérateur
+        avec une flotte de taxis virtuels.
       </p>
+
+      <blockquote>
+        Attention ! notre opérateur de test neotaxi n'accepte plus automatiquement les courses.
+        Dans la liste des courses du taxi à qui l'application client a envoyé sa demande,
+        quand votre demande de course apparaît, il faut choisir manuellement "accepter" ou "refuser"
+        quand la course est dans l'état <strong>received_by_taxi</strong>.
+        Sinon la demande finira en timeout et le taxi sera basculé sur <em>off</em>.
+      </blockquote>
 
       <p>
         La <Link href="/documentation/introduction" passHref><TextLink>documentation</TextLink></Link> est
