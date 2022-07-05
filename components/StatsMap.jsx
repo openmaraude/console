@@ -20,7 +20,7 @@ import {
 } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
-const MID_FRANCE = [46.23, 2.20];
+const MID_FRANCE = [46.536, 2.4302];
 
 function ZUPC({ zupc }) {
   return (
