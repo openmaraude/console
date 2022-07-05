@@ -1,8 +1,8 @@
-import React from 'react';
-
 import dynamic from 'next/dynamic';
-
+import React from 'react';
 import useSWR from 'swr';
+
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import APIErrorAlert from '@/components/APIErrorAlert';
 import { requestList } from '@/src/api';
@@ -26,6 +26,7 @@ export default function DashboardZUPC() {
       <p>Cette carte affiche les <abbr title="Zone unique de prise en charge">ZUPC</abbr> actuellement connues et intégrées dans le.taxi.</p>
       <p>Elle ne couvre pas encore l'ensemble des ZUPC de France.</p>
       {error && <APIErrorAlert error={error} />}
+      {!data && <LinearProgress />}
       {data && <Map zupcs={data.data} />}
     </Layout>
   );
