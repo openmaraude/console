@@ -443,7 +443,7 @@ function HailRequestForm({ taxi, onRequest }) {
           type="number"
           // There is an issue with Safari using this step as the valid pattern, 6 decimal places
           // but a lat/lon can use more digits, and Safari will refuse to submit the form.
-          inputProps={{ step: 0.000001 }}
+          inputProps={{ step: "any" }}
           margin="normal"
           value={hailRequest.lon}
           onChange={updateField}
@@ -453,7 +453,7 @@ function HailRequestForm({ taxi, onRequest }) {
           label="Latitude du client"
           name="lat"
           type="number"
-          inputProps={{ step: 0.000001 }}
+          inputProps={{ step: "any" }}
           margin="normal"
           value={hailRequest.lat}
           onChange={updateField}
@@ -706,7 +706,7 @@ export default function IntegrationSearchPage() {
         name="lon"
         InputLabelProps={{ shrink: true }}
         type="number"
-        inputProps={{ step: 0.000001 }}
+        inputProps={{ step: "any" }}
       />
       <TimeoutTextField
         label="Latitude"
@@ -715,7 +715,7 @@ export default function IntegrationSearchPage() {
         name="lat"
         InputLabelProps={{ shrink: true }}
         type="number"
-        inputProps={{ step: 0.000001 }}
+        inputProps={{ step: "any" }}
       />
       <AddressSearch />
     </>
