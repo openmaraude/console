@@ -285,6 +285,7 @@ function TaxiSetNewLocation({ taxi }) {
           label="Longitude"
           name="lon"
           type="number"
+          inputProps={{ step: 0.000001 }}
           margin="normal"
           value={values.lon || ""}
           onChange={updateField}
@@ -295,6 +296,7 @@ function TaxiSetNewLocation({ taxi }) {
           label="Latitude"
           name="lat"
           type="number"
+          inputProps={{ step: 0.000001 }}
           margin="normal"
           value={values.lat || ""}
           onChange={updateField}
