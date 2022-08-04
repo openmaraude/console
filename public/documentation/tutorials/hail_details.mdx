@@ -14,7 +14,18 @@ Une demande de course commence par un [taxi disponible](/documentation/howto_gui
 La plateforme client envoie un `POST /hails` avec notamment la position du client et le taxi demandé, et nous acquittons la demande après vérification
 en créant un objet *Hail* dans le statut `received` et en retournant cet objet en réponse. Il contient le *hail ID* qui permettra de suivre l'avancée de la demande et de mettre à jour son état. Le taxi demandé est basculé dans l'état `answering` afin de lui éviter de recevoir d'autres demandes en même temps.
 
-Dans la foulée nous envoyons ce *hail* à l'opérateur du taxi à l'URL indiquée dans son compte client (champ « URL de votre API ») qui doit répondre au format JSON, même un simple `[]`. Une réponse positive passe le *hail* au statut `received_by_operator` qui doit maintenant envoyer la demande au taxi, typiquement par une notification push. L'opérateur aura 10 secondes pour confirmer la réception par le taxi en changeant le statut du *hail* en `received_by_taxi`.
+Dans la foulée nous envoyons ce *hail* à l'opérateur du taxi à l'URL indiquée dans son compte client (champ « URL de votre API »).
+Le corps de cette requête *POST* est identique à un *GET /hails/:hail_id*, vous y trouverez le *hail ID* à utiliser pour vos requêtes ultérieures.
+Notez que le numéro de téléphone du client est caché à cette étape mais le champ est toujours envoyé.
+
+L'opérateur doit toujours répondre au format JSON, même un simple `[]` pour confirmer, mais aussi en cas d'erreur.
+
+Une réponse positive (200 ou 201) passe le *hail* au statut `received_by_operator` qui doit maintenant envoyer la demande au taxi, typiquement par une notification push.
+L'opérateur aura 10 secondes pour confirmer la réception par le taxi en changeant le statut du *hail* en `received_by_taxi`.
+
+<InfoBox>
+Attention à ne pas essayer de changer le statut du hail avant que nous ayons nous-même confirmé la réception, l'API ne l'autorise pas.
+</InfoBox>
 
 L'endpoint *PUT /hails/:hail_id* permet de mettre à jour ce statut. Exemple d'appel :
 
