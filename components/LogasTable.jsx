@@ -40,6 +40,16 @@ export default function LogasTable({ minimal }) {
         name="name"
         InputLabelProps={{ shrink: true }}
       />
+
+      {!minimal && (
+        <TimeoutTextField
+          label="Manager"
+          variant="outlined"
+          margin="dense"
+          name="manager"
+          InputLabelProps={{ shrink: true }}
+        />
+      )}
     </>
   );
 
