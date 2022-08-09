@@ -1,0 +1,51 @@
+#### Déclarer un incident (opérateur ou client)
+
+Tout ne se passe pas toujours comme prévu, et un taxi en route vers le client peut s'engager dans une rue qui se trouve bloquée, par exemple.
+
+C'est pourquoi l'API le.taxi prévoit une sortie du parcours client à toute étape.
+
+Déclarer un incident c'est simplement changer le statut du *hail* en `incident_taxi` (pour les opérateurs) ou `incident_customer` (pour les applications client).
+
+*PUT /hails/:hail_id*
+
+```json
+{
+  "data": [
+    {
+      "status": "incident_taxi"
+    }
+  ]
+}
+```
+
+Le motif d'incident est optionnel et peut être envoyé dans un second temps au même *endpoint*.
+
+*PUT /hails/:hail_id*
+
+```json
+{
+  "data": [
+    {
+      "incident_taxi_reason": "no_show"
+    }
+  ]
+}
+```
+
+Les motifs d'incident taxi acceptés par l'API sont les suivants :
+
+|  |
+---|---
+`no_show` | Le client ne s'est pas présenté à l'adresse indiquée
+`address` | L'adresse est introuvable
+`traffic` | Circulation difficile
+`breakdown` | Panne du véhicule
+`traffic_jam` | Embouteillage
+`garbage_truck` | En attente derrière un camion-poubelle
+
+Cette liste peut évoluer mais nous garderons ces motifs pour raison de compatibilité.
+
+Les motifs d'incident client acceptés par l'API sont les suivants : `mud_river`, `parade` et `earthquake`.
+
+Je ne prendrai pas la peine de les expliquer. Ce sont des valeurs de test qui datent de la création de l'API en 2015.
+Les motifs d'incident client restent à définir.
