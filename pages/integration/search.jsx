@@ -539,9 +539,9 @@ function Taxi({ taxi }) {
   // specify X-Logas header because integration account doesn't have the
   // permissions to view the item.
   const headers = (
-    userContext.user.email === taxi.operator
-      ? {}
-      : { 'X-Logas': process.env.INTEGRATION_ACCOUNT_EMAIL }
+    userContext.user.email === process.env.INTEGRATION_ACCOUNT_EMAIL
+      ? { 'X-Logas': process.env.INTEGRATION_ACCOUNT_EMAIL }
+      : {}
   );
 
   const { data, error } = useSWR(
@@ -689,7 +689,7 @@ export default function IntegrationSearchPage() {
         token,
         args: filters,
         headers: {
-          'X-Logas': process.env.INTEGRATION_ACCOUNT_EMAIL,
+          // No X-Logas, the operator must see its own taxis
         },
       });
     },
