@@ -539,9 +539,9 @@ function Taxi({ taxi }) {
   // specify X-Logas header because integration account doesn't have the
   // permissions to view the item.
   const headers = (
-    userContext.user.email === taxi.operator
-      ? {}
-      : { 'X-Logas': process.env.INTEGRATION_ACCOUNT_EMAIL }
+    taxi.operator === process.env.INTEGRATION_ACCOUNT_EMAIL
+      ? { 'X-Logas': process.env.INTEGRATION_ACCOUNT_EMAIL }
+      : {}
   );
 
   const { data, error } = useSWR(
