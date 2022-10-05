@@ -138,14 +138,16 @@ export default function Menu() {
             <>
               {
                 hasRole(userContext.user, 'admin')
-                && (<>
+                && (
+                <>
                   <HighlightedLink href="/admin" passHref>
                     <ButtonLink color="inherit">Administration</ButtonLink>
                   </HighlightedLink>
                   <HighlightedLink href="/stats" passHref>
                     <ButtonLink color="inherit">Statistiques</ButtonLink>
                   </HighlightedLink>
-                </>)
+                </>
+                )
               }
               <HighlightedLink href="/dashboards" passHref>
                 <ButtonLink color="inherit">Tableaux de bord</ButtonLink>
