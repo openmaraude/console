@@ -9,12 +9,8 @@ import useSWR from 'swr';
 import APIErrorAlert from '@/components/APIErrorAlert';
 import { requestOne } from '@/src/api';
 import { UserContext } from '@/src/auth';
+import { formatDecimal } from '@/src/utils';
 import { Layout } from './index';
-
-function roundDecimal(float) {
-  if (!float) return '?';
-  return float.toFixed(2).toString().replace('.', ',');
-}
 
 export default function StatsHails() {
   const userContext = React.useContext(UserContext);
@@ -46,63 +42,63 @@ export default function StatsHails() {
           </TableRow>
           <TableRow>
             <TableCell>Moyenne de courses distribuées</TableCell>
-            <TableCell>{roundDecimal(data.hails_daily.total_average)}</TableCell>
-            <TableCell>{roundDecimal(data.hails_weekly.total_average)}</TableCell>
-            <TableCell>{roundDecimal(data.hails_monthly.total_average)}</TableCell>
+            <TableCell>{formatDecimal(data.hails_daily.total_average)}</TableCell>
+            <TableCell>{formatDecimal(data.hails_weekly.total_average)}</TableCell>
+            <TableCell>{formatDecimal(data.hails_monthly.total_average)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Taux d'échec client : timeout customer</TableCell>
-            <TableCell>{roundDecimal(data.hails_daily.timeout_customer_average)}</TableCell>
-            <TableCell>{roundDecimal(data.hails_weekly.timeout_customer_average)}</TableCell>
-            <TableCell>{roundDecimal(data.hails_monthly.timeout_customer_average)}</TableCell>
+            <TableCell>{formatDecimal(data.hails_daily.timeout_customer_average)}</TableCell>
+            <TableCell>{formatDecimal(data.hails_weekly.timeout_customer_average)}</TableCell>
+            <TableCell>{formatDecimal(data.hails_monthly.timeout_customer_average)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Taux d'échec client : declined_by_customer</TableCell>
-            <TableCell>{roundDecimal(data.hails_daily.declined_by_customer_average)}</TableCell>
-            <TableCell>{roundDecimal(data.hails_weekly.declined_by_customer_average)}</TableCell>
-            <TableCell>{roundDecimal(data.hails_monthly.declined_by_customer_average)}</TableCell>
+            <TableCell>{formatDecimal(data.hails_daily.declined_by_customer_average)}</TableCell>
+            <TableCell>{formatDecimal(data.hails_weekly.declined_by_customer_average)}</TableCell>
+            <TableCell>{formatDecimal(data.hails_monthly.declined_by_customer_average)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>
               Taux/Nombre de courses annulées par les chauffeurs (après acceptation client)
             </TableCell>
-            <TableCell>{roundDecimal(data.hails_daily.incident_taxi_average)}</TableCell>
-            <TableCell>{roundDecimal(data.hails_weekly.incident_taxi_average)}</TableCell>
-            <TableCell>{roundDecimal(data.hails_monthly.incident_taxi_average)}</TableCell>
+            <TableCell>{formatDecimal(data.hails_daily.incident_taxi_average)}</TableCell>
+            <TableCell>{formatDecimal(data.hails_weekly.incident_taxi_average)}</TableCell>
+            <TableCell>{formatDecimal(data.hails_monthly.incident_taxi_average)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>
               Taux/Nombre de courses refusées par les chauffeurs (avant acceptation client)
             </TableCell>
-            <TableCell>{roundDecimal(data.hails_daily.declined_by_taxi_average)}</TableCell>
-            <TableCell>{roundDecimal(data.hails_weekly.declined_by_taxi_average)}</TableCell>
-            <TableCell>{roundDecimal(data.hails_monthly.declined_by_taxi_average)}</TableCell>
+            <TableCell>{formatDecimal(data.hails_daily.declined_by_taxi_average)}</TableCell>
+            <TableCell>{formatDecimal(data.hails_weekly.declined_by_taxi_average)}</TableCell>
+            <TableCell>{formatDecimal(data.hails_monthly.declined_by_taxi_average)}</TableCell>
           </TableRow>
         </Table>
         <Table>
           <TableRow>
             <TableCell>Temps moyen d’acceptation de course chauffeur</TableCell>
-            <TableCell>{roundDecimal(data.average_accepted_by_taxi_time)} s</TableCell>
+            <TableCell>{formatDecimal(data.average_accepted_by_taxi_time)} s</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Temps moyen d’acceptation de course client</TableCell>
-            <TableCell>{roundDecimal(data.average_accepted_by_customer_time)} s</TableCell>
+            <TableCell>{formatDecimal(data.average_accepted_by_customer_time)} s</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Temps moyen d’échec client : timeout customer</TableCell>
-            <TableCell>{roundDecimal(data.average_timeout_customer_time)} s</TableCell>
+            <TableCell>{formatDecimal(data.average_timeout_customer_time)} s</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Temps moyen d’échec client : declined_by_customer</TableCell>
-            <TableCell>{roundDecimal(data.average_declined_by_customer_time)} s</TableCell>
+            <TableCell>{formatDecimal(data.average_declined_by_customer_time)} s</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Temps moyen d’échec taxi : timeout taxi</TableCell>
-            <TableCell>{roundDecimal(data.average_timeout_taxi_time)} s</TableCell>
+            <TableCell>{formatDecimal(data.average_timeout_taxi_time)} s</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Temps moyen d’échec taxi : incident_taxi</TableCell>
-            <TableCell>{roundDecimal(data.average_incident_taxi_time)} s</TableCell>
+            <TableCell>{formatDecimal(data.average_incident_taxi_time)} s</TableCell>
           </TableRow>
         </Table>
       </>

@@ -9,12 +9,8 @@ import useSWR from 'swr';
 import APIErrorAlert from '@/components/APIErrorAlert';
 import { requestOne } from '@/src/api';
 import { UserContext } from '@/src/auth';
+import { formatDecimal } from '@/src/utils';
 import { Layout } from './index';
-
-function roundDecimal(float) {
-  if (!float) return '?';
-  return float.toFixed(2).toString().replace('.', ',');
-}
 
 export default function StatsTaxis() {
   const userContext = React.useContext(UserContext);
@@ -61,7 +57,7 @@ export default function StatsTaxis() {
                 {Object.entries(data.connected_taxis_per_hour).map(([k, v]) => (
                   <TableRow>
                     <TableCell>{k} h</TableCell>
-                    <TableCell>{roundDecimal(v)}</TableCell>
+                    <TableCell>{formatDecimal(v)}</TableCell>
                   </TableRow>
                 ))}
               </Table>
@@ -82,15 +78,15 @@ export default function StatsTaxis() {
           </TableRow>
           <TableRow>
             <TableCell>Courses mensuelles par taxi</TableCell>
-            <TableCell>{roundDecimal(data.monthly_hails_per_taxi)}</TableCell>
+            <TableCell>{formatDecimal(data.monthly_hails_per_taxi)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Valeur de réglage rayon moyen par taxi</TableCell>
-            <TableCell>{roundDecimal(data.average_radius)} m</TableCell>
+            <TableCell>{formatDecimal(data.average_radius)} m</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Pourcentage de modification du rayon</TableCell>
-            <TableCell>{roundDecimal(data.average_radius_change * 100)} %</TableCell>
+            <TableCell>{formatDecimal(data.average_radius_change * 100)} %</TableCell>
           </TableRow>
         </Table>
       </>

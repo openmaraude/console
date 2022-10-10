@@ -10,3 +10,7 @@ export function formatDate(date) {
 export function formatLoc(num) {
   return num?.toFixed(5);
 }
+
+export function formatDecimal(float) {
+  return float?.toFixed(2).toString().replace('.', ',');
+}
