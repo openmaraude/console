@@ -26,13 +26,13 @@ export function Layout({ children }) {
   return (
     <MenuLayout className={classes.root}>
       <Menu>
-        {
-          hasRole(user, 'admin') && <MenuItem title="Taxis" href="/stats/taxis" />
-        }
-
-        {
-          hasRole(user, 'admin') && <MenuItem title="Courses" href="/stats/hails" />
-        }
+        {hasRole(user, 'admin') && (
+          <>
+            <MenuItem title="Taxis" href="/stats/taxis" />
+            <MenuItem title="Courses" href="/stats/hails" />
+            <MenuItem title="Groupements" href="/stats/groupements" />
+          </>
+        )}
       </Menu>
       <Content>
         { children }
