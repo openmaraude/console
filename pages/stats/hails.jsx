@@ -5,7 +5,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
-import { Card, CardContent, Typography } from '@material-ui/core';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import useSWR from 'swr';
 
 import APIErrorAlert from '@/components/APIErrorAlert';
@@ -14,7 +17,7 @@ import { UserContext } from '@/src/auth';
 import { formatDecimal } from '@/src/utils';
 import { Layout } from './index';
 
-function StatsHailPeriod(data) {
+function StatsHailsAverage(data) {
   const { daily, weekly, monthly } = data;
   return (
     <>
@@ -66,15 +69,34 @@ function StatsHailPeriod(data) {
   );
 }
 
+function StatsHailsTotal(data) {
+  const months = Object.fromEntries(data);
+  return (
+    <TableBody>
+      {Object.entries(months).map(([month, total]) => (
+        <TableRow>
+          <TableCell>{month}</TableCell>
+          <TableCell>{total}</TableCell>
+        </TableRow>
+      ))}
+      <TableRow>
+        <TableCell>Total</TableCell>
+        <TableCell>{Object.values(months).reduce((prev, curr) => prev + curr, 0)}</TableCell>
+      </TableRow>
+    </TableBody>
+  );
+}
+
 export default function StatsHails() {
   const userContext = React.useContext(UserContext);
+  const [area, setArea] = React.useState('');
   const { data, error } = useSWR(
-    ['/stats/hails', userContext.user.apikey],
-    (url, token) => requestOne(url, { token }),
+    [area, '/stats/hails', userContext.user.apikey],
+    (area_, url, token) => requestOne(url, { args: { area: area_ }, token }),
   );
 
   return (
-    <Layout>
+    <Layout area={area} setArea={setArea}>
       <Typography variant="h4">Courses</Typography>
 
       {error && <APIErrorAlert error={error} />}
@@ -108,6 +130,34 @@ export default function StatsHails() {
 
         <Card>
           <CardContent>
+            <Typography variant="h5">Nombre de courses par mois</Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Card>
+                  <CardContent>
+                    <Typography variant="h6">Cette année</Typography>
+                    <Table>
+                      {StatsHailsTotal(data.hails_total.current_year)}
+                    </Table>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs={6}>
+                <Card>
+                  <CardContent>
+                    <Typography variant="h6">L'année dernière</Typography>
+                    <Table>
+                      {StatsHailsTotal(data.hails_total.last_year)}
+                    </Table>
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent>
 
             <Typography variant="h5">Moyenne de courses distribuées</Typography>
             <Table>
@@ -117,21 +167,21 @@ export default function StatsHails() {
                   <TableCell align="center" colSpan={3}>3 derniers mois</TableCell>
                 </TableRow>
               </TableHead>
-              {StatsHailPeriod(data.hails_average.last_three_months)}
+              {StatsHailsAverage(data.hails_average.last_three_months)}
               <TableHead>
                 <TableRow>
                   <TableCell />
                   <TableCell align="center" colSpan={3}>Cette année</TableCell>
                 </TableRow>
               </TableHead>
-              {StatsHailPeriod(data.hails_average.current_year)}
+              {StatsHailsAverage(data.hails_average.current_year)}
               <TableHead>
                 <TableRow>
                   <TableCell />
                   <TableCell align="center" colSpan={3}>L'année dernière</TableCell>
                 </TableRow>
               </TableHead>
-              {StatsHailPeriod(data.hails_average.last_year)}
+              {StatsHailsAverage(data.hails_average.last_year)}
             </Table>
           </CardContent>
         </Card>

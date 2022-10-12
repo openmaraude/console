@@ -14,13 +14,14 @@ import { Layout } from './index';
 
 export default function StatsTaxis() {
   const userContext = React.useContext(UserContext);
+  const [area, setArea] = React.useState('');
   const { data, error } = useSWR(
-    ['/stats/taxis', userContext.user.apikey],
-    (url, token) => requestOne(url, { token }),
+    [area, '/stats/taxis', userContext.user.apikey],
+    (area_, url, token) => requestOne(url, { args: { area: area_ }, token }),
   );
 
   return (
-    <Layout>
+    <Layout area={area} setArea={setArea}>
       <Typography variant="h4">Taxis</Typography>
 
       {error && <APIErrorAlert error={error} />}

@@ -36,13 +36,14 @@ const fleetDataColumns = [
 
 export default function StatsGroupements() {
   const userContext = React.useContext(UserContext);
+  const [area, setArea] = React.useState('');
   const { data, error } = useSWR(
-    ['/stats/groupements', userContext.user.apikey],
-    (url, token) => requestOne(url, { token }),
+    [area, '/stats/groupements', userContext.user.apikey],
+    (area_, url, token) => requestOne(url, { args: { area: area_ }, token }),
   );
 
   return (
-    <Layout>
+    <Layout area={area} setArea={setArea}>
       <Typography variant="h4">Groupements</Typography>
 
       {error && <APIErrorAlert error={error} />}

@@ -3,13 +3,17 @@ import PropTypes from 'prop-types';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
 import { hasRole, UserContext } from '@/src/auth';
 import {
   MenuLayout,
   Content,
   Menu,
-  MenuItem,
+  MenuItem as MyMenuItem, // name clash
 } from '@/components/layouts/MenuLayout';
 
 const useStyles = makeStyles((theme) => ({
@@ -18,19 +22,35 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function Layout({ children }) {
+export function Layout({ area, setArea, children }) {
   const userContext = React.useContext(UserContext);
   const { user } = userContext;
   const classes = useStyles();
+
+  const handleAreaChange = (event) => {
+    setArea(event.target.value);
+  };
 
   return (
     <MenuLayout className={classes.root}>
       <Menu>
         {hasRole(user, 'admin') && (
           <>
-            <MenuItem title="Taxis" href="/stats/taxis" />
-            <MenuItem title="Courses" href="/stats/hails" />
-            <MenuItem title="Groupements" href="/stats/groupements" />
+            <MyMenuItem title="Taxis" href="/stats/taxis" />
+            <MyMenuItem title="Courses" href="/stats/hails" />
+            <MyMenuItem title="Groupements" href="/stats/groupements" />
+            <FormControl fullWidth variant="filled">
+              <InputLabel>Territoire</InputLabel>
+              <Select
+                value={area}
+                label="Territoire"
+                onChange={handleAreaChange}
+              >
+                <MenuItem value="">National</MenuItem>
+                <MenuItem value="lyon">Lyon</MenuItem>
+                <MenuItem value="rouen">Rouen</MenuItem>
+              </Select>
+            </FormControl>
           </>
         )}
       </Menu>
@@ -46,6 +66,8 @@ Layout.defaultProps = {
 };
 
 Layout.propTypes = {
+  area: PropTypes.string.isRequired,
+  setArea: PropTypes.func.isRequired,
   children: PropTypes.node,
 };
 
