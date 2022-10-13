@@ -47,6 +47,7 @@ export function Layout({ area, setArea, children }) {
                 onChange={handleAreaChange}
               >
                 <MenuItem value="">National</MenuItem>
+                <MenuItem value="grenoble">Grenoble</MenuItem>
                 <MenuItem value="lyon">Lyon</MenuItem>
                 <MenuItem value="rouen">Rouen</MenuItem>
               </Select>
