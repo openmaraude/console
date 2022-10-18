@@ -14,7 +14,7 @@ import useSWR from 'swr';
 import APIErrorAlert from '@/components/APIErrorAlert';
 import { requestOne } from '@/src/api';
 import { UserContext } from '@/src/auth';
-import { formatDecimal } from '@/src/utils';
+import { formatDecimal, formatMonth } from '@/src/utils';
 import { Layout } from './index';
 
 function StatsHailsAverage(data) {
@@ -71,11 +71,12 @@ function StatsHailsAverage(data) {
 
 function StatsHailsTotal(data) {
   const months = Object.fromEntries(data);
+
   return (
     <TableBody>
       {Object.entries(months).map(([month, total]) => (
         <TableRow>
-          <TableCell>{month}</TableCell>
+          <TableCell>{formatMonth(month)}</TableCell>
           <TableCell>{total}</TableCell>
         </TableRow>
       ))}

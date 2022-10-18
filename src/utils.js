@@ -14,3 +14,9 @@ export function formatLoc(num) {
 export function formatDecimal(float) {
   return float?.toFixed(2).toString().replace('.', ',');
 }
+
+const monthNames = ['ignore zero', 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
+
+export function formatMonth(index) {
+  return monthNames[index];
+}
