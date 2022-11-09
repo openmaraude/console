@@ -14,7 +14,9 @@ import { Layout } from './index';
 
 const fleetDataColumns = [
   {
-    field: 'email', headerName: "Identifant", width: 300,
+    field: 'email', headerName: "Identifant", width: 200,
+  }, {
+    field: 'manager', headerName: "Manager", width: 150,
   }, {
     field: 'fleet_size', headerName: "Taille déclarée", type: 'number', width: 150,
   }, {
@@ -24,7 +26,7 @@ const fleetDataColumns = [
     headerName: "Ratio",
     type: 'number',
     width: 150,
-    valueFormatter: (params) => params.value ? `${params.value?.toFixed(0)} %` : '',
+    valueFormatter: (params) => (params.value ? `${params.value?.toFixed(0)} %` : ''),
   }, {
     field: 'last_taxi',
     headerName: "Dernier taxi",
