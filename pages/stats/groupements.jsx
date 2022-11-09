@@ -24,7 +24,7 @@ const fleetDataColumns = [
     headerName: "Ratio",
     type: 'number',
     width: 150,
-    valueFormatter: (params) => params.value?.toFixed(0),
+    valueFormatter: (params) => params.value ? `${params.value?.toFixed(0)} %` : '',
   }, {
     field: 'last_taxi',
     headerName: "Dernier taxi",
