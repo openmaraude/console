@@ -50,6 +50,11 @@ export function Layout({ children }) {
           (hasRole(user, 'admin') || hasRole(user, 'operateur') || hasRole(user, 'moteur'))
             && <MenuItem title="Liste des ZUPC" href="/dashboards/zupc" />
         }
+
+        {
+          (hasRole(user, 'admin'))
+            && <MenuItem title="Liste des stations" href="/dashboards/stations" />
+        }
       </Menu>
       <Content>
         { children }
