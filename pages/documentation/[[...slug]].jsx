@@ -25,7 +25,6 @@ import {
   Menu,
   MenuItem,
 } from '@/components/layouts/MenuLayout';
-import { TextLink } from '@/components/LinksRef';
 
 const useStyles = makeStyles(() => ({
   hr: {
@@ -208,7 +207,7 @@ const components = {
   tr: ({ children }) => <TableRow>{children}</TableRow>,
   th: ({ children }) => <TableCell>{children}</TableCell>,
   td: ({ children }) => <TableCell>{children}</TableCell>,
-  a: ({ href, children }) => <Link href={href} passHref><TextLink>{children}</TextLink></Link>,
+  a: ({ href, children }) => <Link href={href}>{children}</Link>,
   hr: () => <StyledHr />,
 };
 /* eslint-enable react/prop-types */

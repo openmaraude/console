@@ -23,7 +23,6 @@ import APIErrorAlert from '@/components/APIErrorAlert';
 import APIListTable from '@/components/APIListTable';
 import { formatDate, formatLoc } from '@/src/utils';
 import { requestList, requestOne } from '@/src/api';
-import { TextLink } from '@/components/LinksRef';
 import SearchAddressDialog from '@/components/SearchAddressDialog';
 import { TimeoutTextField, TimeoutContext } from '@/components/TimeoutForm';
 import { UserContext } from '@/src/auth';
@@ -794,7 +793,7 @@ export default function IntegrationSearchPage() {
       </p>
 
       <p>
-        La <Link href="/documentation/introduction" passHref><TextLink>documentation</TextLink></Link> est
+        La <Link href="/documentation/introduction">documentation</Link> est
         disponible pour vous guider sur le développement de votre application.
       </p>
 

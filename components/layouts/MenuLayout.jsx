@@ -11,10 +11,10 @@ import clsx from 'clsx';
 
 import { makeStyles } from '@mui/styles';
 import { alpha } from '@mui/material/styles';
+import Button from '@mui/material/Button';
 import LinearProgress from '@mui/material/LinearProgress';
 
 import BaseLayout from '@/components/layouts/BaseLayout';
-import { ButtonLink } from '@/components/LinksRef';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -36,6 +36,10 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: theme.spacing(3),
     marginBottom: theme.spacing(3),
     flexShrink: 0,
+  },
+
+  menuItem: {
+    color: alpha('#000', 0.87), // Value from MUI 4.x
   },
 
   activeMenuItem: {
@@ -70,14 +74,15 @@ export function MenuItem({ title, href, secondary }) {
 
   return (
     <div>
-      <Link href={href} passHref>
-        <ButtonLink className={clsx(
+      <Link href={href}>
+        <Button className={clsx(
+          classes.menuItem,
           router.asPath === href && classes.activeMenuItem,
           secondary && classes.secondaryMenuItem,
         )}
         >
           {title}
-        </ButtonLink>
+        </Button>
       </Link>
     </div>
   );

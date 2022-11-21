@@ -29,7 +29,6 @@ import { request, requestOne, requestList } from '@/src/api';
 import { UserContext } from '@/src/auth';
 import APIErrorAlert from '@/components/APIErrorAlert';
 import APIListTable from '@/components/APIListTable';
-import { TextLink } from '@/components/LinksRef';
 import SearchAddressDialog from '@/components/SearchAddressDialog';
 import { Layout } from './index';
 
@@ -1034,7 +1033,7 @@ export default function IntegrationOperatorPage() {
       </blockquote>
 
       <p>
-        La <Link href="/documentation/introduction" passHref><TextLink>documentation</TextLink></Link> est
+        La <Link href="/documentation/introduction">documentation</Link> est
         disponible pour vous guider sur le développement de votre application.
       </p>
 

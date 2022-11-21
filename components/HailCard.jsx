@@ -10,7 +10,6 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 
-import { TextLink } from '@/components/LinksRef';
 import { formatDate, formatLoc } from '@/src/utils';
 
 const useStyles = makeStyles((theme) => ({
@@ -49,7 +48,7 @@ export default function HailCard({ hail }) {
           )}
           variant="subtitle1"
         >
-          Hail <Link href={`/dashboards/hails/${hail.id}`} passHref><TextLink>{hail.id}</TextLink></Link>
+          Hail <Link href={`/dashboards/hails/${hail.id}`}>{hail.id}</Link>
         </Typography>
         <dl>
           <dt>Date</dt>

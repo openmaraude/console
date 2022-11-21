@@ -3,6 +3,7 @@ import React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { makeStyles } from '@mui/styles';
 import Paper from '@mui/material/Paper';
@@ -10,7 +11,6 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
 import APIErrorAlert from '@/components/APIErrorAlert';
-import { TextLink } from '@/components/LinksRef';
 import { UserContext } from '@/src/auth';
 
 const useStyles = makeStyles((theme) => ({
@@ -66,7 +66,7 @@ export default function LoginForm() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">Connexion à la console&nbsp;
-            <TextLink target="_blank" href="https://le.taxi">le.taxi</TextLink>
+            <Link target="_blank" href="https://le.taxi">le.taxi</Link>
           </Typography>
           <form method="POST" className={classes.form} onSubmit={onSubmit}>
             <TextField
@@ -109,7 +109,7 @@ export default function LoginForm() {
             Vous êtes un opérateur de taxis ou un applicatif client, mais
             n'avez pas de compte pour vous connecter ? Faites la demande de
             création en vous rendant sur
-            le <TextLink target="_blank" href="https://api.gouv.fr/les-api/le-taxi/demande-acces">formulaire de création de compte</TextLink>.
+            le <Link target="_blank" href="https://api.gouv.fr/les-api/le-taxi/demande-acces">formulaire de création de compte</Link>.
           </p>
         </div>
       </Grid>

@@ -1,4 +1,4 @@
-import { TextLink } from '@/components/LinksRef';
+import { Link } from '@mui/material/Link';
 
 #### Création d'un taxi
 
@@ -67,7 +67,7 @@ $> curl 'https://dev.api.taxi/vehicles/' \
 }'
 ```
 
-Le seul paramètre requis est *licence_plate*. Les autres sont optionnels mais permettent au client de retrouver plus facilement le taxi. Vous pouvez retrouver l'intégralité des champs optionnels dans la <TextLink target="_blank" href={process.env.REFERENCE_DOCUMENTATION_URL + '/#/operator/post_vehicles'}>documentation Swagger</TextLink>.
+Le seul paramètre requis est *licence_plate*. Les autres sont optionnels mais permettent au client de retrouver plus facilement le taxi. Vous pouvez retrouver l'intégralité des champs optionnels dans la <Link target="_blank" href={process.env.REFERENCE_DOCUMENTATION_URL + '/#/operator/post_vehicles'}>documentation Swagger</Link>.
 
 ##### Création de l'ADS
 

@@ -12,7 +12,6 @@ import { makeStyles } from '@mui/styles';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 
-import { ButtonLink } from '@/components/LinksRef';
 import { getAuthenticatedUsers, hasRole, UserContext } from '@/src/auth';
 
 const useStyles = makeStyles((theme) => ({
@@ -128,8 +127,8 @@ export default function Menu() {
             <MenuIcon />
           </IconButton>
 
-          <Link href="/dashboards" passHref>
-            <ButtonLink color="inherit" className={classes.consoleButton}>Console</ButtonLink>
+          <Link href="/dashboards">
+            <Button color="inherit" className={classes.consoleButton}>Console</Button>
           </Link>
         </Box>
 
@@ -140,17 +139,17 @@ export default function Menu() {
                 hasRole(userContext.user, 'admin')
                 && (
                 <>
-                  <HighlightedLink href="/admin" passHref>
-                    <ButtonLink color="inherit">Administration</ButtonLink>
+                  <HighlightedLink href="/admin">
+                    <Button color="inherit">Administration</Button>
                   </HighlightedLink>
-                  <HighlightedLink href="/stats" passHref>
-                    <ButtonLink color="inherit">Statistiques</ButtonLink>
+                  <HighlightedLink href="/stats">
+                    <Button color="inherit">Statistiques</Button>
                   </HighlightedLink>
                 </>
                 )
               }
-              <HighlightedLink href="/dashboards" passHref>
-                <ButtonLink color="inherit">Tableaux de bord</ButtonLink>
+              <HighlightedLink href="/dashboards">
+                <Button color="inherit">Tableaux de bord</Button>
               </HighlightedLink>
             </>
           )}
@@ -158,26 +157,26 @@ export default function Menu() {
           {
             (userContext.user?.managed.length > 0 && !hasRole(userContext.user, 'admin'))
             && (
-              <HighlightedLink href="/manager" passHref>
-                <ButtonLink color="inherit">Comptes en gestion</ButtonLink>
+              <HighlightedLink href="/manager">
+                <Button color="inherit">Comptes en gestion</Button>
               </HighlightedLink>
             )
           }
 
-          <HighlightedLink href="/documentation" passHref>
-            <ButtonLink color="inherit">Documentation</ButtonLink>
+          <HighlightedLink href="/documentation">
+            <Button color="inherit">Documentation</Button>
           </HighlightedLink>
 
           {userContext.user && process.env.INTEGRATION_ENABLED && (
-            <HighlightedLink href="/integration" passHref>
-              <ButtonLink color="inherit">Intégration</ButtonLink>
+            <HighlightedLink href="/integration">
+              <Button color="inherit">Intégration</Button>
             </HighlightedLink>
           )}
 
           {userContext.user && (
             <>
-              <HighlightedLink href="/account" passHref>
-                <ButtonLink color="inherit">Mon compte</ButtonLink>
+              <HighlightedLink href="/account">
+                <Button color="inherit">Mon compte</Button>
               </HighlightedLink>
 
               <Button onClick={userContext.logout} color="inherit">Déconnexion</Button>

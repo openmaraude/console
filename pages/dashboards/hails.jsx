@@ -3,8 +3,9 @@ import React from 'react';
 import Link from 'next/link';
 import useSWR from 'swr';
 
+import Button from '@mui/material/Button';
+
 import APIListTable from '@/components/APIListTable';
-import { ButtonLink } from '@/components/LinksRef';
 import { requestList } from '@/src/api';
 import { TimeoutTextField } from '@/components/TimeoutForm';
 import { UserContext } from '@/src/auth';
@@ -74,10 +75,10 @@ export default function DashboardHails() {
       flex: 1,
       sortable: false,
       renderCell: (cell) => (
-        <Link href={`/dashboards/hails/${cell.row.id}`} passHref>
-          <ButtonLink variant="contained" color="primary">
+        <Link href={`/dashboards/hails/${cell.row.id}`}>
+          <Button variant="contained" color="primary">
             {">>"}
-          </ButtonLink>
+          </Button>
         </Link>
       ),
     },

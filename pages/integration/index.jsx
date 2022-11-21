@@ -9,8 +9,6 @@ import CardContent from '@mui/material/CardContent';
 import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
 
-import { TextLink } from '@/components/LinksRef';
-
 import {
   MenuLayout,
   Content,
@@ -71,7 +69,7 @@ export default function IntegrationPage() {
         Nous mettons à votre disposition des outils pour vous aider dans
         l'intégration de vos applications. Il est recommandé avant toute chose
         de prendre connaissance
-        de la <Link href="/documentation/introduction" passHref><TextLink>documentation</TextLink></Link>.
+        de la <Link href="/documentation/introduction">documentation</Link>.
       </p>
 
       <Box className={classes.sideSections}>
@@ -89,7 +87,7 @@ export default function IntegrationPage() {
             </p>
 
             <p>
-              Le menu <Link href="/integration/operator" passHref><TextLink>application opérateur</TextLink></Link> vous permet
+              Le menu <Link href="/integration/operator">application opérateur</Link> vous permet
               de créer des taxis de test, de changer leur localisation,
               d'accepter des courses et de changer les statuts de celles-ci.
             </p>
@@ -116,7 +114,7 @@ export default function IntegrationPage() {
 
             <p>
               Le menu
-              <Link href="/integration/search" passHref><TextLink>application client</TextLink></Link>
+              <Link href="/integration/search">application client</Link>
               vous permet de lister les taxis autour d'un point, d'effectuer une demande de course
               et de simuler le parcours client dans les différentes possibilités.
             </p>
