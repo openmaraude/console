@@ -4,8 +4,8 @@
 
 import PropTypes from 'prop-types';
 
-import Box from '@material-ui/core/Box';
-import { Alert } from '@material-ui/lab';
+import Box from '@mui/material/Box';
+import Alert from '@mui/material/Alert';
 
 import SyntaxHighlighter from 'react-syntax-highlighter';
 

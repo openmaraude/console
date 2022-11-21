@@ -24,7 +24,12 @@ function readEnvBool(key, defaultValue) {
 }
 
 const withMDX = require('@next/mdx')({
-  extension: /\.mdx?$/
+  // By default only the .mdx extension is supported.
+  extension: /\.mdx?$/,
+  options: {
+    /* providerImportSource: …, otherOptions… */
+    providerImportSource: "@mdx-js/react"
+  }
 })
 
 module.exports = withMDX({
@@ -43,6 +48,7 @@ module.exports = withMDX({
     return defaultPathMap;
   },
 
+  // Support MDX files as pages:
   pageExtensions: ['js', 'jsx', 'md', 'mdx'],
 });
 

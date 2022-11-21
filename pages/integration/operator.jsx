@@ -5,22 +5,22 @@ import Link from 'next/link';
 
 import useSWR from 'swr';
 
-import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import { makeStyles } from '@material-ui/core/styles';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import LinearProgress from '@mui/material/LinearProgress';
+import { makeStyles } from '@mui/styles';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 
 import faker from 'faker/locale/fr';
 
@@ -110,13 +110,13 @@ function TaxiSetNewStatus({ taxi }) {
         <em>Seuls les taxis avec le statut free peuvent apparaitre lors d'une recherche.</em>
       </p>
 
-      <FormControl className={classes.statusFormControl}>
+      <FormControl variant="standard" className={classes.statusFormControl}>
         <InputLabel id="setTaxiStatus">Changer le statut</InputLabel>
         <Select
+          variant="standard"
           labelId="setTaxiStatus"
           value={initialValue}
-          onChange={onTaxiStatusChange}
-        >
+          onChange={onTaxiStatusChange}>
           <MenuItem value="" disabled />
           <MenuItem value="free">Free</MenuItem>
           <MenuItem value="occupied">Occupied</MenuItem>
@@ -182,13 +182,13 @@ function TaxiSetNewRadius({ taxi }) {
         </em>
       </p>
 
-      <FormControl className={classes.radiusFormControl}>
+      <FormControl variant="standard" className={classes.radiusFormControl}>
         <InputLabel id="setTaxiRadius">Changer le rayon</InputLabel>
         <Select
+          variant="standard"
           labelId="setTaxiRadius"
           value={initialValue}
-          onChange={onTaxiRadiusChange}
-        >
+          onChange={onTaxiRadiusChange}>
           <MenuItem value="null">par défaut</MenuItem>
           <MenuItem value="150">150 mètres</MenuItem>
           <MenuItem value="200">200 mètres</MenuItem>
@@ -289,8 +289,7 @@ function TaxiSetNewLocation({ taxi }) {
           margin="normal"
           value={values.lon || ""}
           onChange={updateField}
-          required
-        />
+          required />
 
         <TextField
           label="Latitude"
@@ -300,10 +299,9 @@ function TaxiSetNewLocation({ taxi }) {
           margin="normal"
           value={values.lat || ""}
           onChange={updateField}
-          required
-        />
+          required />
 
-        <Button type="submit" variant="contained" color="primary" size="small" disabled={loading}>
+        <Button type="submit" variant="contained" size="small" disabled={loading}>
           Mettre à jour
         </Button>
         <Button variant="contained" color="secondary" size="small" onClick={() => setSearchDialog(true)}>Chercher une adresse</Button>
@@ -366,7 +364,7 @@ function HailDetailActions({ hail }) {
   const incidentTaxiCard = (
     <Card>
       <CardContent>
-        <Button variant="contained" color="primary" onClick={updateHailStatus('incident_taxi')}>Déclarer un incident</Button>
+        <Button variant="contained" onClick={updateHailStatus('incident_taxi')}>Déclarer un incident</Button>
 
         <p>
           Mettre le statut en <strong>incident_taxi</strong> pour
@@ -407,7 +405,7 @@ function HailDetailActions({ hail }) {
           <div className={classes.actionsCards}>
             <Card>
               <CardContent>
-                <Button variant="contained" color="primary" onClick={updateHailStatus('accepted_by_taxi', '0607080910')}>
+                <Button variant="contained" onClick={updateHailStatus('accepted_by_taxi', '0607080910')}>
                   Accepter la course
                 </Button>
 
@@ -420,7 +418,7 @@ function HailDetailActions({ hail }) {
 
             <Card>
               <CardContent>
-                <Button variant="contained" color="primary" onClick={updateHailStatus('declined_by_taxi')}>
+                <Button variant="contained" onClick={updateHailStatus('declined_by_taxi')}>
                   Refuser la course
                 </Button>
 
@@ -456,7 +454,7 @@ function HailDetailActions({ hail }) {
           <div className={classes.actionsCards}>
             <Card>
               <CardContent>
-                <Button variant="contained" color="primary" onClick={updateHailStatus('customer_on_board')}>
+                <Button variant="contained" onClick={updateHailStatus('customer_on_board')}>
                   Déclarer le client à bord
                 </Button>
 
@@ -481,7 +479,7 @@ function HailDetailActions({ hail }) {
           <div className={classes.actionsCards}>
             <Card>
               <CardContent>
-                <Button variant="contained" color="primary" onClick={updateHailStatus('finished')}>
+                <Button variant="contained" onClick={updateHailStatus('finished')}>
                   Terminer la course
                 </Button>
 
@@ -676,7 +674,7 @@ function HailDetail({ hailId, onBackClicked }) {
       <HailDetailActions hail={data} />
 
       <Box marginTop={2}>
-        <Button color="primary" onClick={onBackClicked}>
+        <Button onClick={onBackClicked}>
           &lt;&lt;&lt; Fermer les détails du hail
         </Button>
       </Box>
@@ -747,7 +745,6 @@ function TaxiHailsList({ taxi }) {
       renderCell: (cell) => (
         <Button
           variant="contained"
-          color="primary"
           onClick={() => setSelectedHail(cell.row)}
         >
           {">>"}
@@ -1005,7 +1002,6 @@ export default function IntegrationOperatorPage() {
       renderCell: (cell) => (
         <Button
           variant="contained"
-          color="primary"
           onClick={() => setSelectedTaxi(cell.row)}
         >
           {">>"}
@@ -1055,7 +1051,7 @@ export default function IntegrationOperatorPage() {
 
         <p>
           Vous pouvez aussi&nbsp;
-          <Button variant="contained" color="primary" size="small" onClick={createIntegrationTaxi}>
+          <Button variant="contained" size="small" onClick={createIntegrationTaxi}>
             créer nouveau taxi
           </Button>
           &nbsp;dans la ville de&nbsp;

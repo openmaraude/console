@@ -1,13 +1,13 @@
 import React from 'react';
 
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { makeStyles } from '@mui/styles';
+import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 
 import APIErrorAlert from '@/components/APIErrorAlert';
 import { TextLink } from '@/components/LinksRef';
@@ -70,7 +70,6 @@ export default function LoginForm() {
           </Typography>
           <form method="POST" className={classes.form} onSubmit={onSubmit}>
             <TextField
-              variant="outlined"
               margin="normal"
               required
               fullWidth
@@ -82,7 +81,6 @@ export default function LoginForm() {
               error={!!authenticationError}
             />
             <TextField
-              variant="outlined"
               margin="normal"
               required
               fullWidth
@@ -101,7 +99,6 @@ export default function LoginForm() {
               type="submit"
               fullWidth
               variant="contained"
-              color="primary"
               className={classes.submit}
             >
               Connexion

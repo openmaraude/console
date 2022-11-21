@@ -126,9 +126,11 @@ Cliquez sur le premier lien, vous obtenez une erreur puisque nous n'avons pas en
 
 Dans `routes/index.js`, rajoutez le code suivant :
 
+```javascript
 router.get('/driver', function (req, res) {
   res.render('driver');
 });
+```
 
 Cette vue va simplement afficher le template `views/driver.pug` que voici :
 

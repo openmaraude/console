@@ -1,13 +1,13 @@
 import React from 'react';
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 
 import BaseLayout from '@/components/layouts/BaseLayout';
 import LogasTable from '@/components/LogasTable';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    minWidth: theme.breakpoints.width('md'),
+    minWidth: theme.breakpoints.values.md,
   },
 }));
 

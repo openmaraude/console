@@ -5,8 +5,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Button from '@material-ui/core/Button';
-import Link from '@material-ui/core/Link';
+import Button from '@mui/material/Button';
+import Link from '@mui/material/Link';
 
 export const ButtonLink = React.forwardRef(
   (

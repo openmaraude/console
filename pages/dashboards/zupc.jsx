@@ -2,7 +2,7 @@ import dynamic from 'next/dynamic';
 import React from 'react';
 import useSWR from 'swr';
 
-import LinearProgress from '@material-ui/core/LinearProgress';
+import LinearProgress from '@mui/material/LinearProgress';
 
 import APIErrorAlert from '@/components/APIErrorAlert';
 import { requestList } from '@/src/api';

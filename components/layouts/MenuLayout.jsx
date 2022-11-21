@@ -9,8 +9,9 @@ import { useRouter } from 'next/router';
 
 import clsx from 'clsx';
 
-import { alpha, makeStyles } from '@material-ui/core/styles';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import { makeStyles } from '@mui/styles';
+import { alpha } from '@mui/material/styles';
+import LinearProgress from '@mui/material/LinearProgress';
 
 import BaseLayout from '@/components/layouts/BaseLayout';
 import { ButtonLink } from '@/components/LinksRef';

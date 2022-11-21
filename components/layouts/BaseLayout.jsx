@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 
-import Container from '@material-ui/core/Container';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
+import Container from '@mui/material/Container';
+import LinearProgress from '@mui/material/LinearProgress';
+import { makeStyles } from '@mui/styles';
+import Paper from '@mui/material/Paper';
 
 import clsx from 'clsx';
 

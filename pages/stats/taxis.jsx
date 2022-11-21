@@ -1,9 +1,9 @@
 import React from 'react';
 
-import Table from '@material-ui/core/Table';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import { Card, CardContent, Typography } from '@material-ui/core';
+import Table from '@mui/material/Table';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import { Card, CardContent, Typography } from '@mui/material';
 import useSWR from 'swr';
 
 import APIErrorAlert from '@/components/APIErrorAlert';

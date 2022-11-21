@@ -1,7 +1,7 @@
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import React from 'react';
-import Tooltip from '@material-ui/core/Tooltip';
-import { makeStyles } from '@material-ui/core/styles';
+import Tooltip from '@mui/material/Tooltip';
+import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles(() => ({
   root: {},
@@ -15,7 +15,7 @@ export default function Legend() {
         title={<img src="/images/doc/legend.png" alt="Légende des graphes" />}
         placement="left"
       >
-        <Button color="primary">Ouvrir la légende</Button>
+        <Button>Ouvrir la légende</Button>
       </Tooltip>
     </div>
   );

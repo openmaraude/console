@@ -2,7 +2,8 @@ import PropTypes from 'prop-types';
 
 import clsx from 'clsx';
 
-import { alpha, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
+import { alpha } from '@mui/material/styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {

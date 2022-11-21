@@ -3,17 +3,17 @@ import PropTypes from 'prop-types';
 
 import useSWR from 'swr';
 
-import Avatar from '@material-ui/core/Avatar';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DirectionsIcon from '@material-ui/icons/Directions';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemText from '@material-ui/core/ListItemText';
-import { makeStyles } from '@material-ui/core/styles';
+import Avatar from '@mui/material/Avatar';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import DirectionsIcon from '@mui/icons-material/Directions';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemText from '@mui/material/ListItemText';
+import { makeStyles } from '@mui/styles';
 
 import APIErrorAlert from '@/components/APIErrorAlert';
 import { TimeoutGroup, TimeoutTextField } from '@/components/TimeoutForm';
@@ -94,7 +94,9 @@ export default function SearchAddressDialog({ open, onClose, mapMode }) {
   );
 
   return (
-    <Dialog open={open} onClose={() => onClose(null)} aria-labelledby="form-dialog-title">
+    <Dialog open={open} aria-labelledby="form-dialog-title" TransitionProps={{
+      onClose: () => onClose(null)
+    }}>
       <DialogTitle id="form-dialog-title">Rechercher une adresse</DialogTitle>
       <DialogContent>
         {mapMode && (

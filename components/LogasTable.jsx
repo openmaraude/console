@@ -5,7 +5,7 @@ import useSWR from 'swr';
 
 import { useRouter } from 'next/router';
 
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 
 import { toast } from 'react-toastify';
 
@@ -112,7 +112,6 @@ export default function LogasTable({ minimal }) {
       <Button
         disabled={cell.row.id === userContext.user.id}
         variant="contained"
-        color="primary"
         onClick={() => logas(cell.row)}
       >
         {">>"}

@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 
 import Link from 'next/link';
 
-import Box from '@material-ui/core/Box';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import { makeStyles } from '@mui/styles';
+import Typography from '@mui/material/Typography';
 
 import { TextLink } from '@/components/LinksRef';
 
@@ -20,7 +20,7 @@ import {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    minWidth: theme.breakpoints.width('md'),
+    minWidth: theme.breakpoints.values.md,
   },
   sideSections: {
     display: 'flex',

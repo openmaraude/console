@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import Typography from '@mui/material/Typography';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 import { hasRole, UserContext } from '@/src/auth';
 import {
@@ -18,7 +18,7 @@ import {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    minWidth: theme.breakpoints.width('md'),
+    minWidth: theme.breakpoints.values.md,
   },
 }));
 
@@ -42,10 +42,10 @@ export function Layout({ area, setArea, children }) {
             <FormControl fullWidth variant="filled">
               <InputLabel>Territoire</InputLabel>
               <Select
+                variant="standard"
                 value={area}
                 label="Territoire"
-                onChange={handleAreaChange}
-              >
+                onChange={handleAreaChange}>
                 <MenuItem value="">National</MenuItem>
                 <MenuItem value="grenoble">Grenoble</MenuItem>
                 <MenuItem value="lyon">Lyon</MenuItem>

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { dark } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
@@ -12,12 +12,12 @@ import { dark } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 import { MDXProvider } from '@mdx-js/react';
 import Slugger from 'github-slugger';
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Typography from '@material-ui/core/Typography';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
 
 import {
   MenuLayout,
@@ -187,12 +187,15 @@ const components = {
   h6: ({ children }) => <Heading variant="h6">{children}</Heading>,
 
   code: ({ className, children }) => {
-    const language = className.replace(/language-/, '');
-    return (
-      <SyntaxHighlighter style={dark} language={language} wrapLongLines>
-        {children}
-      </SyntaxHighlighter>
-    );
+    if (className) {
+      const language = className.replace(/language-/, '');
+      return (
+        <SyntaxHighlighter style={dark} language={language} wrapLongLines>
+          {children}
+        </SyntaxHighlighter>
+      );
+    }
+    return <InlineCode>{children}</InlineCode>;
   },
   inlineCode: InlineCode,
 

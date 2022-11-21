@@ -21,7 +21,7 @@ import {
 } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 
 const MID_FRANCE = [46.536, 2.4302];
 

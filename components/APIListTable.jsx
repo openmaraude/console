@@ -5,27 +5,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Box from '@material-ui/core/Box';
+import Box from '@mui/material/Box';
 import { DataGrid, GridOverlay } from '@mui/x-data-grid';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import { makeStyles } from '@material-ui/core/styles';
+import LinearProgress from '@mui/material/LinearProgress';
+import { styled } from '@mui/material/styles';
 
 import APIErrorAlert from '@/components/APIErrorAlert';
 import { TimeoutGroup } from '@/components/TimeoutForm';
 
-const useStyles = makeStyles((theme) => ({
-  filters: {
-    display: 'flex',
-    alignItems: 'center',
+const StyledBox = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
 
-    [theme.breakpoints.down('xs')]: {
-      flexDirection: 'column',
-      alignItems: 'start',
-    },
+  [theme.breakpoints.down('xs')]: {
+    flexDirection: 'column',
+    alignItems: 'start',
+  },
 
-    '& > *': {
-      marginRight: theme.spacing(2),
-    },
+  '& > *': {
+    marginRight: theme.spacing(2),
   },
 }));
 
@@ -48,7 +46,6 @@ export default function APIListTable({
   columns,
   hideUntilFiltersFilled,
 }) {
-  const classes = useStyles();
   const [request, setRequest] = React.useState({});
   const { data, error } = apiFunc(request.page, request.filters);
 
@@ -71,21 +68,22 @@ export default function APIListTable({
   return (
     <>
       {error && (
-        <APIErrorAlert className={classes.error} error={error} />
+        <APIErrorAlert error={error} />
       )}
 
       {filters && (
-        <Box marginTop={2} marginBottom={2} className={classes.filters}>
+        <StyledBox marginTop={2} marginBottom={2}>
           <TimeoutGroup onSubmit={updateFilters}>
             {filters}
           </TimeoutGroup>
-        </Box>
+        </StyledBox>
       )}
 
       {!hideTable && (
         <DataGrid
           autoHeight
           disableColumnMenu
+          disableSelectionOnClick
           rowsPerPageOptions={[]}
           hideFooterSelectedRowCount
           columns={columns}

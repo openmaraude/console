@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 
 import Head from 'next/head';
 
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { ThemeProvider } from '@material-ui/core/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -51,12 +51,12 @@ export default function ConsoleApp({ Component, pageProps }) {
     { user, authenticate, logout }
   ), [user, authenticate, logout]);
 
-  return (
-    <>
-      <Head>
-        <title>Console le.taxi</title>
-        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-      </Head>
+  return <>
+    <Head>
+      <title>Console le.taxi</title>
+      <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+    </Head>
+    <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
         <CssBaseline />
 
@@ -79,8 +79,8 @@ export default function ConsoleApp({ Component, pageProps }) {
           }
         </UserContext.Provider>
       </ThemeProvider>
-    </>
-  );
+    </StyledEngineProvider>
+  </>;
 }
 
 ConsoleApp.propTypes = {

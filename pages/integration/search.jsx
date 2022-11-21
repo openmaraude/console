@@ -5,19 +5,19 @@ import Link from 'next/link';
 
 import useSWR from 'swr';
 
-import { Alert } from '@material-ui/lab';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import LinearProgress from '@mui/material/LinearProgress';
+import { makeStyles } from '@mui/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 
 import APIErrorAlert from '@/components/APIErrorAlert';
 import APIListTable from '@/components/APIListTable';
@@ -102,7 +102,7 @@ function HailDetailActions({ hail }) {
   const incidentCustomerCard = (
     <Card>
       <CardContent>
-        <Button variant="contained" color="primary" onClick={updateHailStatus('incident_customer')}>Déclarer un incident</Button>
+        <Button variant="contained" onClick={updateHailStatus('incident_customer')}>Déclarer un incident</Button>
 
         <p>
           Mettre le statut en <strong>incident_customer</strong> pour
@@ -148,7 +148,7 @@ function HailDetailActions({ hail }) {
           <div className={classes.actionsCards}>
             <Card>
               <CardContent>
-                <Button variant="contained" color="primary" onClick={updateHailStatus('accepted_by_customer')}>
+                <Button variant="contained" onClick={updateHailStatus('accepted_by_customer')}>
                   Accepter la course
                 </Button>
 
@@ -163,7 +163,7 @@ function HailDetailActions({ hail }) {
 
             <Card>
               <CardContent>
-                <Button variant="contained" color="primary" onClick={updateHailStatus('declined_by_customer')}>Refuser la course</Button>
+                <Button variant="contained" onClick={updateHailStatus('declined_by_customer')}>Refuser la course</Button>
 
                 <p>
                   Mettre le statut en <strong>declined_by_customer</strong> pour signaler
@@ -372,7 +372,7 @@ function HailDetail({ hailId, onBackClicked }) {
       <HailDetailActions hail={data} />
 
       <Box marginTop={2}>
-        <Button color="primary" onClick={onBackClicked}>
+        <Button onClick={onBackClicked}>
           &lt;&lt;&lt; Retour vers le formulaire de demande de course
         </Button>
       </Box>
@@ -432,71 +432,64 @@ function HailRequestForm({ taxi, onRequest }) {
     });
   };
 
-  return (
-    <>
-      <Typography variant="h5">Envoyer une demande de course au taxi {taxi.id} ({taxi.operator})</Typography>
+  return <>
+    <Typography variant="h5">Envoyer une demande de course au taxi {taxi.id} ({taxi.operator})</Typography>
 
-      <form className={classes.hailRequestForm} onSubmit={onSubmit}>
-        <TextField
-          label="Longitude du client"
-          name="lon"
-          type="number"
-          // There is an issue with Safari using this step as the valid pattern, 6 decimal places
-          // but a lat/lon can use more digits, and Safari will refuse to submit the form.
-          inputProps={{ step: "any" }}
-          margin="normal"
-          value={hailRequest.lon}
-          onChange={updateField}
-        />
+    <form className={classes.hailRequestForm} onSubmit={onSubmit}>
+      <TextField
+        label="Longitude du client"
+        name="lon"
+        type="number"
+        // There is an issue with Safari using this step as the valid pattern, 6 decimal places
+        // but a lat/lon can use more digits, and Safari will refuse to submit the form.
+        inputProps={{ step: "any" }}
+        margin="normal"
+        value={hailRequest.lon}
+        onChange={updateField} />
 
-        <TextField
-          label="Latitude du client"
-          name="lat"
-          type="number"
-          inputProps={{ step: "any" }}
-          margin="normal"
-          value={hailRequest.lat}
-          onChange={updateField}
-        />
+      <TextField
+        label="Latitude du client"
+        name="lat"
+        type="number"
+        inputProps={{ step: "any" }}
+        margin="normal"
+        value={hailRequest.lat}
+        onChange={updateField} />
 
-        <TextField
-          label="Adresse du client"
-          name="customer_address"
-          margin="normal"
-          value={hailRequest.customer_address}
-          onChange={updateField}
-        />
+      <TextField
+        label="Adresse du client"
+        name="customer_address"
+        margin="normal"
+        value={hailRequest.customer_address}
+        onChange={updateField} />
 
-        <TextField
-          label="Numéro de téléphone du client"
-          name="customer_phone_number"
-          margin="normal"
-          value={hailRequest.customer_phone_number}
-          onChange={updateField}
-        />
+      <TextField
+        label="Numéro de téléphone du client"
+        name="customer_phone_number"
+        margin="normal"
+        value={hailRequest.customer_phone_number}
+        onChange={updateField} />
 
-        <TextField
-          label="Identifiant du client"
-          name="customer_id"
-          margin="normal"
-          value={hailRequest.customer_id}
-          onChange={updateField}
-        />
+      <TextField
+        label="Identifiant du client"
+        name="customer_id"
+        margin="normal"
+        value={hailRequest.customer_id}
+        onChange={updateField} />
 
-        {error && <APIErrorAlert error={error} />}
+      {error && <APIErrorAlert error={error} />}
 
-        <small>
-          Attention: la demande de course ne peut fonctionner que si le taxi a
-          le statut <strong>free</strong> et que sa géolocalisation a été mise
-          à jour il y a moins de deux minutes.
-        </small>
+      <small>
+        Attention: la demande de course ne peut fonctionner que si le taxi a
+        le statut <strong>free</strong> et que sa géolocalisation a été mise
+        à jour il y a moins de deux minutes.
+      </small>
 
-        <Button type="submit" variant="contained" color="primary">
-          Envoyer la demande de course à {taxi.operator}
-        </Button>
-      </form>
-    </>
-  );
+      <Button type="submit" variant="contained">
+        Envoyer la demande de course à {taxi.operator}
+      </Button>
+    </form>
+  </>;
 }
 
 HailRequestForm.propTypes = {
