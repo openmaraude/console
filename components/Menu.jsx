@@ -28,6 +28,7 @@ const useStyles = makeStyles()((theme) => ({
   },
 
   consoleButton: {
+    color: theme.palette.primary.contrastText,
     fontWeight: 'bold',
     fontSize: '1.3em',
   },
@@ -65,6 +66,10 @@ const useStyles = makeStyles()((theme) => ({
     fontWeight: 'bold',
   },
 
+  menu: {
+    color: theme.palette.primary.contrastText,
+  },
+
   currentMenu: {
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
   },
@@ -83,7 +88,7 @@ function AuthenticatedUser() {
 
 function HighlightedLink({ href, ...props }) {
   const router = useRouter();
-  const { classes } = useStyles();
+  const { classes, cx } = useStyles();
 
   // Only get the first part of the URL, until the first slash.
   //
@@ -93,9 +98,7 @@ function HighlightedLink({ href, ...props }) {
   const firstLevelRouter = router.pathname.match(/^\/[^/]+/)?.[0];
 
   return (
-    <div className={firstLevelHref === firstLevelRouter ? classes.currentMenu : null}>
-      <Link href={href} {...props} />
-    </div>
+    <Link href={href} {...props} className={cx(classes.menu, firstLevelHref === firstLevelRouter && classes.currentMenu)} />
   );
 }
 
@@ -109,8 +112,8 @@ export default function Menu() {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [authenticatedUsers, setAuthenticatedUsers] = React.useState([]);
 
-  React.useEffect(
-    async () => setAuthenticatedUsers(getAuthenticatedUsers()),
+  React.useEffect(() => {
+    return async () => { setAuthenticatedUsers(getAuthenticatedUsers()) }},
     [userContext.user],
   );
 

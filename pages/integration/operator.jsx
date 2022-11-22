@@ -586,9 +586,9 @@ function HailDetail({ hailId, onBackClicked }) {
   const sectionRef = React.createRef();
 
   // Scroll to section when page loads.
-  React.useEffect(
-    () => sectionRef.current.scrollIntoView(),
-    [hailId],
+  React.useEffect(() => {
+    sectionRef.current.scrollIntoView()
+    }, [hailId],
   );
 
   const HailDetailLayout = React.useCallback(({ children }) => (
@@ -791,9 +791,9 @@ function Taxi({ taxi }) {
   const sectionRef = React.createRef();
 
   // Scroll to section when page loads.
-  React.useEffect(
-    () => sectionRef.current.scrollIntoView(),
-    [taxi],
+  React.useEffect(() => {
+    sectionRef.current.scrollIntoView()
+    }, [taxi],
   );
 
   // Avoid code duplication.
