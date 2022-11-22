@@ -92,14 +92,14 @@ export default function LogasTable({ minimal }) {
       field: 'roles',
       headerName: 'Roles',
       flex: 2,
-      valueFormatter: (cell) => cell.value.map((role) => role.name).join(', '),
+      valueFormatter: ({ value }) => value.map((role) => role.name).join(', '),
       sortable: false,
     });
     columns.push({
       field: 'manager',
       headerName: 'Manager',
       flex: 2,
-      valueFormatter: (cell) => (cell.value ? (cell.value.name || cell.value.email) : ''),
+      valueFormatter: ({ value }) => value?.name || value?.email,
       sortable: false,
     });
   }

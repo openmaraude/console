@@ -9,6 +9,7 @@ import APIListTable from '@/components/APIListTable';
 import { requestList } from '@/src/api';
 import { TimeoutTextField } from '@/components/TimeoutForm';
 import { UserContext } from '@/src/auth';
+import { formatDate } from '@/src/utils';
 import { Layout } from './index';
 
 export default function DashboardHails() {
@@ -49,7 +50,7 @@ export default function DashboardHails() {
       headerName: 'Date',
       flex: 2,
       sortable: false,
-      valueFormatter: (cell) => new Date(cell.value).toLocaleString('fr-FR'),
+      valueFormatter: ({ value }) => formatDate(value),
     },
     {
       field: 'operateur',

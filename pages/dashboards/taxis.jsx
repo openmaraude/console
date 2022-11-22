@@ -6,6 +6,7 @@ import APIListTable from '@/components/APIListTable';
 import { requestList } from '@/src/api';
 import { TimeoutTextField } from '@/components/TimeoutForm';
 import { UserContext } from '@/src/auth';
+import { formatDate } from '@/src/utils';
 import { Layout } from './index';
 
 export default function DashboardHails() {
@@ -45,28 +46,28 @@ export default function DashboardHails() {
       headerName: 'Date de création',
       flex: 2,
       sortable: false,
-      valueFormatter: (cell) => new Date(cell.value).toLocaleString('fr-FR'),
+      valueFormatter: ({ value }) => formatDate(value),
     },
     {
-      field: 'licence_plate',
-      valueGetter: (params) => params.row.vehicle.licence_plate,
+      field: 'vehicle',
+      valueFormatter: ({ value }) => value.licence_plate,
       headerName: 'Immatriculation',
       flex: 1,
       sortable: false,
     },
     {
       field: 'ads',
-      valueGetter: (params) => params.row.ads.town.name || params.row.ads.insee,
       headerName: 'ADS',
       flex: 1,
       sortable: false,
+      valueFormatter: ({ value }) => value.town.name || value.insee,
     },
     {
       field: 'driver',
       headerName: 'Chauffeur',
       flex: 1,
       sortable: false,
-      valueFormatter: (cell) => `${cell.row.driver.first_name} ${cell.row.driver.last_name}`,
+      valueFormatter: ({ value }) => `${value.first_name} ${value.last_name}`,
     },
   ];
 

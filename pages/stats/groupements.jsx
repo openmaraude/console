@@ -11,6 +11,7 @@ import APIErrorAlert from '@/components/APIErrorAlert';
 import { requestOne } from '@/src/api';
 import { UserContext } from '@/src/auth';
 import { Layout } from './index';
+import { formatDate } from '@/src/utils';
 
 const fleetDataColumns = [
   {
@@ -26,13 +27,13 @@ const fleetDataColumns = [
     headerName: "Ratio",
     type: 'number',
     width: 150,
-    valueFormatter: (params) => (params.value ? `${params.value?.toFixed(0)} %` : ''),
+    valueFormatter: ({ value }) => (value ? `${value.toFixed(0)} %` : ''),
   }, {
     field: 'last_taxi',
     headerName: "Dernier taxi",
     type: 'date',
     width: 200,
-    valueFormatter: (params) => new Date(params.value).toLocaleDateString('fr'),
+    valueFormatter: ({ value }) => formatDate(value),
   },
 ];
 

@@ -51,7 +51,7 @@ export default function HailCard({ hail }) {
         </Typography>
         <dl>
           <dt>Date</dt>
-          <dd>{formatDate(new Date(hail.added_at))}</dd>
+          <dd>{formatDate(hail.added_at)}</dd>
 
           <dt>Statut</dt>
           <dd><strong>{hail.status}</strong></dd>

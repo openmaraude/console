@@ -3,7 +3,7 @@ export function formatDate(date) {
   if (!date) {
     return null;
   }
-  return `${date.toLocaleDateString('fr')} ${date.toLocaleTimeString('fr')}`;
+  return new Date(date).toLocaleString('fr');
 }
 
 // Format longitude or latitude
