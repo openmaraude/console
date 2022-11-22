@@ -55,36 +55,38 @@ export default function ConsoleApp({ Component, pageProps }) {
     { user, authenticate, logout }
   ), [user, authenticate, logout]);
 
-  return <>
-    <Head>
-      <title>Console le.taxi</title>
-      <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-    </Head>
-    <CacheProvider value={cache}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
+  return (
+    <>
+      <Head>
+        <title>Console le.taxi</title>
+        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+      </Head>
+      <CacheProvider value={cache}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
 
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          newestOnTop
-          closeOnClick
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            newestOnTop
+            closeOnClick
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
 
-        <UserContext.Provider value={providerValue}>
-          <Menu />
-          {
-            user || pageProps.optionalAuth
-              ? <Component {...pageProps} />
-              : <LoginForm />
-          }
-        </UserContext.Provider>
-      </ThemeProvider>
-    </CacheProvider>
-  </>;
+          <UserContext.Provider value={providerValue}>
+            <Menu />
+            {
+              user || pageProps.optionalAuth
+                ? <Component {...pageProps} />
+                : <LoginForm />
+            }
+          </UserContext.Provider>
+        </ThemeProvider>
+      </CacheProvider>
+    </>
+  );
 }
 
 ConsoleApp.propTypes = {

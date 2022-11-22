@@ -94,9 +94,13 @@ export default function SearchAddressDialog({ open, onClose, mapMode }) {
   );
 
   return (
-    <Dialog open={open} aria-labelledby="form-dialog-title" TransitionProps={{
-      onClose: () => onClose(null)
-    }}>
+    <Dialog
+      open={open}
+      aria-labelledby="form-dialog-title"
+      TransitionProps={{
+        onClose: () => onClose(null),
+      }}
+    >
       <DialogTitle id="form-dialog-title">Rechercher une adresse</DialogTitle>
       <DialogContent>
         {mapMode && (

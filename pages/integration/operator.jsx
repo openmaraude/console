@@ -115,7 +115,8 @@ function TaxiSetNewStatus({ taxi }) {
           variant="standard"
           labelId="setTaxiStatus"
           value={initialValue}
-          onChange={onTaxiStatusChange}>
+          onChange={onTaxiStatusChange}
+        >
           <MenuItem value="" disabled />
           <MenuItem value="free">Free</MenuItem>
           <MenuItem value="occupied">Occupied</MenuItem>
@@ -187,7 +188,8 @@ function TaxiSetNewRadius({ taxi }) {
           variant="standard"
           labelId="setTaxiRadius"
           value={initialValue}
-          onChange={onTaxiRadiusChange}>
+          onChange={onTaxiRadiusChange}
+        >
           <MenuItem value="null">par défaut</MenuItem>
           <MenuItem value="150">150 mètres</MenuItem>
           <MenuItem value="200">200 mètres</MenuItem>
@@ -288,7 +290,8 @@ function TaxiSetNewLocation({ taxi }) {
           margin="normal"
           value={values.lon || ""}
           onChange={updateField}
-          required />
+          required
+        />
 
         <TextField
           label="Latitude"
@@ -298,7 +301,8 @@ function TaxiSetNewLocation({ taxi }) {
           margin="normal"
           value={values.lat || ""}
           onChange={updateField}
-          required />
+          required
+        />
 
         <Button type="submit" variant="contained" size="small" disabled={loading}>
           Mettre à jour
@@ -587,9 +591,8 @@ function HailDetail({ hailId, onBackClicked }) {
 
   // Scroll to section when page loads.
   React.useEffect(() => {
-    sectionRef.current.scrollIntoView()
-    }, [hailId],
-  );
+    sectionRef.current.scrollIntoView();
+  }, [hailId]);
 
   const HailDetailLayout = React.useCallback(({ children }) => (
     <>
@@ -792,9 +795,8 @@ function Taxi({ taxi }) {
 
   // Scroll to section when page loads.
   React.useEffect(() => {
-    sectionRef.current.scrollIntoView()
-    }, [taxi],
-  );
+    sectionRef.current.scrollIntoView();
+  }, [taxi]);
 
   // Avoid code duplication.
   const TaxiSection = React.useCallback(({ children }) => (

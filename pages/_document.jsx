@@ -57,18 +57,17 @@ MyDocument.getInitialProps = async (ctx) => {
 
   const originalRenderPage = ctx.renderPage;
 
-  // You can consider sharing the same Emotion cache between all the SSR requests to speed up performance.
+  // You can consider sharing the same Emotion cache between all the SSR requests
+  // to speed up performance.
   // However, be aware that it can have global side effects.
   const cache = createEmotionCache();
   const { extractCriticalToChunks } = createEmotionServer(cache);
 
-  ctx.renderPage = () =>
-    originalRenderPage({
-      enhanceApp: (App) =>
-        function EnhanceApp(props) {
-          return <App {...props} />
-        },
-    });
+  ctx.renderPage = () => originalRenderPage({
+    enhanceApp: (App) => function EnhanceApp(props) {
+      return <App emotionCache={cache} {...props} />;
+    },
+  });
 
   const initialProps = await Document.getInitialProps(ctx);
   // This is important. It prevents Emotion to render invalid HTML.
@@ -85,6 +84,10 @@ MyDocument.getInitialProps = async (ctx) => {
 
   return {
     ...initialProps,
-    emotionStyleTags,
+    // Styles fragment is rendered after the app and page rendering finish.
+    styles: [
+      ...React.Children.toArray(initialProps.styles),
+      ...emotionStyleTags,
+    ],
   };
 };

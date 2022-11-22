@@ -431,64 +431,71 @@ function HailRequestForm({ taxi, onRequest }) {
     });
   };
 
-  return <>
-    <Typography variant="h5">Envoyer une demande de course au taxi {taxi.id} ({taxi.operator})</Typography>
+  return (
+    <>
+      <Typography variant="h5">Envoyer une demande de course au taxi {taxi.id} ({taxi.operator})</Typography>
 
-    <form className={classes.hailRequestForm} onSubmit={onSubmit}>
-      <TextField
-        label="Longitude du client"
-        name="lon"
-        type="number"
-        // There is an issue with Safari using this step as the valid pattern, 6 decimal places
-        // but a lat/lon can use more digits, and Safari will refuse to submit the form.
-        inputProps={{ step: "any" }}
-        margin="normal"
-        value={hailRequest.lon}
-        onChange={updateField} />
+      <form className={classes.hailRequestForm} onSubmit={onSubmit}>
+        <TextField
+          label="Longitude du client"
+          name="lon"
+          type="number"
+          // There is an issue with Safari using this step as the valid pattern, 6 decimal places
+          // but a lat/lon can use more digits, and Safari will refuse to submit the form.
+          inputProps={{ step: "any" }}
+          margin="normal"
+          value={hailRequest.lon}
+          onChange={updateField}
+        />
 
-      <TextField
-        label="Latitude du client"
-        name="lat"
-        type="number"
-        inputProps={{ step: "any" }}
-        margin="normal"
-        value={hailRequest.lat}
-        onChange={updateField} />
+        <TextField
+          label="Latitude du client"
+          name="lat"
+          type="number"
+          inputProps={{ step: "any" }}
+          margin="normal"
+          value={hailRequest.lat}
+          onChange={updateField}
+        />
 
-      <TextField
-        label="Adresse du client"
-        name="customer_address"
-        margin="normal"
-        value={hailRequest.customer_address}
-        onChange={updateField} />
+        <TextField
+          label="Adresse du client"
+          name="customer_address"
+          margin="normal"
+          value={hailRequest.customer_address}
+          onChange={updateField}
+        />
 
-      <TextField
-        label="Numéro de téléphone du client"
-        name="customer_phone_number"
-        margin="normal"
-        value={hailRequest.customer_phone_number}
-        onChange={updateField} />
+        <TextField
+          label="Numéro de téléphone du client"
+          name="customer_phone_number"
+          margin="normal"
+          value={hailRequest.customer_phone_number}
+          onChange={updateField}
+        />
 
-      <TextField
-        label="Identifiant du client"
-        name="customer_id"
-        margin="normal"
-        value={hailRequest.customer_id}
-        onChange={updateField} />
+        <TextField
+          label="Identifiant du client"
+          name="customer_id"
+          margin="normal"
+          value={hailRequest.customer_id}
+          onChange={updateField}
+        />
 
-      {error && <APIErrorAlert error={error} />}
+        {error && <APIErrorAlert error={error} />}
 
-      <small>
-        Attention: la demande de course ne peut fonctionner que si le taxi a
-        le statut <strong>free</strong> et que sa géolocalisation a été mise
-        à jour il y a moins de deux minutes.
-      </small>
+        <small>
+          Attention: la demande de course ne peut fonctionner que si le taxi a
+          le statut <strong>free</strong> et que sa géolocalisation a été mise
+          à jour il y a moins de deux minutes.
+        </small>
 
-      <Button type="submit" variant="contained">
-        Envoyer la demande de course à {taxi.operator}
-      </Button>
-    </form>
-  </>;
+        <Button type="submit" variant="contained">
+          Envoyer la demande de course à {taxi.operator}
+        </Button>
+      </form>
+    </>
+  );
 }
 
 HailRequestForm.propTypes = {

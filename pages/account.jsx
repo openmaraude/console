@@ -131,7 +131,8 @@ export default function AccountPage() {
                 fullWidth
                 value={data?.name || ""}
                 onChange={updateField}
-                InputLabelProps={{ shrink: true }} />
+                InputLabelProps={{ shrink: true }}
+              />
             </div>
             <div className={classes.helpText}>
               Nom affiché lorsque faisons référence à votre compte.
@@ -148,7 +149,8 @@ export default function AccountPage() {
                 fullWidth
                 value={data?.password || ""}
                 onChange={updateField}
-                InputLabelProps={{ shrink: true }} />
+                InputLabelProps={{ shrink: true }}
+              />
             </div>
             <div className={classes.helpText}>
               Laissez vide pour garder votre mot de passe actuel.
@@ -165,7 +167,8 @@ export default function AccountPage() {
                 fullWidth
                 value={data?.passwordConfirm || ""}
                 onChange={updateField}
-                InputLabelProps={{ shrink: true }} />
+                InputLabelProps={{ shrink: true }}
+              />
             </div>
             <div className={classes.helpText}>
               Pour changer le mot de passe, spécifier le même que celui ci-dessus.
@@ -185,7 +188,8 @@ export default function AccountPage() {
                   fullWidth
                   value={data?.hail_endpoint_production || ""}
                   onChange={updateField}
-                  InputLabelProps={{ shrink: true }} />
+                  InputLabelProps={{ shrink: true }}
+                />
               </div>
               <div className={classes.helpText}>
                 Lorsqu'une application client effectue une demande de course à un
@@ -203,7 +207,8 @@ export default function AccountPage() {
                   fullWidth
                   value={data?.operator_header_name || ""}
                   onChange={updateField}
-                  InputLabelProps={{ shrink: true }} />
+                  InputLabelProps={{ shrink: true }}
+                />
               </div>
               <div className={classes.helpText}>
                 Lorsque l'endpoint renseigné ci-dessus est appelé lors d'une
@@ -221,7 +226,8 @@ export default function AccountPage() {
                   fullWidth
                   value={data?.operator_api_key || ""}
                   onChange={updateField}
-                  InputLabelProps={{ shrink: true }} />
+                  InputLabelProps={{ shrink: true }}
+                />
               </div>
               <div className={classes.helpText}>
                 Contenu du header HTTP configuré ci-dessus.
@@ -241,7 +247,8 @@ export default function AccountPage() {
                 fullWidth
                 value={data?.phone_number_technical || ""}
                 onChange={updateField}
-                InputLabelProps={{ shrink: true }} />
+                InputLabelProps={{ shrink: true }}
+              />
             </div>
             <div className={classes.helpText}>
               Numéro pour contacter votre support technique.
@@ -256,7 +263,8 @@ export default function AccountPage() {
                 fullWidth
                 value={data?.email_technical || ""}
                 onChange={updateField}
-                InputLabelProps={{ shrink: true }} />
+                InputLabelProps={{ shrink: true }}
+              />
             </div>
             <div className={classes.helpText}>
               Email pour contacter votre support technique.
@@ -275,7 +283,8 @@ export default function AccountPage() {
                 fullWidth
                 value={data?.phone_number_customer || ""}
                 onChange={updateField}
-                InputLabelProps={{ shrink: true }} />
+                InputLabelProps={{ shrink: true }}
+              />
             </div>
             <div className={classes.helpText}>
               Numéro pour contacter votre support client.
@@ -290,7 +299,8 @@ export default function AccountPage() {
                 fullWidth
                 value={data?.email_customer || ""}
                 onChange={updateField}
-                InputLabelProps={{ shrink: true }} />
+                InputLabelProps={{ shrink: true }}
+              />
             </div>
             <div className={classes.helpText}>
               Email pour contacter votre support client.

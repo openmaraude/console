@@ -98,7 +98,11 @@ function HighlightedLink({ href, ...props }) {
   const firstLevelRouter = router.pathname.match(/^\/[^/]+/)?.[0];
 
   return (
-    <Link href={href} {...props} className={cx(classes.menu, firstLevelHref === firstLevelRouter && classes.currentMenu)} />
+    <Link
+      href={href}
+      className={cx(classes.menu, firstLevelHref === firstLevelRouter && classes.currentMenu)}
+      {...props}
+    />
   );
 }
 
@@ -112,8 +116,8 @@ export default function Menu() {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [authenticatedUsers, setAuthenticatedUsers] = React.useState([]);
 
-  React.useEffect(() => {
-    return async () => { setAuthenticatedUsers(getAuthenticatedUsers()) }},
+  React.useEffect(
+    () => async () => setAuthenticatedUsers(getAuthenticatedUsers()),
     [userContext.user],
   );
 

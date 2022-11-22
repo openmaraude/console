@@ -53,29 +53,31 @@ function Session({ session }) {
     (status) => HAIL_SUCCESS_STATUS.indexOf(status) !== -1,
   );
 
-  return <>
-    <TableRow className={cx(success && classes.rowSuccess, !success && classes.rowFailure)}>
-      <TableCell>
-        <IconButton size="small" onClick={() => setOpen(!open)}>
-          {open ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
-        </IconButton>
-      </TableCell>
-      <TableCell>{formatDate(new Date(session.added_at))}</TableCell>
-      <TableCell>{session.session_id}</TableCell>
-      <TableCell>{session.hails.length}</TableCell>
-      <TableCell>{session.hails.slice(-1)?.[0].status}</TableCell>
-    </TableRow>
+  return (
+    <>
+      <TableRow className={cx(success && classes.rowSuccess, !success && classes.rowFailure)}>
+        <TableCell>
+          <IconButton size="small" onClick={() => setOpen(!open)}>
+            {open ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell>{formatDate(new Date(session.added_at))}</TableCell>
+        <TableCell>{session.session_id}</TableCell>
+        <TableCell>{session.hails.length}</TableCell>
+        <TableCell>{session.hails.slice(-1)?.[0].status}</TableCell>
+      </TableRow>
 
-    <TableRow>
-      <TableCell style={{ border: 'none', paddingBottom: 0, paddingTop: 0 }} colSpan={5}>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <div className={classes.hailsContainer}>
-            {session.hails.map((hail) => <HailCard key={hail.id} hail={hail} />)}
-          </div>
-        </Collapse>
-      </TableCell>
-    </TableRow>
-  </>;
+      <TableRow>
+        <TableCell style={{ border: 'none', paddingBottom: 0, paddingTop: 0 }} colSpan={5}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <div className={classes.hailsContainer}>
+              {session.hails.map((hail) => <HailCard key={hail.id} hail={hail} />)}
+            </div>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </>
+  );
 }
 
 /* eslint-disable react/forbid-prop-types */

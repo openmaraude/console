@@ -12,6 +12,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import L from 'leaflet';
 import {
   MapContainer,
   Marker,
@@ -20,14 +21,13 @@ import {
   Tooltip,
 } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import { makeStyles } from 'tss-react/mui';
 
 import MarkerClusterGroup from '@/components/ReactLeafletCluster';
 
-import { makeStyles } from 'tss-react/mui';
-
 const MID_FRANCE = [46.536, 2.4302];
 
-const useStyles = makeStyles()((theme) => ({
+const useStyles = makeStyles()(() => ({
   taxiIcon: {
     fontSize: '32px',
   },
@@ -44,52 +44,43 @@ function Station({ station }) {
   });
 
   const showPlaces = (places) => {
-    switch (places) {
-      case undefined:
-      case 0:
-        return;
-      case 1:
-        return <i>une place</i>;
-        break;
-      default:
-        return <i>{places} places</i>;
-    };
-  }
-
-  switch (station.geojson.type) {
-    case 'Point':
-      const lon = station.geojson.coordinates[0];
-      const lat = station.geojson.coordinates[1];
-      return (
-        <Marker key={station.id} position={[lat, lon]} icon={taxiIcon}>
-          <Tooltip offset={[0, 20]} opacity={1}>
-            <p>
-              <strong>{station.name}</strong>
-              <br />
-              {showPlaces(station.places)}
-            </p>
-          </Tooltip>
-        </Marker>
-      );
-    default:
-      return (
-        <Polygon positions={station.geojson.coordinates}>
-          <Tooltip offset={[0, 20]} opacity={1}>
-            <p>
-              <strong>{station.name}</strong>
-              {station.places !== undefined && (
-                <>
-                  <br />
-                  <i>{station.places}</i> places
-                </>
-              )}
-              <br />
-              {JSON.stringify(station.geojson)}
-            </p>
-          </Tooltip>
-        </Polygon>
-      );
+    if (!places) return '';
+    if (places === 1) return <i>une place</i>;
+    return <i>{places} places</i>;
   };
+
+  if (station.geojson.type === 'Point') {
+    const lon = station.geojson.coordinates[0];
+    const lat = station.geojson.coordinates[1];
+    return (
+      <Marker key={station.id} position={[lat, lon]} icon={taxiIcon}>
+        <Tooltip offset={[0, 20]} opacity={1}>
+          <p>
+            <strong>{station.name}</strong>
+            <br />
+            {showPlaces(station.places)}
+          </p>
+        </Tooltip>
+      </Marker>
+    );
+  }
+  return (
+    <Polygon positions={station.geojson.coordinates}>
+      <Tooltip offset={[0, 20]} opacity={1}>
+        <p>
+          <strong>{station.name}</strong>
+          {station.places !== undefined && (
+            <>
+              <br />
+              <i>{station.places}</i> places
+            </>
+          )}
+          <br />
+          {JSON.stringify(station.geojson)}
+        </p>
+      </Tooltip>
+    </Polygon>
+  );
 }
 
 Station.propTypes = {
@@ -97,7 +88,10 @@ Station.propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,
     places: PropTypes.number,
-    geojson: PropTypes.shape({}),
+    geojson: PropTypes.shape({
+      type: PropTypes.string,
+      coordinates: PropTypes.shape([]),
+    }),
   }).isRequired,
 };
 

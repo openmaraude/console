@@ -23,7 +23,9 @@ export default function DashboardStations() {
 
   return (
     <Layout>
-      <p>Cette carte affiche les stations de taxi actuellement connues et intégrées dans le.taxi.</p>
+      <p>
+        Cette carte affiche les stations de taxi actuellement connues et intégrées dans le.taxi.
+      </p>
       <p>Elle ne couvre pas encore l'ensemble des stations de France.</p>
       {error && <APIErrorAlert error={error} />}
       {!data && <LinearProgress />}

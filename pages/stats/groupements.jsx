@@ -10,8 +10,8 @@ import useSWR from 'swr';
 import APIErrorAlert from '@/components/APIErrorAlert';
 import { requestOne } from '@/src/api';
 import { UserContext } from '@/src/auth';
-import { Layout } from './index';
 import { formatDate } from '@/src/utils';
+import { Layout } from './index';
 
 const fleetDataColumns = [
   {
