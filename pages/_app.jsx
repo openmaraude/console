@@ -6,7 +6,8 @@ import PropTypes from 'prop-types';
 import Head from 'next/head';
 
 import CssBaseline from '@mui/material/CssBaseline';
-import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
+import { CacheProvider } from '@emotion/react';
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -26,6 +27,9 @@ import LoginForm from '@/components/Login';
 import Menu from '@/components/Menu';
 import theme from '@/components/theme';
 import '@/styles/styles.css';
+import createEmotionCache from '@/src/createEmotionCache';
+
+const cache = createEmotionCache();
 
 export default function ConsoleApp({ Component, pageProps }) {
   React.useEffect(() => {
@@ -56,7 +60,7 @@ export default function ConsoleApp({ Component, pageProps }) {
       <title>Console le.taxi</title>
       <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
     </Head>
-    <StyledEngineProvider injectFirst>
+    <CacheProvider value={cache}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
 
@@ -79,7 +83,7 @@ export default function ConsoleApp({ Component, pageProps }) {
           }
         </UserContext.Provider>
       </ThemeProvider>
-    </StyledEngineProvider>
+    </CacheProvider>
   </>;
 }
 

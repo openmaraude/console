@@ -7,16 +7,14 @@ import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import clsx from 'clsx';
-
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { alpha } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import LinearProgress from '@mui/material/LinearProgress';
 
 import BaseLayout from '@/components/layouts/BaseLayout';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   paper: {
     [theme.breakpoints.up('md')]: {
       display: 'flex',
@@ -60,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function Menu({ children }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   return <div className={classes.menu}>{children}</div>;
 }
 
@@ -69,13 +67,13 @@ Menu.propTypes = {
 };
 
 export function MenuItem({ title, href, secondary }) {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const router = useRouter();
 
   return (
     <div>
       <Link href={href}>
-        <Button className={clsx(
+        <Button className={cx(
           classes.menuItem,
           router.asPath === href && classes.activeMenuItem,
           secondary && classes.secondaryMenuItem,
@@ -99,7 +97,7 @@ MenuItem.propTypes = {
 };
 
 export function Content({ loading, children }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <div className={classes.content}>
       {loading ? <LinearProgress /> : children}
@@ -118,7 +116,7 @@ Content.propTypes = {
 };
 
 export function MenuLayout({ children, ...props }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <BaseLayout maxWidth="lg" paperClassName={classes.paper} {...props}>
       { children }

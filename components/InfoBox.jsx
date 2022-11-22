@@ -1,11 +1,9 @@
 import PropTypes from 'prop-types';
 
-import clsx from 'clsx';
-
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { alpha } from '@mui/material/styles';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
@@ -32,11 +30,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function InfoBox({ title, children, type }) {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const typeName = type.charAt(0).toUpperCase() + type.slice(1);
 
   return (
-    <div className={clsx(classes.root, classes[`type${typeName}`])}>
+    <div className={cx(classes.root, classes[`type${typeName}`])}>
       { title && <strong>{ title }</strong> }
       <div className={classes.content}>
         { children }

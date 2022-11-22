@@ -21,18 +21,18 @@ import {
 } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 
 const MID_FRANCE = [46.536, 2.4302];
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   taxiIcon: {
     fontSize: '32px',
   },
 }));
 
 function Station({ station }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const taxiIcon = new L.divIcon({
     className: classes.taxiIcon,

@@ -4,7 +4,7 @@ import useSWR from 'swr';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
@@ -15,7 +15,7 @@ import BaseLayout from '@/components/layouts/BaseLayout';
 import { hasRole, UserContext } from '@/src/auth';
 import { requestOne } from '@/src/api';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   formSection: {
     marginBottom: theme.spacing(5),
   },
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function AccountPage() {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
   const { data, error, mutate } = useSWR(
     [`/users/${userContext.user.id}`, userContext.user.apikey],

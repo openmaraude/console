@@ -2,12 +2,10 @@ import PropTypes from 'prop-types';
 
 import Container from '@mui/material/Container';
 import LinearProgress from '@mui/material/LinearProgress';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import Paper from '@mui/material/Paper';
 
-import clsx from 'clsx';
-
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   paper: {
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(3),
@@ -23,10 +21,10 @@ export default function BaseLayout({
   paperClassName,
   ...props
 }) {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   return (
     <Container maxWidth="md" {...props}>
-      <Paper className={clsx(classes.paper, paperClassName)} elevation={10}>
+      <Paper className={cx(classes.paper, paperClassName)} elevation={10}>
         {loading ? <LinearProgress /> : children}
       </Paper>
     </Container>

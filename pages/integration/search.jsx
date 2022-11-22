@@ -11,7 +11,7 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import LinearProgress from '@mui/material/LinearProgress';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -28,7 +28,7 @@ import { TimeoutTextField, TimeoutContext } from '@/components/TimeoutForm';
 import { UserContext } from '@/src/auth';
 import { Layout } from './index';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   section: {
     marginBottom: theme.spacing(2),
   },
@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
 
 // Change hail status
 function HailDetailActions({ hail }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
   const [response, setApiResponse] = React.useState({});
   let actions;
@@ -275,7 +275,7 @@ HailDetailActions.propTypes = {
 };
 
 function HailDetail({ hailId, onBackClicked }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
 
   const { data, error } = useSWR(
@@ -385,7 +385,7 @@ HailDetail.propTypes = {
 };
 
 function HailRequestForm({ taxi, onRequest }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
   const [hailRequest, setHailRequest] = React.useState({
     lon: taxi.position?.lon, // FIXME this is the position of the taxi, not the customer
@@ -507,7 +507,7 @@ HailRequestForm.propTypes = {
  * Display form to send a hail, or details of the sent hail.
  */
 function TaxiHail({ taxi }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [currentHail, setCurrentHail] = React.useState();
 
   return (
@@ -524,7 +524,7 @@ TaxiHail.propTypes = {
 };
 
 function Taxi({ taxi }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
 
   // If the user currently logged in is  the owner of the taxi, we should not
@@ -669,7 +669,7 @@ function AddressSearch() {
 }
 
 export default function IntegrationSearchPage() {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
   const listTaxisAvailable = (page, filters) => useSWR(
     ['/taxis', userContext.user.apikey, page, JSON.stringify(filters)],

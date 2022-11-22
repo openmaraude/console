@@ -16,7 +16,7 @@ import useSWR from 'swr';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 
 import L from 'leaflet';
 import {
@@ -38,7 +38,7 @@ import { UserContext } from '@/src/auth';
 
 const PARIS = [48.86, 2.35];
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   taxiIcon: {
     fontSize: '32px',
   },
@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
  * Display taxis on the map.
  */
 function Taxis({ lon, lat }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
 
   const { data, error } = useSWR(
@@ -261,7 +261,7 @@ function MapWidgets() {
 }
 
 export default function TaxisMap() {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [searchDialog, setSearchDialog] = React.useState(false);
 
   // We haven't changed this token for years. If you need to update the token

@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import clsx from 'clsx';
 import Link from 'next/link';
 
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { alpha } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -12,7 +11,7 @@ import Typography from '@mui/material/Typography';
 
 import { formatDate, formatLoc } from '@/src/utils';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   hail: {
     marginRight: theme.spacing(2),
     marginBottom: theme.spacing(2),
@@ -34,14 +33,14 @@ const useStyles = makeStyles((theme) => ({
 export const HAIL_SUCCESS_STATUS = ['finished', 'customer_on_board'];
 
 export default function HailCard({ hail }) {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const success = HAIL_SUCCESS_STATUS.indexOf(hail.status) !== -1;
 
   return (
     <Card className={classes.hail}>
       <CardContent>
         <Typography
-          className={clsx(
+          className={cx(
             classes.hailTitle,
             success && classes.hailSuccessTitle,
             !success && classes.hailFailureTitle,

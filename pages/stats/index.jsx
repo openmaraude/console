@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import Typography from '@mui/material/Typography';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -16,7 +16,7 @@ import {
   MenuItem as MyMenuItem, // name clash
 } from '@/components/layouts/MenuLayout';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     minWidth: theme.breakpoints.values.md,
   },
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 export function Layout({ area, setArea, children }) {
   const userContext = React.useContext(UserContext);
   const { user } = userContext;
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const handleAreaChange = (event) => {
     setArea(event.target.value);

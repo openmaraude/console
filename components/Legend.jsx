@@ -1,14 +1,14 @@
 import Button from '@mui/material/Button';
 import React from 'react';
 import Tooltip from '@mui/material/Tooltip';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   root: {},
 }));
 
 export default function Legend() {
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <div className={classes.root}>
       <Tooltip

@@ -8,13 +8,13 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 
 import { getAuthenticatedUsers, hasRole, UserContext } from '@/src/auth';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   menuButton: {
     marginRight: theme.spacing(2),
 
@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
 
 function AuthenticatedUser() {
   const userContext = React.useContext(UserContext);
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <div className={classes.loggedAs}>
@@ -83,7 +83,7 @@ function AuthenticatedUser() {
 
 function HighlightedLink({ href, ...props }) {
   const router = useRouter();
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   // Only get the first part of the URL, until the first slash.
   //
@@ -105,7 +105,7 @@ HighlightedLink.propTypes = {
 
 export default function Menu() {
   const userContext = React.useContext(UserContext);
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [authenticatedUsers, setAuthenticatedUsers] = React.useState([]);
 

@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import clsx from 'clsx';
 import useSWR from 'swr';
 
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -25,7 +24,7 @@ import { UserContext } from '@/src/auth';
 import { requestList } from '@/src/api';
 import { Layout } from './index';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   rowSuccess: {
     borderLeft: `3px solid ${theme.palette.success.main}`,
     borderRight: `3px solid ${theme.palette.success.main}`,
@@ -43,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Session({ session }) {
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
   const [open, setOpen] = React.useState(false);
 
   // Session is considered successful if at least one hail is finished or
@@ -54,31 +53,29 @@ function Session({ session }) {
     (status) => HAIL_SUCCESS_STATUS.indexOf(status) !== -1,
   );
 
-  return (
-    <>
-      <TableRow className={clsx(success && classes.rowSuccess, !success && classes.rowFailure)}>
-        <TableCell>
-          <IconButton size="small" onClick={() => setOpen(!open)}>
-            {open ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
-          </IconButton>
-        </TableCell>
-        <TableCell>{formatDate(new Date(session.added_at))}</TableCell>
-        <TableCell>{session.session_id}</TableCell>
-        <TableCell>{session.hails.length}</TableCell>
-        <TableCell>{session.hails.slice(-1)?.[0].status}</TableCell>
-      </TableRow>
+  return <>
+    <TableRow className={cx(success && classes.rowSuccess, !success && classes.rowFailure)}>
+      <TableCell>
+        <IconButton size="small" onClick={() => setOpen(!open)}>
+          {open ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
+        </IconButton>
+      </TableCell>
+      <TableCell>{formatDate(new Date(session.added_at))}</TableCell>
+      <TableCell>{session.session_id}</TableCell>
+      <TableCell>{session.hails.length}</TableCell>
+      <TableCell>{session.hails.slice(-1)?.[0].status}</TableCell>
+    </TableRow>
 
-      <TableRow>
-        <TableCell style={{ border: 'none', paddingBottom: 0, paddingTop: 0 }} colSpan={5}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <div className={classes.hailsContainer}>
-              {session.hails.map((hail) => <HailCard key={hail.id} hail={hail} />)}
-            </div>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </>
-  );
+    <TableRow>
+      <TableCell style={{ border: 'none', paddingBottom: 0, paddingTop: 0 }} colSpan={5}>
+        <Collapse in={open} timeout="auto" unmountOnExit>
+          <div className={classes.hailsContainer}>
+            {session.hails.map((hail) => <HailCard key={hail.id} hail={hail} />)}
+          </div>
+        </Collapse>
+      </TableCell>
+    </TableRow>
+  </>;
 }
 
 /* eslint-disable react/forbid-prop-types */

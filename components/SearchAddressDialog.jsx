@@ -13,12 +13,12 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 
 import APIErrorAlert from '@/components/APIErrorAlert';
 import { TimeoutGroup, TimeoutTextField } from '@/components/TimeoutForm';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   address: {
     '&:hover': {
       backgroundColor: theme.palette.secondary.light,
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Address({ address, onClick }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <ListItem className={classes.address} onClick={onClick}>
       <ListItemAvatar>

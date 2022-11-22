@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { dark } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
@@ -26,7 +26,7 @@ import {
   MenuItem,
 } from '@/components/layouts/MenuLayout';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   hr: {
     border: 0,
     height: 0,
@@ -64,7 +64,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 function StyledHr() {
-  const classes = useStyles();
+  const { classes } = useStyles();
   return <hr className={classes.hr} />;
 }
 
@@ -139,7 +139,7 @@ Heading.propTypes = {
 };
 
 function SideNote({ children }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <p className={classes.sideNote}>{children}</p>
   );
@@ -150,7 +150,7 @@ SideNote.propTypes = {
 };
 
 function CenteredImage({ src, alt }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   return (
     <div className={classes.centeredImage}>
       <img src={src} alt={alt} />
@@ -168,7 +168,7 @@ CenteredImage.propTypes = {
 };
 
 function InlineCode({ children }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   return <code className={classes.inlineCode}>{children}</code>;
 }
 

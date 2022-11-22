@@ -12,7 +12,7 @@ import CardContent from '@mui/material/CardContent';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import LinearProgress from '@mui/material/LinearProgress';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Table from '@mui/material/Table';
@@ -32,7 +32,7 @@ import APIListTable from '@/components/APIListTable';
 import SearchAddressDialog from '@/components/SearchAddressDialog';
 import { Layout } from './index';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   section: {
     marginBottom: theme.spacing(2),
   },
@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
 
 // Section to change taxi status
 function TaxiSetNewStatus({ taxi }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
   const [error, setError] = React.useState();
 
@@ -137,7 +137,7 @@ TaxiSetNewStatus.propTypes = {
 
 // Section to change taxi visibility radius
 function TaxiSetNewRadius({ taxi }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
   const [error, setError] = React.useState();
 
@@ -214,7 +214,7 @@ TaxiSetNewRadius.propTypes = {
 
 // Section to change taxi location
 function TaxiSetNewLocation({ taxi }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
   const [values, setValues] = React.useState({
     lon: taxi.position.lon,
@@ -331,7 +331,7 @@ TaxiSetNewLocation.propTypes = {
 
 // Update hail status
 function HailDetailActions({ hail }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
   const [response, setApiResponse] = React.useState({});
   let actions;
@@ -568,7 +568,7 @@ HailDetailActions.propTypes = {
 };
 
 function HailDetail({ hailId, onBackClicked }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
 
   const { data, error } = useSWR(
@@ -687,7 +687,7 @@ HailDetail.propTypes = {
 };
 
 function TaxiHailsList({ taxi }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
   const listHails = (page) => useSWR(
     ['/hails', userContext.user.apikey, page, taxi.id],
@@ -774,7 +774,7 @@ TaxiHailsList.propTypes = {
 };
 
 function Taxi({ taxi }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
   const { data, error } = useSWR(
     [`/taxis/${taxi.id}`, userContext.user.apikey],
@@ -868,7 +868,7 @@ Taxi.propTypes = {
 };
 
 export default function IntegrationOperatorPage() {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
   const listIntegrationTaxis = (page) => useSWR(
     ['/taxis/all', userContext.user.apikey, page],

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import Typography from '@mui/material/Typography';
 
 import {
@@ -16,7 +16,7 @@ import {
   MenuItem,
 } from '@/components/layouts/MenuLayout';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     minWidth: theme.breakpoints.values.md,
   },
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function Layout({ loading, children }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <MenuLayout className={classes.root}>
@@ -60,7 +60,7 @@ Layout.propTypes = {
 };
 
 export default function IntegrationPage() {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <Layout>

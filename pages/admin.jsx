@@ -1,18 +1,18 @@
 import React from 'react';
 
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 
 import BaseLayout from '@/components/layouts/BaseLayout';
 import LogasTable from '@/components/LogasTable';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     minWidth: theme.breakpoints.values.md,
   },
 }));
 
 export default function AdminPage() {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <BaseLayout maxWidth="lg" className={classes.root}>

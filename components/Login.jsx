@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 import APIErrorAlert from '@/components/APIErrorAlert';
 import { UserContext } from '@/src/auth';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     height: '100vh',
   },
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function LoginForm() {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [authenticationError, setAuthenticationError] = React.useState();
   const userContext = React.useContext(UserContext);
 
