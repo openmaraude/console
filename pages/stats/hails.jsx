@@ -90,14 +90,14 @@ function StatsHailsTotal(data) {
 
 export default function StatsHails() {
   const userContext = React.useContext(UserContext);
-  const [area, setArea] = React.useState('');
+  const [filters, setFilters] = React.useState({ area: '' });
   const { data, error } = useSWR(
-    [area, '/stats/hails', userContext.user.apikey],
-    (area_, url, token) => requestOne(url, { args: { area: area_ }, token }),
+    [filters, '/stats/hails', userContext.user.apikey],
+    (args, url, token) => requestOne(url, { args, token }),
   );
 
   return (
-    <Layout area={area} setArea={setArea}>
+    <Layout filters={filters} setFilters={setFilters}>
       <Typography variant="h4">Courses</Typography>
 
       {error && <APIErrorAlert error={error} />}

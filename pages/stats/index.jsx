@@ -15,6 +15,10 @@ import {
   Menu,
   MenuItem as MyMenuItem, // name clash
 } from '@/components/layouts/MenuLayout';
+import {
+  TimeoutGroup,
+  TimeoutTextField,
+} from '@/components/TimeoutForm';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
@@ -22,13 +26,17 @@ const useStyles = makeStyles()((theme) => ({
   },
 }));
 
-export function Layout({ area, setArea, children }) {
+export function Layout({ filters, setFilters, children }) {
   const userContext = React.useContext(UserContext);
   const { user } = userContext;
   const { classes } = useStyles();
 
   const handleAreaChange = (event) => {
-    setArea(event.target.value);
+    if (setFilters) setFilters({ ...filters, area: event.target.value });
+  };
+
+  const updateFilters = (newFilters) => {
+    if (setFilters) setFilters({ ...filters, ...newFilters });
   };
 
   return (
@@ -43,7 +51,7 @@ export function Layout({ area, setArea, children }) {
               <InputLabel>Territoire</InputLabel>
               <Select
                 variant="standard"
-                value={area}
+                value={filters?.area}
                 label="Territoire"
                 onChange={handleAreaChange}
               >
@@ -52,6 +60,16 @@ export function Layout({ area, setArea, children }) {
                 <MenuItem value="lyon">Lyon</MenuItem>
                 <MenuItem value="rouen">Rouen</MenuItem>
               </Select>
+            </FormControl>
+            <FormControl fullWidth variant="filled">
+              <TimeoutGroup onSubmit={updateFilters}>
+                <TimeoutTextField
+                  id="insee"
+                  name="insee"
+                  label="INSEE"
+                  value={filters?.insee}
+                />
+              </TimeoutGroup>
             </FormControl>
           </>
         )}
@@ -68,8 +86,11 @@ Layout.defaultProps = {
 };
 
 Layout.propTypes = {
-  area: PropTypes.string.isRequired,
-  setArea: PropTypes.func.isRequired,
+  filters: PropTypes.shape({
+    area: PropTypes.string,
+    insee: PropTypes.string,
+  }).isRequired,
+  setFilters: PropTypes.func.isRequired,
   children: PropTypes.node,
 };
 
