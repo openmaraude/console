@@ -21,6 +21,8 @@ import {
 } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
+import MarkerClusterGroup from '@/components/ReactLeafletCluster';
+
 import { makeStyles } from 'tss-react/mui';
 
 const MID_FRANCE = [46.536, 2.4302];
@@ -41,6 +43,19 @@ function Station({ station }) {
     iconAnchor: [32 / 2, 32],
   });
 
+  const showPlaces = (places) => {
+    switch (places) {
+      case undefined:
+      case 0:
+        return;
+      case 1:
+        return <i>une place</i>;
+        break;
+      default:
+        return <i>{places} places</i>;
+    };
+  }
+
   switch (station.geojson.type) {
     case 'Point':
       const lon = station.geojson.coordinates[0];
@@ -50,12 +65,8 @@ function Station({ station }) {
           <Tooltip offset={[0, 20]} opacity={1}>
             <p>
               <strong>{station.name}</strong>
-              {station.places !== undefined && (
-                <>
-                  <br />
-                  <i>{station.places}</i> places
-                </>
-              )}
+              <br />
+              {showPlaces(station.places)}
             </p>
           </Tooltip>
         </Marker>
@@ -111,7 +122,9 @@ export default function StationsMap({ stations }) {
           accessToken={mapboxToken}
           id="mapbox/streets-v11"
         />
-        {stations.map((station) => <Station key={station.id} station={station} />)}
+        <MarkerClusterGroup chunkedLoading removeOutsideVisibleBounds disableClusteringAtZoom={12}>
+          {stations.map((station) => <Station key={station.id} station={station} />)}
+        </MarkerClusterGroup>
       </MapContainer>
     </div>
   );
