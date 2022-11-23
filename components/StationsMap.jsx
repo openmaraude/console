@@ -21,26 +21,22 @@ import {
   Tooltip,
 } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { makeStyles } from 'tss-react/mui';
 
 import MarkerClusterGroup from '@/components/ReactLeafletCluster';
 
+import StationIcon from '@/public/images/station.png';
+import StationShadow from '@/public/images/shadow.png';
+
 const MID_FRANCE = [46.536, 2.4302];
 
-const useStyles = makeStyles()(() => ({
-  taxiIcon: {
-    fontSize: '32px',
-  },
-}));
-
 function Station({ station }) {
-  const { classes } = useStyles();
-
-  const taxiIcon = new L.divIcon({
-    className: classes.taxiIcon,
-    html: '🅿️',
-    iconSize: [32, 32],
-    iconAnchor: [32 / 2, 32],
+  const stationIcon = new L.Icon({
+    iconUrl: StationIcon.src,
+    iconSize: [StationIcon.width / 2, StationIcon.height / 2],
+    iconAnchor: [StationIcon.width / 4, StationIcon.height / 2],
+    shadowUrl: StationShadow.src,
+    shadowSize: [StationShadow.width / 4, StationShadow.height / 4],
+    shadowAnchor: [0, StationShadow.height / 4],
   });
 
   const showPlaces = (places) => {
@@ -53,7 +49,7 @@ function Station({ station }) {
     const lon = station.geojson.coordinates[0];
     const lat = station.geojson.coordinates[1];
     return (
-      <Marker key={station.id} position={[lat, lon]} icon={taxiIcon}>
+      <Marker key={station.id} position={[lat, lon]} icon={stationIcon}>
         <Tooltip offset={[0, 20]} opacity={1}>
           <p>
             <strong>{station.name}</strong>
