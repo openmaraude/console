@@ -2,14 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { makeStyles } from 'tss-react/mui';
-import Typography from '@mui/material/Typography';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
+import Box from '@mui/material/Box';
+import Checkbox from '@mui/material/Checkbox';
+import Chip from '@mui/material/Chip';
 import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
 import FormLabel from '@mui/material/FormLabel';
+import InputLabel from '@mui/material/InputLabel';
+import ListItemText from '@mui/material/ListItemText';
+import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 
 import { hasRole, UserContext } from '@/src/auth';
 import {
@@ -22,6 +26,7 @@ import {
   TimeoutGroup,
   TimeoutTextField,
 } from '@/components/TimeoutForm';
+import { departements, departementNames } from '@/src/utils';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
@@ -41,6 +46,10 @@ export function Layout({
 
   const handleAreaChange = (event) => {
     if (setFilters) setFilters({ ...filters, area: event.target.value });
+  };
+
+  const handleDeptChange = (event) => {
+    if (setFilters) setFilters({ ...filters, departements: event.target.value });
   };
 
   const updateFilters = (newFilters) => {
@@ -63,7 +72,7 @@ export function Layout({
                   <InputLabel>Grenoble, Lyon...</InputLabel>
                   <Select
                     variant="standard"
-                    value={filters?.area}
+                    value={filters.area}
                     onChange={handleAreaChange}
                   >
                     <MenuItem value="">National</MenuItem>
@@ -74,14 +83,41 @@ export function Layout({
                 </FormControl>
               </FormGroup>
               <FormGroup>
+                <FormLabel>Départements</FormLabel>
+                <FormControl>
+                  <Select
+                    multiple
+                    variant="standard"
+                    value={filters.departements}
+                    onChange={handleDeptChange}
+                    label="Un ou plusieurs départements"
+                    renderValue={(selected) => (
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                        {selected.map((value) => (
+                          <Chip key={value} label={departementNames[value]} />
+                        ))}
+                      </Box>
+                    )}
+                    sx={{ maxWidth: 226 }}
+                  >
+                    {departements.map((value) => (
+                      <MenuItem key={`dpt-${value}`} value={value}>
+                        <Checkbox checked={filters.departements.indexOf(value) > -1} />
+                        <ListItemText primary={departementNames[value]} />
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </FormGroup>
+              <FormGroup>
                 <FormLabel>Code INSEE</FormLabel>
                 <FormControl>
                   <TimeoutGroup onSubmit={updateFilters}>
                     <TimeoutTextField
                       id="insee"
                       name="insee"
-                      label="38, 69, 75056..."
-                      value={filters?.insee}
+                      label="38185, 69123, 75056..."
+                      value={filters.insee}
                     />
                   </TimeoutGroup>
                 </FormControl>
@@ -98,15 +134,22 @@ export function Layout({
 }
 
 Layout.defaultProps = {
+  filters: {
+    area: '',
+    departements: [],
+    insee: '',
+  },
+  setFilters: null,
   children: null,
 };
 
 Layout.propTypes = {
   filters: PropTypes.shape({
     area: PropTypes.string,
+    departements: PropTypes.shape([]),
     insee: PropTypes.string,
-  }).isRequired,
-  setFilters: PropTypes.func.isRequired,
+  }),
+  setFilters: PropTypes.func,
   children: PropTypes.node,
 };
 

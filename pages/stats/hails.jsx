@@ -75,7 +75,7 @@ function StatsHailsTotal(data) {
   return (
     <TableBody>
       {Object.entries(months).map(([month, total]) => (
-        <TableRow>
+        <TableRow key={`total-${month}`}>
           <TableCell>{formatMonth(month)}</TableCell>
           <TableCell>{total}</TableCell>
         </TableRow>
@@ -90,7 +90,7 @@ function StatsHailsTotal(data) {
 
 export default function StatsHails() {
   const userContext = React.useContext(UserContext);
-  const [filters, setFilters] = React.useState({ area: '' });
+  const [filters, setFilters] = React.useState({ area: '', departements: [] });
   const { data, error } = useSWR(
     [filters, '/stats/hails', userContext.user.apikey],
     (args, url, token) => requestOne(url, { args, token }),
@@ -191,42 +191,44 @@ export default function StatsHails() {
           <CardContent>
             <Typography variant="h5">Temps moyen de réaction</Typography>
             <Table>
-              <TableRow>
-                <TableCell>Temps moyen d’acceptation de course chauffeur</TableCell>
-                <TableCell>{formatDecimal(data.average_times.accepted_by_taxi)} s</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Temps moyen d’acceptation de course client</TableCell>
-                <TableCell>{formatDecimal(data.average_times.accepted_by_customer)} s</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Temps moyen d’échec client : timeout customer</TableCell>
-                <TableCell>{formatDecimal(data.average_times.timeout_customer)} s</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Temps moyen d’échec client : declined_by_customer</TableCell>
-                <TableCell>{formatDecimal(data.average_times.declined_by_customer)} s</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Temps moyen d’échec taxi : timeout taxi</TableCell>
-                <TableCell>{formatDecimal(data.average_times.timeout_taxi)} s</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Temps moyen d’échec taxi : incident_taxi</TableCell>
-                <TableCell>{formatDecimal(data.average_times.incident_taxi)} s</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Temps moyen d’échec taxi : une fois le client à bord</TableCell>
-                <TableCell>
-                  {formatDecimal(data.average_times.customer_on_board_incident_taxi)} s
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Temps moyen de prise en charge</TableCell>
-                <TableCell>
-                  {formatDecimal(data.average_times.customer_on_board)} s
-                </TableCell>
-              </TableRow>
+              <TableBody>
+                <TableRow>
+                  <TableCell>Temps moyen d’acceptation de course chauffeur</TableCell>
+                  <TableCell>{formatDecimal(data.average_times.accepted_by_taxi)} s</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Temps moyen d’acceptation de course client</TableCell>
+                  <TableCell>{formatDecimal(data.average_times.accepted_by_customer)} s</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Temps moyen d’échec client : timeout customer</TableCell>
+                  <TableCell>{formatDecimal(data.average_times.timeout_customer)} s</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Temps moyen d’échec client : declined_by_customer</TableCell>
+                  <TableCell>{formatDecimal(data.average_times.declined_by_customer)} s</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Temps moyen d’échec taxi : timeout taxi</TableCell>
+                  <TableCell>{formatDecimal(data.average_times.timeout_taxi)} s</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Temps moyen d’échec taxi : incident_taxi</TableCell>
+                  <TableCell>{formatDecimal(data.average_times.incident_taxi)} s</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Temps moyen d’échec taxi : une fois le client à bord</TableCell>
+                  <TableCell>
+                    {formatDecimal(data.average_times.customer_on_board_incident_taxi)} s
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Temps moyen de prise en charge</TableCell>
+                  <TableCell>
+                    {formatDecimal(data.average_times.customer_on_board)} s
+                  </TableCell>
+                </TableRow>
+              </TableBody>
             </Table>
           </CardContent>
         </Card>

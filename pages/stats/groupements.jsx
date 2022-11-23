@@ -39,7 +39,7 @@ const fleetDataColumns = [
 
 export default function StatsGroupements() {
   const userContext = React.useContext(UserContext);
-  const [filters, setFilters] = React.useState({ area: '' });
+  const [filters, setFilters] = React.useState({ area: '', departements: [] });
   const { data, error } = useSWR(
     [filters, '/stats/groupements', userContext.user.apikey],
     (args, url, token) => requestOne(url, { args, token }),
