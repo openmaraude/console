@@ -15,9 +15,9 @@ import { Layout } from './index';
 
 const fleetDataColumns = [
   {
-    field: 'email', headerName: "Identifant", width: 200,
+    field: 'email', headerName: "Identifant", width: 250,
   }, {
-    field: 'manager', headerName: "Manager", width: 150,
+    field: 'manager', headerName: "Manager", width: 200,
   }, {
     field: 'fleet_size', headerName: "Taille déclarée", type: 'number', width: 150,
   }, {
@@ -46,7 +46,7 @@ export default function StatsGroupements() {
   );
 
   return (
-    <Layout filters={filters} setFilters={setFilters}>
+    <Layout filters={filters} setFilters={setFilters} maxWidth="xl">
       <Typography variant="h4">Groupements</Typography>
 
       {error && <APIErrorAlert error={error} />}

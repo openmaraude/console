@@ -29,7 +29,12 @@ const useStyles = makeStyles()((theme) => ({
   },
 }));
 
-export function Layout({ filters, setFilters, children }) {
+export function Layout({
+  filters,
+  setFilters,
+  children,
+  ...props
+}) {
   const userContext = React.useContext(UserContext);
   const { user } = userContext;
   const { classes } = useStyles();
@@ -43,7 +48,7 @@ export function Layout({ filters, setFilters, children }) {
   };
 
   return (
-    <MenuLayout className={classes.root}>
+    <MenuLayout className={classes.root} {...props}>
       <Menu>
         {hasRole(user, 'admin') && (
           <>
