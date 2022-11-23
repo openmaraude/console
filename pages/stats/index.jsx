@@ -6,7 +6,10 @@ import Typography from '@mui/material/Typography';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
+import FormGroup from '@mui/material/FormGroup';
+import FormLabel from '@mui/material/FormLabel';
 import Select from '@mui/material/Select';
+import Stack from '@mui/material/Stack';
 
 import { hasRole, UserContext } from '@/src/auth';
 import {
@@ -47,30 +50,38 @@ export function Layout({ filters, setFilters, children }) {
             <MyMenuItem title="Taxis" href="/stats/taxis" />
             <MyMenuItem title="Courses" href="/stats/hails" />
             <MyMenuItem title="Groupements" href="/stats/groupements" />
-            <FormControl fullWidth variant="filled">
-              <InputLabel>Territoire</InputLabel>
-              <Select
-                variant="standard"
-                value={filters?.area}
-                label="Territoire"
-                onChange={handleAreaChange}
-              >
-                <MenuItem value="">National</MenuItem>
-                <MenuItem value="grenoble">Grenoble</MenuItem>
-                <MenuItem value="lyon">Lyon</MenuItem>
-                <MenuItem value="rouen">Rouen</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl fullWidth variant="filled">
-              <TimeoutGroup onSubmit={updateFilters}>
-                <TimeoutTextField
-                  id="insee"
-                  name="insee"
-                  label="INSEE"
-                  value={filters?.insee}
-                />
-              </TimeoutGroup>
-            </FormControl>
+            <Stack spacing={4} sx={{ mt: 4 }}>
+              <Typography variant="inherit">Rechercher par</Typography>
+              <FormGroup>
+                <FormLabel>Territoire</FormLabel>
+                <FormControl>
+                  <InputLabel>Grenoble, Lyon...</InputLabel>
+                  <Select
+                    variant="standard"
+                    value={filters?.area}
+                    onChange={handleAreaChange}
+                  >
+                    <MenuItem value="">National</MenuItem>
+                    <MenuItem value="grenoble">Grenoble</MenuItem>
+                    <MenuItem value="lyon">Lyon</MenuItem>
+                    <MenuItem value="rouen">Rouen</MenuItem>
+                  </Select>
+                </FormControl>
+              </FormGroup>
+              <FormGroup>
+                <FormLabel>Code INSEE</FormLabel>
+                <FormControl>
+                  <TimeoutGroup onSubmit={updateFilters}>
+                    <TimeoutTextField
+                      id="insee"
+                      name="insee"
+                      label="38, 69, 75056..."
+                      value={filters?.insee}
+                    />
+                  </TimeoutGroup>
+                </FormControl>
+              </FormGroup>
+            </Stack>
           </>
         )}
       </Menu>
