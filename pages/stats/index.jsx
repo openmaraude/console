@@ -2,17 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { makeStyles } from 'tss-react/mui';
-import Box from '@mui/material/Box';
+import Autocomplete from '@mui/material/Autocomplete';
 import Checkbox from '@mui/material/Checkbox';
 import Chip from '@mui/material/Chip';
 import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
 import FormLabel from '@mui/material/FormLabel';
 import InputLabel from '@mui/material/InputLabel';
-import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
 import { hasRole, UserContext } from '@/src/auth';
@@ -45,15 +45,16 @@ export function Layout({
   const { classes } = useStyles();
 
   const handleAreaChange = (event) => {
-    if (setFilters) setFilters({ ...filters, area: event.target.value });
+    setFilters({ ...filters, area: event.target.value });
   };
 
-  const handleDeptChange = (event) => {
-    if (setFilters) setFilters({ ...filters, departements: event.target.value });
+  const handleDeptChange = (event, value) => {
+    console.debug('handleDeptChange', value);
+    setFilters({ ...filters, departements: value });
   };
 
   const updateFilters = (newFilters) => {
-    if (setFilters) setFilters({ ...filters, ...newFilters });
+    setFilters({ ...filters, ...newFilters });
   };
 
   return (
@@ -85,28 +86,27 @@ export function Layout({
               <FormGroup>
                 <FormLabel>Départements</FormLabel>
                 <FormControl>
-                  <Select
+                  <Autocomplete
                     multiple
                     variant="standard"
+                    freeSolo
+                    disableCloseOnSelect
+                    options={departements}
+                    getOptionLabel={(option) => departementNames[option]}
                     value={filters.departements}
                     onChange={handleDeptChange}
-                    label="Un ou plusieurs départements"
-                    renderValue={(selected) => (
-                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                        {selected.map((value) => (
-                          <Chip key={value} label={departementNames[value]} />
-                        ))}
-                      </Box>
+                    label=""
+                    renderOption={(props, option, { selected }) => (
+                      <li {...props}>
+                        <Checkbox checked={selected} />
+                        {departementNames[option]}
+                      </li>
+                    )}
+                    renderInput={(params) => (
+                      <TextField {...params} variant="standard" placeholder="Un ou plusieurs départements" />
                     )}
                     sx={{ maxWidth: 226 }}
-                  >
-                    {departements.map((value) => (
-                      <MenuItem key={`dpt-${value}`} value={value}>
-                        <Checkbox checked={filters.departements.indexOf(value) > -1} />
-                        <ListItemText primary={departementNames[value]} />
-                      </MenuItem>
-                    ))}
-                  </Select>
+                  />
                 </FormControl>
               </FormGroup>
               <FormGroup>
