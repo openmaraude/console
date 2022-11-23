@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { makeStyles } from 'tss-react/mui';
 import Autocomplete from '@mui/material/Autocomplete';
 import Checkbox from '@mui/material/Checkbox';
-import Chip from '@mui/material/Chip';
 import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
 import FormLabel from '@mui/material/FormLabel';
@@ -49,7 +48,6 @@ export function Layout({
   };
 
   const handleDeptChange = (event, value) => {
-    console.debug('handleDeptChange', value);
     setFilters({ ...filters, departements: value });
   };
 
@@ -96,8 +94,8 @@ export function Layout({
                     value={filters.departements}
                     onChange={handleDeptChange}
                     label=""
-                    renderOption={(props, option, { selected }) => (
-                      <li {...props}>
+                    renderOption={(renderProps, option, { selected }) => (
+                      <li {...renderProps}>
                         <Checkbox checked={selected} />
                         {departementNames[option]}
                       </li>
