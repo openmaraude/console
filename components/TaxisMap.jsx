@@ -293,7 +293,7 @@ export default function TaxisMap() {
         zoom={15}
         style={{ height: 600, width: "100%" }}
         attributionControl={false}
-        whenCreated={setMapInstance}
+        ref={setMapInstance}
       >
         <TileLayer
           url={mapboxTileLayer}
