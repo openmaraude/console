@@ -43,18 +43,6 @@ export function Layout({
   const { user } = userContext;
   const { classes } = useStyles();
 
-  const handleAreaChange = (event) => {
-    setFilters({ ...filters, area: event.target.value });
-  };
-
-  const handleDeptChange = (event, value) => {
-    setFilters({ ...filters, departements: value });
-  };
-
-  const updateFilters = (newFilters) => {
-    setFilters({ ...filters, ...newFilters });
-  };
-
   return (
     <MenuLayout className={classes.root} {...props}>
       <Menu>
@@ -72,7 +60,9 @@ export function Layout({
                   <Select
                     variant="standard"
                     value={filters.area}
-                    onChange={handleAreaChange}
+                    onChange={(event) => {
+                      setFilters({ ...filters, area: event.target.value });
+                    }}
                   >
                     <MenuItem value="">National</MenuItem>
                     <MenuItem value="grenoble">Grenoble</MenuItem>
@@ -92,7 +82,9 @@ export function Layout({
                     options={departements}
                     getOptionLabel={(option) => departementNames[option]}
                     value={filters.departements}
-                    onChange={handleDeptChange}
+                    onChange={(event, value) => {
+                      setFilters({ ...filters, departements: value });
+                    }}
                     label=""
                     renderOption={(renderProps, option, { selected }) => (
                       <li {...renderProps}>
@@ -110,7 +102,9 @@ export function Layout({
               <FormGroup>
                 <FormLabel>Code INSEE</FormLabel>
                 <FormControl>
-                  <TimeoutGroup onSubmit={updateFilters}>
+                  <TimeoutGroup onSubmit={(newFilters) => {
+                    setFilters({ ...filters, ...newFilters });
+                  }}>
                     <TimeoutTextField
                       id="insee"
                       name="insee"

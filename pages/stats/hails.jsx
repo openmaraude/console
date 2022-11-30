@@ -94,6 +94,7 @@ export default function StatsHails() {
   const { data, error } = useSWR(
     [filters, '/stats/hails', userContext.user.apikey],
     (args, url, token) => requestOne(url, { args, token }),
+    { refreshInterval: 0 },
   );
 
   return (

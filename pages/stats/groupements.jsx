@@ -43,6 +43,7 @@ export default function StatsGroupements() {
   const { data, error } = useSWR(
     [filters, '/stats/groupements', userContext.user.apikey],
     (args, url, token) => requestOne(url, { args, token }),
+    { refreshInterval: 0 },
   );
 
   return (
