@@ -90,7 +90,7 @@ function StatsHailsTotal(data) {
 
 export default function StatsHails() {
   const userContext = React.useContext(UserContext);
-  const [filters, setFilters] = React.useState({ area: '', departements: [] });
+  const [filters, setFilters] = React.useState({ area: '', departements: [], insee: [] });
   const { data, error } = useSWR(
     [filters, '/stats/hails', userContext.user.apikey],
     (args, url, token) => requestOne(url, { args, token }),
