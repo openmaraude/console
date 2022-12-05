@@ -21,7 +21,12 @@ import {
   Menu,
   MenuItem as MyMenuItem, // name clash
 } from '@/components/layouts/MenuLayout';
-import { departements, departementNames } from '@/src/utils';
+import {
+  departements,
+  departementNames,
+  regions,
+  regionDetails,
+} from '@/src/utils';
 import { requestList } from '@/src/api';
 
 const useStyles = makeStyles()((theme) => ({
@@ -42,6 +47,7 @@ export function Layout({
   const [townInput, settownInput] = React.useState('');
   const [availableTowns, setAvailableTowns] = React.useState([]);
   const [selectedTowns, setSelectedTowns] = React.useState([]);
+  const [region, setRegion] = React.useState('');
 
   // These towns are too costly to ask the server under three characters typed
   const shortTownNames = [
@@ -100,7 +106,7 @@ export function Layout({
               <Stack spacing={4} sx={{ mt: 4 }}>
                 <Typography variant="inherit">Rechercher par</Typography>
                 <FormGroup>
-                  <FormLabel>Territoire</FormLabel>
+                  <FormLabel>Métropole</FormLabel>
                   <FormControl>
                     <InputLabel>Grenoble, Lyon...</InputLabel>
                     <Select
@@ -118,6 +124,34 @@ export function Layout({
                   </FormControl>
                 </FormGroup>
                 <FormGroup>
+                  <FormLabel>Région</FormLabel>
+                  <FormControl>
+                    <InputLabel>Grand Est...</InputLabel>
+                    <Select
+                      variant="standard"
+                      value={region}
+                      onChange={(event) => {
+                        const { target: { value } } = event;
+                        setRegion(value);
+                        if (value) {
+                          setFilters({
+                            ...filters,
+                            departements: regionDetails[value].departements,
+                          });
+                        } else {
+                          setFilters({
+                            ...filters,
+                            departements: [],
+                          });
+                        }
+                      }}
+                    >
+                      <MenuItem value="" />
+                      {regions.map((id) => <MenuItem value={id} key={`region-${id}`}>{regionDetails[id].name}</MenuItem>)}
+                    </Select>
+                  </FormControl>
+                </FormGroup>
+                <FormGroup>
                   <FormLabel>Départements</FormLabel>
                   <FormControl>
                     <Autocomplete
@@ -130,6 +164,7 @@ export function Layout({
                       value={filters.departements}
                       onChange={(event, value) => {
                         setFilters({ ...filters, departements: value });
+                        setRegion('');
                       }}
                       renderInput={(params) => (
                         <TextField {...params} variant="standard" label="Un ou plusieurs départements" fullWidth />

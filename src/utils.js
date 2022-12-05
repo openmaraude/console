@@ -137,3 +137,202 @@ export const departements = [
   '64', '66', '69', '71', '72', '73', '77', '76', '93', '80', '81', '82', '90', '95', '94', '83',
   '84', '85', '86', '88', '89', '78',
 ];
+
+export const regionDetails = {
+  "01": {
+    "name": "Guadeloupe",
+    "departements": [
+      "971",
+    ],
+  },
+  "02": {
+    "name": "Martinique",
+    "departements": [
+      "972",
+    ],
+  },
+  "03": {
+    "name": "Guyane",
+    "departements": [
+      "973",
+    ],
+  },
+  "04": {
+    "name": "La R\u00e9union",
+    "departements": [
+      "974",
+    ],
+  },
+  "06": {
+    "name": "Mayotte",
+    "departements": [
+      "976",
+    ],
+  },
+  "11": {
+    "name": "\u00cele-de-France",
+    "departements": [
+      "75",
+      "77",
+      "78",
+      "91",
+      "92",
+      "93",
+      "94",
+      "95",
+    ],
+  },
+  "24": {
+    "name": "Centre-Val de Loire",
+    "departements": [
+      "18",
+      "28",
+      "36",
+      "37",
+      "41",
+      "45",
+    ],
+  },
+  "27": {
+    "name": "Bourgogne-Franche-Comt\u00e9",
+    "departements": [
+      "21",
+      "25",
+      "39",
+      "58",
+      "70",
+      "71",
+      "89",
+      "90",
+    ],
+  },
+  "28": {
+    "name": "Normandie",
+    "departements": [
+      "14",
+      "27",
+      "50",
+      "61",
+      "76",
+    ],
+  },
+  "32": {
+    "name": "Hauts-de-France",
+    "departements": [
+      "02",
+      "59",
+      "60",
+      "62",
+      "80",
+    ],
+  },
+  "44": {
+    "name": "Grand Est",
+    "departements": [
+      "08",
+      "10",
+      "51",
+      "52",
+      "54",
+      "55",
+      "57",
+      "67",
+      "68",
+      "88",
+    ],
+  },
+  "52": {
+    "name": "Pays de la Loire",
+    "departements": [
+      "44",
+      "49",
+      "53",
+      "72",
+      "85",
+    ],
+  },
+  "53": {
+    "name": "Bretagne",
+    "departements": [
+      "22",
+      "29",
+      "35",
+      "56",
+    ],
+  },
+  "75": {
+    "name": "Nouvelle-Aquitaine",
+    "departements": [
+      "16",
+      "17",
+      "19",
+      "23",
+      "24",
+      "33",
+      "40",
+      "47",
+      "64",
+      "79",
+      "86",
+      "87",
+    ],
+  },
+  "76": {
+    "name": "Occitanie",
+    "departements": [
+      "09",
+      "11",
+      "12",
+      "30",
+      "31",
+      "32",
+      "34",
+      "46",
+      "48",
+      "65",
+      "66",
+      "81",
+      "82",
+    ],
+  },
+  "84": {
+    "name": "Auvergne-Rh\u00f4ne-Alpes",
+    "departements": [
+      "01",
+      "03",
+      "07",
+      "15",
+      "26",
+      "38",
+      "42",
+      "43",
+      "63",
+      "69",
+      "73",
+      "74",
+    ],
+  },
+  "93": {
+    "name": "Provence-Alpes-C\u00f4te d'Azur",
+    "departements": [
+      "04",
+      "05",
+      "06",
+      "13",
+      "83",
+      "84",
+    ],
+  },
+  "94": {
+    "name": "Corse",
+    "departements": [
+      "2A",
+      "2B",
+    ],
+  },
+};
+
+// Ordered by name, not number
+export const regions = [
+  '84', '27', '53', '24', '94', '44', '01', '03', '32', '11', '04', '02', '06', '28', '75', '76', '52', '93',
+];
