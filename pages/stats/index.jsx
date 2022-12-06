@@ -116,7 +116,7 @@ export function Layout({
                         setFilters({ ...filters, area: event.target.value });
                       }}
                     >
-                      <MenuItem value="">National</MenuItem>
+                      <MenuItem value="">&nbsp;</MenuItem>
                       <MenuItem value="grenoble">Grenoble</MenuItem>
                       <MenuItem value="lyon">Lyon</MenuItem>
                       <MenuItem value="rouen">Rouen</MenuItem>
@@ -146,7 +146,7 @@ export function Layout({
                         }
                       }}
                     >
-                      <MenuItem value="" />
+                      <MenuItem value="">&nbsp;</MenuItem>
                       {regions.map((id) => <MenuItem value={id} key={`region-${id}`}>{regionDetails[id].name}</MenuItem>)}
                     </Select>
                   </FormControl>
@@ -170,7 +170,7 @@ export function Layout({
                         <TextField {...params} variant="standard" label="Un ou plusieurs départements" fullWidth />
                       )}
                       renderOption={(renderProps, option, { selected }) => (
-                        <li {...renderProps} key={`dpt-${option}`}>
+                        <li {...renderProps}>
                           <Checkbox checked={selected} />
                           {departementNames[option]}
                         </li>
@@ -202,7 +202,7 @@ export function Layout({
                         <TextField {...params} variant="standard" label="Une ou plusieurs communes" fullWidth />
                       )}
                       renderOption={(renderProps, option, { selected }) => (
-                        <li {...renderProps} key={`town-${option.insee}`}>
+                        <li {...renderProps}>
                           <Checkbox checked={selected} />
                           {renderTown(option)}
                         </li>
@@ -232,8 +232,8 @@ Layout.defaultProps = {
 Layout.propTypes = {
   filters: PropTypes.shape({
     area: PropTypes.string,
-    departements: PropTypes.shape([]),
-    insee: PropTypes.shape([]),
+    departements: PropTypes.arrayOf(PropTypes.string),
+    insee: PropTypes.arrayOf(PropTypes.string),
   }),
   setFilters: PropTypes.func,
   children: PropTypes.node,

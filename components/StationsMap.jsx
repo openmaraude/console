@@ -86,7 +86,7 @@ Station.propTypes = {
     places: PropTypes.number,
     geojson: PropTypes.shape({
       type: PropTypes.string,
-      coordinates: PropTypes.shape([]),
+      coordinates: PropTypes.arrayOf(PropTypes.number),
     }),
   }).isRequired,
 };
