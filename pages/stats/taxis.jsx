@@ -17,7 +17,13 @@ import { Layout } from './index';
 
 export default function StatsTaxis() {
   const userContext = React.useContext(UserContext);
-  const [filters, setFilters] = React.useState({ area: '', departements: [], insee: [] });
+  const [filters, setFilters] = React.useState(
+    () => JSON.parse(localStorage.getItem('statsFilters')) || { area: '', departements: [], insee: [] },
+  );
+  React.useEffect(() => {
+    localStorage.setItem('statsFilters', JSON.stringify(filters));
+  }, [filters]);
+
   const { data, error } = useSWR(
     [filters, '/stats/taxis', userContext.user.apikey],
     (args, url, token) => requestOne(url, { args, token }),
