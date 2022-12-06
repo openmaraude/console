@@ -67,14 +67,13 @@ export function Layout({
     { insee: '80829', name: "Y" },
   ];
 
-  const fetch = React.useMemo(() => async (townName) => {
-    const { data } = await requestList('/towns', null, {
+  const fetch = React.useMemo(() => (townName) => {
+    requestList('/towns', null, {
       token: user.apikey,
       args: {
         search: townName,
       },
-    });
-    setAvailableTowns(data);
+    }).then(({ data }) => setAvailableTowns(data));
   }, []);
 
   const renderTown = ({ insee, name }) => {
