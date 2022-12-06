@@ -46,8 +46,19 @@ export function Layout({
   const { classes } = useStyles();
   const [townInput, settownInput] = React.useState('');
   const [availableTowns, setAvailableTowns] = React.useState([]);
-  const [selectedTowns, setSelectedTowns] = React.useState([]);
-  const [region, setRegion] = React.useState('');
+  const [selectedTowns, setSelectedTowns] = React.useState(
+    () => JSON.parse(localStorage.getItem('statsSelectedTowns')) || [],
+  );
+  const [region, setRegion] = React.useState(
+    () => JSON.parse(localStorage.getItem('statsRegion')) || '',
+  );
+
+  React.useEffect(() => {
+    localStorage.setItem('statsSelectedTowns', JSON.stringify(selectedTowns));
+  }, [selectedTowns]);
+  React.useEffect(() => {
+    localStorage.setItem('statsRegion', JSON.stringify(region));
+  }, [region]);
 
   // These towns are too costly to ask the server under three characters typed
   const shortTownNames = [
