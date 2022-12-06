@@ -1,9 +1,12 @@
 import React from 'react';
 
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
-import { Card, CardContent, Typography } from '@mui/material';
+import Typography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 import useSWR from 'swr';
 
@@ -63,10 +66,12 @@ export default function StatsGroupements() {
         <Card>
           <CardContent>
             <Table>
-              <TableRow>
-                <TableCell>Nombre de groupements de taxis enregistrés</TableCell>
-                <TableCell>{data.registered_groupements}</TableCell>
-              </TableRow>
+              <TableBody>
+                <TableRow>
+                  <TableCell>Nombre de groupements de taxis enregistrés</TableCell>
+                  <TableCell>{data.registered_groupements}</TableCell>
+                </TableRow>
+              </TableBody>
             </Table>
           </CardContent>
         </Card>
