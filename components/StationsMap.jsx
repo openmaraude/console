@@ -46,8 +46,7 @@ function Station({ station }) {
   };
 
   if (station.geojson.type === 'Point') {
-    const lon = station.geojson.coordinates[0];
-    const lat = station.geojson.coordinates[1];
+    const [lon, lat] = station.geojson.coordinates;
     return (
       <Marker key={station.id} position={[lat, lon]} icon={stationIcon}>
         <Tooltip offset={[0, 20]} opacity={1}>
