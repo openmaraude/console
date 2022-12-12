@@ -35,39 +35,39 @@ const useStyles = makeStyles()(() => ({
   },
 }));
 
-function Taxi({ taxi }) {
+function ADS({ department }) {
   const { classes } = useStyles();
-  const [lon, lat] = taxi.position.coordinates;
+  const [lon, lat] = department.position.coordinates;
   const icon = new L.DivIcon({
     className: classes.markerIcon,
-    html: taxi.count,
+    html: department.count,
     iconSize: [16, 16],
     iconAnchor: [24, 12],
   });
 
   return (
-    <Marker key={taxi.insee} position={[lat, lon]} icon={icon}>
-      <CircleMarker
-        key={taxi.insee}
-        center={[lat, lon]}
-        radius={16}
-        stroke={false}
-        fillColor="#edd400"
-        fillOpacity={1.0}
-      />
-      <Tooltip offset={[20, 0]} opacity={1}>
-        <p>
-          <strong>{taxi.name}</strong>
-          <br />
-          {`${taxi.count} taxis`}
-        </p>
-      </Tooltip>
-    </Marker>
+    <CircleMarker
+      center={[lat, lon]}
+      radius={16}
+      stroke={false}
+      fillColor="#edd400"
+      fillOpacity={1.0}
+    >
+      <Marker position={[lat, lon]} icon={icon}>
+        <Tooltip offset={[20, 0]} opacity={1}>
+          <p>
+            <strong>{department.name}</strong>
+            <br />
+            {`${department.count} taxis`}
+          </p>
+        </Tooltip>
+      </Marker>
+    </CircleMarker>
   );
 }
 
-Taxi.propTypes = {
-  taxi: PropTypes.shape({
+ADS.propTypes = {
+  department: PropTypes.shape({
     count: PropTypes.number,
     insee: PropTypes.string,
     position: PropTypes.shape({
@@ -78,7 +78,7 @@ Taxi.propTypes = {
   }).isRequired,
 };
 
-export default function TaxiStatsMap({ taxis }) {
+export default function StatsADSMap({ departments }) {
   // We haven't changed this token for years. If you need to update the token
   // in the future, maybe you should consider setting it in process.env.
   const mapboxToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
@@ -99,12 +99,12 @@ export default function TaxiStatsMap({ taxis }) {
           accessToken={mapboxToken}
           id="mapbox/streets-v11"
         />
-        {taxis.map((taxi) => <Taxi key={taxi.insee} taxi={taxi} />)}
+        {departments.map((department) => <ADS key={department.insee} department={department} />)}
       </MapContainer>
     </div>
   );
 }
 
-TaxiStatsMap.propTypes = {
-  taxis: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+StatsADSMap.propTypes = {
+  departments: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };

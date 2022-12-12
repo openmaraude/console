@@ -37,7 +37,7 @@ export default function DashboardStations() {
       <p>Le positionnement correspond à leur ADS et non à leur zone de prise en charge.</p>
       {error && <APIErrorAlert error={error} />}
       {!data && <LinearProgress />}
-      {data && <Map taxis={data.data} />}
+      {data && <Map departments={data.data} />}
     </Layout>
   );
 }
