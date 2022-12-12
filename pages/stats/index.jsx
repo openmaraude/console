@@ -112,7 +112,7 @@ export function Layout({
             <MyMenuItem title="Taxis" href="/stats/taxis" />
             <MyMenuItem title="Courses" href="/stats/hails" />
             <MyMenuItem title="Groupements" href="/stats/groupements" />
-            <MyMenuItem title="Carte des taxis" href="/stats/taximap" />
+            <MyMenuItem title="Carte des ADS" href="/stats/adsmap" />
             {filters && (
               <Stack spacing={4} sx={{ mt: 4 }}>
                 <Typography variant="inherit">Rechercher par</Typography>

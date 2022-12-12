@@ -19,13 +19,13 @@ export default function DashboardStations() {
   }, [filters]);
 
   const { data, error } = useSWR(
-    [filters, '/stats/taximap', userContext.user.apikey],
+    [filters, '/stats/adsmap', userContext.user.apikey],
     (args, url, token) => requestList(url, null, { args, token }),
     { refreshInterval: 0 },
   );
 
   const Map = dynamic(
-    () => import('@/components/StatsTaxiMap'),
+    () => import('@/components/StatsADSMap'),
     { ssr: false },
   );
 
