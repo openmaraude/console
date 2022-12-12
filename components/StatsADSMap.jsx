@@ -48,7 +48,7 @@ function ADS({ department }) {
   return (
     <CircleMarker
       center={[lat, lon]}
-      radius={16}
+      radius={Math.floor(12 + 2 * Math.log(department.count))}
       stroke={false}
       fillColor="#edd400"
       fillOpacity={1.0}
