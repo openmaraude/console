@@ -47,7 +47,14 @@ function Taxi({ taxi }) {
 
   return (
     <Marker key={taxi.insee} position={[lat, lon]} icon={icon}>
-      <CircleMarker key={taxi.insee} center={[lat, lon]} radius={16} />
+      <CircleMarker
+        key={taxi.insee}
+        center={[lat, lon]}
+        radius={16}
+        stroke={false}
+        fillColor="#edd400"
+        fillOpacity={1.0}
+      />
       <Tooltip offset={[20, 0]} opacity={1}>
         <p>
           <strong>{taxi.name}</strong>
@@ -84,7 +91,7 @@ export default function TaxiStatsMap({ taxis }) {
         minZoom={4}
         maxZoom={16}
         zoom={6}
-        style={{ height: 600, width: "100%" }}
+        style={{ height: 700, width: "100%" }}
         attributionControl={false}
       >
         <TileLayer
