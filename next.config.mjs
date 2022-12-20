@@ -1,4 +1,6 @@
-const { withSentryConfig } = require('@sentry/nextjs');
+import { withSentryConfig } from '@sentry/nextjs';
+import createMDX from "@next/mdx";
+import remarkGfm from 'remark-gfm';
 
 function readEnv(key, defaultValue) {
   const value = process.env[key];
@@ -23,16 +25,18 @@ function readEnvBool(key, defaultValue) {
   return false;
 }
 
-const withMDX = require('@next/mdx')({
+const withMDX = createMDX({
   // By default only the .mdx extension is supported.
   extension: /\.mdx?$/,
   options: {
     /* providerImportSource: …, otherOptions… */
-    providerImportSource: "@mdx-js/react"
+    providerImportSource: "@mdx-js/react",
+    remarkPlugins: [remarkGfm]
   }
 })
 
-module.exports = withMDX({
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   env: {
     API_TAXI_PUBLIC_URL: readEnv('API_TAXI_PUBLIC_URL', 'http://localhost:5000'),
     REFERENCE_DOCUMENTATION_URL: readEnv('REFERENCE_DOCUMENTATION_URL', 'http://localhost:4999/doc/'),
@@ -50,8 +54,16 @@ module.exports = withMDX({
 
   // Support MDX files as pages:
   pageExtensions: ['js', 'jsx', 'md', 'mdx'],
-});
+
+  sentry: {
+    hideSourceMaps: true,
+  },
+};
+
+let toExport = withMDX(nextConfig);
 
 if (process.env.SENTRY_AUTH_TOKEN) {
-  module.exports = withSentryConfig(module.exports, {silent: true});
+  toExport = withSentryConfig(toExport, { silent: true });
 }
+
+export default toExport;
