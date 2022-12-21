@@ -91,7 +91,7 @@ function StatsHailsTotal(data) {
 export default function StatsHails() {
   const userContext = React.useContext(UserContext);
   const [filters, setFilters] = React.useState(
-    () => JSON.parse(localStorage.getItem('statsFilters')) || { area: '', departements: [], insee: [] },
+    () => JSON.parse(localStorage.getItem('statsFilters')) || { departements: [], insee: [] },
   );
   React.useEffect(() => {
     localStorage.setItem('statsFilters', JSON.stringify(filters));
@@ -118,9 +118,9 @@ export default function StatsHails() {
                 <TableRow>
                   <TableCell />
                   <TableCell>Auj.</TableCell>
-                  <TableCell>-3 mois</TableCell>
-                  <TableCell>-6 mois</TableCell>
-                  <TableCell>-12 mois</TableCell>
+                  <TableCell>il y a 3 mois</TableCell>
+                  <TableCell>il y a 6 mois</TableCell>
+                  <TableCell>il y a 12 mois</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -131,6 +131,48 @@ export default function StatsHails() {
                   <TableCell>{data.hails_received.six_months_ago}</TableCell>
                   <TableCell>{data.hails_received.twelve_months_ago}</TableCell>
                 </TableRow>
+                <TableRow>
+                  <TableCell>Nombre de courses terminées</TableCell>
+                  <TableCell>{data.hails_finished.today}</TableCell>
+                  <TableCell>{data.hails_finished.three_months_ago}</TableCell>
+                  <TableCell>{data.hails_finished.six_months_ago}</TableCell>
+                  <TableCell>{data.hails_finished.twelve_months_ago}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Nombre de courses en declined_by_taxi</TableCell>
+                  <TableCell>{data.hails_declined_by_taxi.today}</TableCell>
+                  <TableCell>{data.hails_declined_by_taxi.three_months_ago}</TableCell>
+                  <TableCell>{data.hails_declined_by_taxi.six_months_ago}</TableCell>
+                  <TableCell>{data.hails_declined_by_taxi.twelve_months_ago}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Nombre de courses en declined_by_customer</TableCell>
+                  <TableCell>{data.hails_declined_by_customer.today}</TableCell>
+                  <TableCell>{data.hails_declined_by_customer.three_months_ago}</TableCell>
+                  <TableCell>{data.hails_declined_by_customer.six_months_ago}</TableCell>
+                  <TableCell>{data.hails_declined_by_customer.twelve_months_ago}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Nombre de courses en timeout_taxi (pas de réponse)</TableCell>
+                  <TableCell>{data.hails_timeout_taxi.today}</TableCell>
+                  <TableCell>{data.hails_timeout_taxi.three_months_ago}</TableCell>
+                  <TableCell>{data.hails_timeout_taxi.six_months_ago}</TableCell>
+                  <TableCell>{data.hails_timeout_taxi.twelve_months_ago}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Nombre de courses en timeout_taxi (course non terminée)</TableCell>
+                  <TableCell>{data.hails_timeout_ride.today}</TableCell>
+                  <TableCell>{data.hails_timeout_ride.three_months_ago}</TableCell>
+                  <TableCell>{data.hails_timeout_ride.six_months_ago}</TableCell>
+                  <TableCell>{data.hails_timeout_ride.twelve_months_ago}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Nombre de courses en timeout_customer</TableCell>
+                  <TableCell>{data.hails_timeout_customer.today}</TableCell>
+                  <TableCell>{data.hails_timeout_customer.three_months_ago}</TableCell>
+                  <TableCell>{data.hails_timeout_customer.six_months_ago}</TableCell>
+                  <TableCell>{data.hails_timeout_customer.twelve_months_ago}</TableCell>
+                </TableRow>
               </TableBody>
             </Table>
           </CardContent>
@@ -138,7 +180,7 @@ export default function StatsHails() {
 
         <Card>
           <CardContent>
-            <Typography variant="h5">Nombre de courses par mois</Typography>
+            <Typography variant="h5">Nombre de courses distribuées par mois</Typography>
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <Card>

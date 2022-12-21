@@ -18,7 +18,7 @@ import { Layout } from './index';
 export default function StatsTaxis() {
   const userContext = React.useContext(UserContext);
   const [filters, setFilters] = React.useState(
-    () => JSON.parse(localStorage.getItem('statsFilters')) || { area: '', departements: [], insee: [] },
+    () => JSON.parse(localStorage.getItem('statsFilters')) || { departements: [], insee: [] },
   );
   React.useEffect(() => {
     localStorage.setItem('statsFilters', JSON.stringify(filters));
@@ -45,9 +45,9 @@ export default function StatsTaxis() {
                 <TableRow>
                   <TableCell />
                   <TableCell>Auj.</TableCell>
-                  <TableCell>-3 mois</TableCell>
-                  <TableCell>-6 mois</TableCell>
-                  <TableCell>-12 mois</TableCell>
+                  <TableCell>il y a 3 mois</TableCell>
+                  <TableCell>il y a 6 mois</TableCell>
+                  <TableCell>il y a 12 mois</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>Nombre de taxis enregistrés</TableCell>
@@ -78,6 +78,10 @@ export default function StatsTaxis() {
                   <TableCell>{data.connected_taxis_since_threshold.three_months_ago}</TableCell>
                   <TableCell>{data.connected_taxis_since_threshold.six_months_ago}</TableCell>
                   <TableCell>{data.connected_taxis_since_threshold.twelve_months_ago}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Nombre de taxis connectés en temps réel</TableCell>
+                  <TableCell>{data.connected_taxis_now}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>Courses mensuelles par taxi</TableCell>

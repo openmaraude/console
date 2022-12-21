@@ -12,7 +12,7 @@ import { Layout } from './index';
 export default function DashboardStations() {
   const userContext = React.useContext(UserContext);
   const [filters, setFilters] = React.useState(
-    () => JSON.parse(localStorage.getItem('statsFilters')) || { area: '', departements: [], insee: [] },
+    () => JSON.parse(localStorage.getItem('statsFilters')) || { departements: [], insee: [] },
   );
   React.useEffect(() => {
     localStorage.setItem('statsFilters', JSON.stringify(filters));

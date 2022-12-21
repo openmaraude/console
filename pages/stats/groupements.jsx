@@ -43,7 +43,7 @@ const fleetDataColumns = [
 export default function StatsGroupements() {
   const userContext = React.useContext(UserContext);
   const [filters, setFilters] = React.useState(
-    () => JSON.parse(localStorage.getItem('statsFilters')) || { area: '', departements: [], insee: [] },
+    () => JSON.parse(localStorage.getItem('statsFilters')) || { departements: [], insee: [] },
   );
   React.useEffect(() => {
     localStorage.setItem('statsFilters', JSON.stringify(filters));
@@ -68,7 +68,7 @@ export default function StatsGroupements() {
             <Table>
               <TableBody>
                 <TableRow>
-                  <TableCell>Nombre de groupements de taxis enregistrés</TableCell>
+                  <TableCell>Nombre de groupements enregistrés</TableCell>
                   <TableCell>{data.registered_groupements}</TableCell>
                 </TableRow>
               </TableBody>
