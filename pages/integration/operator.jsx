@@ -103,7 +103,7 @@ function TaxiSetNewStatus({ taxi }) {
 
   return (
     <section className={classes.section}>
-      <p>Le statut a le statut <strong>{taxi.status}</strong>.</p>
+      <p>Le taxi a le statut <strong>{taxi.status}</strong>.</p>
 
       <p>
         <em>Seuls les taxis avec le statut free peuvent apparaitre lors d'une recherche.</em>
