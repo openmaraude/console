@@ -22,6 +22,7 @@ import {
   MenuItem as MyMenuItem, // name clash
 } from '@/components/layouts/MenuLayout';
 import {
+  departementCode,
   departements,
   departementNames,
   regions,
@@ -119,7 +120,7 @@ export function Layout({
     }).then(({ data }) => setAvailableTowns(data));
   }, []);
   const renderTown = ({ insee, name }) => {
-    const departement = insee.substr(0, 2) === '97' ? insee.substr(0, 3) : insee.substr(0, 2);
+    const departement = departementCode(insee);
     return `${name} (${departement})`;
   };
   React.useEffect(() => {
@@ -196,7 +197,7 @@ export function Layout({
                   </FormControl>
                 </FormGroup>
                 <FormGroup>
-                  <FormLabel>Région</FormLabel>
+                  <FormLabel>Région ou collectivité</FormLabel>
                   <FormControl>
                     <InputLabel>Grand Est...</InputLabel>
                     <Select
@@ -223,7 +224,7 @@ export function Layout({
                   </FormControl>
                 </FormGroup>
                 <FormGroup>
-                  <FormLabel>Départements</FormLabel>
+                  <FormLabel>Département ou collectivité</FormLabel>
                   <FormControl>
                     <Autocomplete
                       multiple

@@ -15,6 +15,12 @@ export function formatDecimal(float) {
   return float?.toFixed(2).toString().replace('.', ',');
 }
 
+// Extract the departement code from the town INSEE code
+export function departementCode(insee) {
+  const prefix = insee.substr(0, 2)
+  return prefix === '97' || prefix === '98' ? insee.substr(0, 3) : prefix;
+}
+
 const monthNames = ['ignore zero', 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 
 export function formatMonth(index) {
@@ -135,7 +141,7 @@ export const departements = [
   '34', '35', '36', '37', '38', '39', '974', '40', '41', '42', '44', '45', '46', '47', '48', '49',
   '50', '51', '972', '53', '976', '54', '55', '56', '57', '58', '59', '988', '60', '61', '75', '62', '63',
   '64', '66', '69', '71', '72', '73', '77', '76', '93', '80', '81', '82', '90', '95', '94', '83',
-  '84', '85', '86', '88', '89', '78',
+  '84', '85', '86', '88', '89', '78', '988',
 ];
 
 export const regionDetails = {
@@ -330,11 +336,18 @@ export const regionDetails = {
       "2B",
     ],
   },
+  // These are not part of the INSEE regions
+  "988": {
+    "name": "Nouvelle-Calédonie",
+    "departements": [
+      "988",
+    ],
+  },
 };
 
 // Ordered by name, not number
 export const regions = [
-  '84', '27', '53', '24', '94', '44', '01', '03', '32', '11', '04', '02', '06', '28', '75', '76', '52', '93',
+  '84', '27', '53', '24', '94', '44', '01', '03', '32', '11', '04', '02', '06', '28', '75', '76', '52', '93', '988',
 ];
 
 export const metropoles = {

@@ -24,7 +24,11 @@ import Typography from '@mui/material/Typography';
 
 import faker from 'faker/locale/fr';
 
-import { formatDate, formatLoc } from '@/src/utils';
+import {
+  departementCode,
+  formatDate,
+  formatLoc
+} from '@/src/utils';
 import { request, requestOne, requestList } from '@/src/api';
 import { UserContext } from '@/src/auth';
 import APIErrorAlert from '@/components/APIErrorAlert';
@@ -889,8 +893,7 @@ export default function IntegrationOperatorPage() {
 
   const onSearch = (address) => {
     if (address && address.properties && address.properties.citycode) {
-      const codeLength = address.properties.citycode.substr(0, 2) === '97' ? 3 : 2;
-      const depCode = address.properties.citycode.substr(0, codeLength);
+      const depCode = departementCode(address.properties.citycode);
       setTaxiRequest({
         insee: address.properties.citycode,
         name: `${address.properties.city} (${depCode})`,
