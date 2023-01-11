@@ -27,7 +27,7 @@ import faker from 'faker/locale/fr';
 import {
   departementCode,
   formatDate,
-  formatLoc
+  formatLoc,
 } from '@/src/utils';
 import { request, requestOne, requestList } from '@/src/api';
 import { UserContext } from '@/src/auth';

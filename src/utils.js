@@ -17,7 +17,7 @@ export function formatDecimal(float) {
 
 // Extract the departement code from the town INSEE code
 export function departementCode(insee) {
-  const prefix = insee.substr(0, 2)
+  const prefix = insee.substr(0, 2);
   return prefix === '97' || prefix === '98' ? insee.substr(0, 3) : prefix;
 }
 
