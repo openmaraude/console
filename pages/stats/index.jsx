@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import { makeStyles } from 'tss-react/mui';
 import Autocomplete from '@mui/material/Autocomplete';
+import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
@@ -163,6 +164,16 @@ export function Layout({
     }).then(({ data }) => setManagers(data));
   }, []);
 
+  const resetFilters = () => {
+    setFilters({});
+    setTownInput('');
+    setSelectedTowns([]);
+    setSelectedGroups([]);
+    setMetropole('');
+    setRegion('');
+    setManager('');
+  };
+
   return (
     <MenuLayout className={classes.root} {...props}>
       <Menu>
@@ -233,7 +244,7 @@ export function Layout({
                       disableCloseOnSelect
                       options={departements}
                       getOptionLabel={(option) => departementNames[option]}
-                      value={filters.departements}
+                      value={filters.departements || []}
                       onChange={(event, value) => {
                         setFilters({ ...filters, departements: value });
                         setMetropole('');
@@ -335,6 +346,11 @@ export function Layout({
                       <MenuItem value="">&nbsp;</MenuItem>
                       {managers.map((option) => <MenuItem value={option.id} key={`manager-${option.id}`}>{renderGroup(option)}</MenuItem>)}
                     </Select>
+                  </FormControl>
+                </FormGroup>
+                <FormGroup>
+                  <FormControl>
+                    <Button type="button" onClick={resetFilters}>Réinitialiser les filtres</Button>
                   </FormControl>
                 </FormGroup>
               </Stack>

@@ -91,7 +91,7 @@ function StatsHailsTotal(data) {
 export default function StatsHails() {
   const userContext = React.useContext(UserContext);
   const [filters, setFilters] = React.useState(
-    () => JSON.parse(localStorage.getItem('statsFilters')) || { departements: [], insee: [] },
+    () => JSON.parse(localStorage.getItem('statsFilters')) || {},
   );
   React.useEffect(() => {
     localStorage.setItem('statsFilters', JSON.stringify(filters));
