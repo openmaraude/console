@@ -312,7 +312,7 @@ function TaxiSetNewLocation({ taxi }) {
           Mettre à jour
         </Button>
         <Button variant="contained" color="secondary" size="small" onClick={() => setSearchDialog(true)}>Chercher une adresse</Button>
-        <SearchAddressDialog open={searchDialog} onClose={onSearch} mapMode={false} />
+        <SearchAddressDialog open={searchDialog} onClose={onSearch} dialogContentText="" />
       </form>
 
       <small>
@@ -1072,7 +1072,7 @@ export default function IntegrationOperatorPage() {
       </section>
 
       {selectedTaxi && <Taxi taxi={selectedTaxi} />}
-      <SearchAddressDialog open={searchDialog} onClose={onSearch} mapMode={false} />
+      <SearchAddressDialog open={searchDialog} onClose={onSearch} type="municipality" dialogContentText="" />
     </Layout>
   );
 }

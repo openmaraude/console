@@ -62,7 +62,7 @@ Address.propTypes = {
   onClick: PropTypes.func.isRequired,
 };
 
-export default function SearchAddressDialog({ open, onClose, mapMode }) {
+export default function SearchAddressDialog({ open, onClose, type, dialogContentText }) {
   const API_URL = 'https://api-adresse.data.gouv.fr';
   const [searchAddress, setSearchAddress] = React.useState();
 
@@ -74,11 +74,11 @@ export default function SearchAddressDialog({ open, onClose, mapMode }) {
   const { data, error } = useSWR(
     [searchAddress, API_URL],
     async (address) => {
-      if (!address) {
+      if (!address || address.length < 3) {
         return null;
       }
 
-      const url = new URL(`${API_URL}/search`);
+      const url = new URL(`${API_URL}/search?type=${type}`);
       url.searchParams.append('q', address);
 
       const resp = await fetch(url);
@@ -97,17 +97,11 @@ export default function SearchAddressDialog({ open, onClose, mapMode }) {
     <Dialog
       open={open}
       aria-labelledby="form-dialog-title"
-      TransitionProps={{
-        onClose: () => onClose(null),
-      }}
+      onClose={() => onClose(null)}
     >
       <DialogTitle id="form-dialog-title">Rechercher une adresse</DialogTitle>
       <DialogContent>
-        {mapMode && (
-          <DialogContentText>
-            Entrez une adresse pour positionner la carte à l'endroit voulu.
-          </DialogContentText>
-        )}
+        <DialogContentText>{dialogContentText}</DialogContentText>
         <TimeoutGroup onSubmit={search}>
           <TimeoutTextField
             autoFocus
@@ -140,9 +134,11 @@ export default function SearchAddressDialog({ open, onClose, mapMode }) {
 SearchAddressDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  mapMode: PropTypes.bool,
+  type: PropTypes.oneOf(['', 'housenumber', 'street', 'locality', 'municipality']),
+  dialogContentText: PropTypes.string,
 };
 
 SearchAddressDialog.defaultProps = {
-  mapMode: true,
+  type: '',  // Not the same as 'housenumber', but a bit of all types at once
+  dialogContentText: "Entrez une adresse pour positionner la carte à l'endroit voulu.",
 };

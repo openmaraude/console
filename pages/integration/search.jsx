@@ -670,7 +670,7 @@ function AddressSearch() {
     <>
       {selectedCoords && (<span>{selectedCoords.join(', ')}</span>)}
       <Button variant="contained" color="secondary" size="small" onClick={() => setSearchDialog(true)}>Chercher une adresse</Button>
-      <SearchAddressDialog open={searchDialog} onClose={onSearch} mapMode={false} />
+      <SearchAddressDialog open={searchDialog} onClose={onSearch} dialogContentText="" />
     </>
   );
 }
