@@ -152,6 +152,9 @@ export default function Menu() {
                   <HighlightedLink href="/stats">
                     <Button color="inherit">Statistiques</Button>
                   </HighlightedLink>
+                  <HighlightedLink href="/activity_logs">
+                    <Button color="inherit">Journaux</Button>
+                  </HighlightedLink>
                 </>
                 )
               }

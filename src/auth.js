@@ -86,6 +86,9 @@ export async function login(form) {
   } else {
     body.password = form.password;
   }
+  if (authenticatedUsers.length) {
+    body.referrer = authenticatedUsers[0].id;
+  }
 
   // Authenticate.
   const resp = await request('/internal/auth', {
