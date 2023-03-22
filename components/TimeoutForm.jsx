@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
 import TextField from '@mui/material/TextField';
+import Select from '@mui/material/Select';
 
 export const TimeoutContext = React.createContext();
 
@@ -19,6 +22,42 @@ export function TimeoutTextField({ ...props }) {
 
   return <TextField {...props} onChange={onChange} />;
 }
+
+/*
+ * Select already wrapped in a FormControl, as required
+ */
+export function TimeoutSelectField({
+  name,
+  label,
+  children,
+  ...props
+}) {
+  const updateValues = React.useContext(TimeoutContext);
+
+  const onChange = (e) => {
+    e.preventDefault();
+    updateValues({ [e.target.name]: e.target.value });
+  };
+
+  return (
+    <FormControl sx={{ minWidth: 120 }} {...props}>
+      <InputLabel>{label}</InputLabel>
+      <Select
+        name={name}
+        label={label}
+        onChange={onChange}
+      >
+        {children}
+      </Select>
+    </FormControl>
+  );
+}
+
+TimeoutSelectField.propTypes = {
+  name: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  children: PropTypes.arrayOf(PropTypes.node).isRequired,
+};
 
 /*
  * Calls onSubmit() after some time when children are updated.

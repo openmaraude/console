@@ -6,11 +6,12 @@ import useSWR from 'swr';
 import { useRouter } from 'next/router';
 
 import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
 
 import { toast } from 'react-toastify';
 
 import APIListTable from '@/components/APIListTable';
-import { TimeoutTextField } from '@/components/TimeoutForm';
+import { TimeoutTextField, TimeoutSelectField } from '@/components/TimeoutForm';
 import { UserContext } from '@/src/auth';
 import { requestList } from '@/src/api';
 
@@ -42,13 +43,29 @@ export default function LogasTable({ minimal }) {
       />
 
       {!minimal && (
-        <TimeoutTextField
-          label="Manager"
-          variant="outlined"
-          margin="dense"
-          name="manager"
-          InputLabelProps={{ shrink: true }}
-        />
+        <>
+          <TimeoutTextField
+            label="Manager"
+            variant="outlined"
+            margin="dense"
+            name="manager"
+            InputLabelProps={{ shrink: true }}
+          />
+          <TimeoutSelectField
+            label="Rôle"
+            variant="outlined"
+            margin="dense"
+            name="role"
+            value={[]}
+            InputLabelProps={{ shrink: true }}
+          >
+            <MenuItem value=""><em>Tous</em></MenuItem>
+            <MenuItem value="groupement">Groupement</MenuItem>
+            <MenuItem value="operateur">Opérateur</MenuItem>
+            <MenuItem value="moteur">Moteur</MenuItem>
+            <MenuItem value="editeur">Éditeur</MenuItem>
+          </TimeoutSelectField>
+        </>
       )}
     </>
   );

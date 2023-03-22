@@ -1,5 +1,6 @@
 import React from 'react';
 
+import MenuItem from '@mui/material/MenuItem';
 import useSWR from 'swr';
 import { makeStyles } from 'tss-react/mui';
 
@@ -8,7 +9,7 @@ import APIListTable from '@/components/APIListTable';
 import { UserContext } from '@/src/auth';
 import { requestList } from '@/src/api';
 import { formatDate } from '@/src/utils';
-import { TimeoutTextField } from '@/components/TimeoutForm';
+import { TimeoutTextField, TimeoutSelectField } from '@/components/TimeoutForm';
 
 const useStyles = makeStyles()((theme) => ({
   root: {
@@ -23,15 +24,33 @@ function ActivityLogs() {
     (url, token) => requestList(url, page, { token, args: filters }),
   );
 
+  const resources = [
+    { name: "user", label: "Utilisateur" },
+    { name: "taxi", label: "Taxi" },
+    { name: "customer", label: "Client" },
+  ];
+
+  const actions = [
+    { name: "login_password", label: "Connexion avec mot de passe (console)" },
+    { name: "login_apikey", label: "Connexion avec clé d'API (console)" },
+    { name: "auth_apikey", label: "Authentification avec clé d'API" },
+    { name: "auth_logas", label: "Authentification sous un autre utilisateur" },
+    { name: "taxi_status", label: "Changement de statut" },
+    { name: "customer_hail", label: "Demande de prise en charge" },
+  ];
+
   const filters = (
     <>
-      <TimeoutTextField
+      <TimeoutSelectField
         label="Ressource"
         variant="outlined"
         margin="dense"
         name="resource"
         InputLabelProps={{ shrink: true }}
-      />
+      >
+        <MenuItem value=""><em>Toutes</em></MenuItem>
+        {resources.map(({ name, label }) => <MenuItem value={name}>{label}</MenuItem>)}
+      </TimeoutSelectField>
       <TimeoutTextField
         label="ID ressource"
         variant="outlined"
@@ -39,13 +58,17 @@ function ActivityLogs() {
         name="resource_id"
         InputLabelProps={{ shrink: true }}
       />
-      <TimeoutTextField
+      <TimeoutSelectField
         label="Action"
         variant="outlined"
         margin="dense"
         name="action"
         InputLabelProps={{ shrink: true }}
-      />
+        sx={{ minWidth: 400 }}
+      >
+        <MenuItem value=""><em>Toutes</em></MenuItem>
+        {actions.map(({ name, label }) => <MenuItem value={name}>{label}</MenuItem>)}
+      </TimeoutSelectField>
     </>
   );
   const columns = [
