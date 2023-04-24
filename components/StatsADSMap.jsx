@@ -93,7 +93,7 @@ export default function StatsADSMap({ departments }) {
       >
         <TileLayer
           url={mapboxTileLayer}
-          accessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+          accessToken={process.env.MAPBOX_TOKEN}
           id="mapbox/streets-v11"
         />
         {departments.map((department) => <ADS key={department.insee} department={department} />)}

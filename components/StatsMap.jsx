@@ -66,7 +66,7 @@ export default function StatsMap({ zupcs }) {
       >
         <TileLayer
           url={mapboxTileLayer}
-          accessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+          accessToken={process.env.MAPBOX_TOKEN}
           id="mapbox/streets-v11"
         />
         {zupcs.map((zupc) => <ZUPC key={zupc.id} zupc={zupc} />)}

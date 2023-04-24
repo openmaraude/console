@@ -105,7 +105,7 @@ export default function StationsMap({ stations }) {
       >
         <TileLayer
           url={mapboxTileLayer}
-          accessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+          accessToken={process.env.MAPBOX_TOKEN}
           id="mapbox/streets-v11"
         />
         <MarkerClusterGroup chunkedLoading removeOutsideVisibleBounds disableClusteringAtZoom={12}>
