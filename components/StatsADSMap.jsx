@@ -79,9 +79,6 @@ ADS.propTypes = {
 };
 
 export default function StatsADSMap({ departments }) {
-  // We haven't changed this token for years. If you need to update the token
-  // in the future, maybe you should consider setting it in process.env.
-  const mapboxToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
   const mapboxTileLayer = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}';
 
   return (
@@ -96,7 +93,7 @@ export default function StatsADSMap({ departments }) {
       >
         <TileLayer
           url={mapboxTileLayer}
-          accessToken={mapboxToken}
+          accessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
           id="mapbox/streets-v11"
         />
         {departments.map((department) => <ADS key={department.insee} department={department} />)}

@@ -264,9 +264,6 @@ export default function TaxisMap() {
   const { classes } = useStyles();
   const [searchDialog, setSearchDialog] = React.useState(false);
 
-  // We haven't changed this token for years. If you need to update the token
-  // in the future, maybe you should consider setting it in process.env.
-  const mapboxToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
   const mapboxTileLayer = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}';
   const [mapInstance, setMapInstance] = React.useState();
 
@@ -297,7 +294,7 @@ export default function TaxisMap() {
       >
         <TileLayer
           url={mapboxTileLayer}
-          accessToken={mapboxToken}
+          accessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
           id="mapbox/streets-v11"
         />
         <MapWidgets />
