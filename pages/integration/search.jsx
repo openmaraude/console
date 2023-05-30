@@ -132,7 +132,7 @@ function HailDetailActions({ hail }) {
       actions = (
         <p>
           La course a le statut <strong>received_by_taxi</strong>. Le taxi
-          dispose de quelques secondes pour accepter ou refuser la course.
+          dispose de 30 secondes pour accepter ou refuser la course.
         </p>
       );
       break;
@@ -155,7 +155,7 @@ function HailDetailActions({ hail }) {
                   Mettre le statut en <strong>accepted_by_customer</strong> pour
                   signaler que le client souhaite toujours effectuer la course.
                   Sans confirmation de la part du client, la course passera
-                  automatiquement en <strong>timeout_customer</strong> après quelques secondes.
+                  automatiquement en <strong>timeout_customer</strong> après 30 secondes.
                 </p>
               </CardContent>
             </Card>
