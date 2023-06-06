@@ -22,13 +22,14 @@ function ActivityLogs() {
   const listActivityLogs = (page, filters) => useSWR(
     ['/activity_logs', userContext.user.apikey, page, JSON.stringify(filters)],
     (url, token) => requestList(url, page, { token, args: filters }),
+    { refreshInterval: 0 },
   );
 
-  const resources = [
-    { name: "user", label: "Utilisateur" },
-    { name: "taxi", label: "Taxi" },
-    { name: "customer", label: "Client" },
-  ];
+  const resources = {
+    user: "Utilisateur",
+    taxi: "Taxi",
+    customer: "Client",
+  };
 
   const actions = [
     { name: "login_password", label: "Connexion avec mot de passe (console)" },
@@ -49,7 +50,7 @@ function ActivityLogs() {
         InputLabelProps={{ shrink: true }}
       >
         <MenuItem value=""><em>Toutes</em></MenuItem>
-        {resources.map(({ name, label }) => <MenuItem value={name}>{label}</MenuItem>)}
+        {Object.entries(resources).map(([v, label]) => <MenuItem value={v}>{label}</MenuItem>)}
       </TimeoutSelectField>
       <TimeoutTextField
         label="ID ressource"
@@ -84,14 +85,7 @@ function ActivityLogs() {
       headerName: 'Ressource',
       flex: 1,
       sortable: false,
-      valueFormatter: ({ value }) => {
-        switch (value) {
-          case 'user': return 'Utilisateur';
-          case 'taxi': return 'Chauffeur';
-          case 'customer': return 'Client';
-          default: return value;
-        }
-      },
+      valueFormatter: ({ value }) => resources[value] || value,
     },
     {
       field: 'resource_id',
