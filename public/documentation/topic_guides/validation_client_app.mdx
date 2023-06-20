@@ -1,55 +1,7 @@
 #### Validation d'une application client
 
-Avant de fournir les accès à la plateforme de production, l'équipe le.taxi teste votre application afin de vérifier que les fonctionnalités principales sont correctement implémentées. Voici une liste régulièrement mise à jour des tests que nous effectuons.
+Avant de fournir les accès à la plateforme de production, l'équipe le.taxi teste votre application afin de vérifier que les fonctionnalités principales sont correctement implémentées.
 
+Il est attendu que le partenaire passe tous les tests de son côté avant de demander une validation.
 
-##### Informations du compte à jour
-
-Les informations de votre compte doivent être à jour : l'email et le téléphone du référent technique sont définis dans la section ["mon compte"](/account).
-
-
-##### Rechercher les taxis autour de l'utilisateur
-
-Le client peut lister les taxis disponibles autour de lui ([GET /taxis](https://dev.api.taxi/doc/#/default/get_taxis)). Le client peut afficher les informations d'un taxi : nombre de places et caractéristiques.
-
-
-##### Héler un taxi numéro non vérifié
-
-L'action doit être impossible si le numéro de téléphone du client n'est pas vérifié.
-
-
-##### Héler un taxi avec un numéro vérifié
-
-Le client doit pouvoir héler un taxi de son choix. L'application peut choisir automatiquement le taxi pour le client.
-
-
-##### Signaler une erreur
-
-Si l'API le.taxi retourne une erreur HTTP/400, l'erreur est affichée par l'application.
-
-
-###### Refus du taxi
-
-Si le taxi refuse la course, l'application notifie le client ou hèle un autre taxi automatiquement en fournissant le même [session_id](session_id).
-
-###### Délai dépassé par le taxi
-
-Si le taxi prend trop de temps pour répondre à la demande, l'application notifie le client ou hèle un autre taxi automatiquement en fournissant le même [session_id](session_id).
-
-###### Acceptation par le taxi
-
-Si le taxi accepte la course, le client est notifié et doit confirmer sa demande. Si la demande a été faite peu de temps avant l'acceptation, la confirmation de la demande peut être faite automatiquement : nous souhaitons éviter à tout prix la situation où l'application confirme automatiquement la demande de course, où le chauffeur se rend à l'adresse alors que le client ne s'y trouve plus. Si la course met un délai trop long avant d'être acceptée, le client doit confirmer manuellement.
-
-Le vrai numéro du taxi est maintenant affiché au lieu du masque « 0600000000 ».
-
-##### Course en cours
-
-Lorsque la demande du client est confirmée automatiquement ou manuellement, le taxi se rend vers le client.
-
-###### Annulation de la course par le chauffeur
-
-Le client est notifié si le chauffeur déclare un incident, et ne peut prendre le client en charge ([GET /hails/:id](https://dev.api.taxi/doc/#/default/get_hails__hail_id_)).
-
-###### Annulation de la course par le client
-
-Le client peut déclarer un incident afin d'annuler la course ([PUT /hails/:id](https://dev.api.taxi/doc/#/default/put_hails__hail_id_)).
+Télécharger [le cahier de recette](/assets/Modèle_application_client.xlsx?20230620) au format XLSX.
