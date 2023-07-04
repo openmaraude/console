@@ -46,7 +46,7 @@ const nextConfig = {
     MAPBOX_TOKEN: readEnv('MAPBOX_TOKEN', 'pk.eyJ1IjoibGUtdGF4aSIsImEiOiJjbGd1anFlZWsxNjNnM2ZxdjNva3Rzcnd0In0.lKJXey7A7Twd-PMg5Q2DCA'),
   },
 
-  async exportPathMap(defaultPathMap, { dev, dir, outDir, distDir, buildId }) {
+  async exportPathMap(defaultPathMap, { dev, dir, outDir, distDir, buildId, _nextDefaultLocale }) {
     // Redirect / to /dashboards
     defaultPathMap['/'] = {
       page: '/dashboards',
