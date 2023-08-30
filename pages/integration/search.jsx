@@ -734,18 +734,11 @@ export default function IntegrationSearchPage() {
       sortable: false,
     },
     {
-      field: 'lon',
-      headerName: 'Longitude',
-      flex: 1,
+      field: 'position',
+      headerName: 'Position',
+      flex: 2,
       sortable: false,
-      valueFormatter: ({ value }) => formatLoc(value),
-    },
-    {
-      field: 'lat',
-      headerName: 'Latitude',
-      flex: 1,
-      sortable: false,
-      valueFormatter: ({ value }) => formatLoc(value),
+      valueFormatter: ({ value }) => `${formatLoc(value.lon)}, ${formatLoc(value.lat)}`,
     },
     {
       field: 'crowfly_distance',
@@ -756,7 +749,7 @@ export default function IntegrationSearchPage() {
     },
     {
       field: 'vehicle',
-      headerName: 'Plaque d\'immatriculation',
+      headerName: 'Immat',
       flex: 1,
       sortable: false,
       valueFormatter: ({ value }) => value.licence_plate,
