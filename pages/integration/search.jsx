@@ -343,7 +343,7 @@ function HailDetail({ hailId, onBackClicked }) {
 
           <TableRow>
             <TableCell variant="head">Tél. taxi</TableCell>
-            <TableCell>{data.taxi_phone_number}</TableCell>
+            <TableCell>{data.taxi_phone_number} {data.status !== 'accepted_by_customer' ? '(masqué)' : ''}</TableCell>
           </TableRow>
 
           <TableRow>
@@ -363,7 +363,7 @@ function HailDetail({ hailId, onBackClicked }) {
 
           <TableRow>
             <TableCell variant="head">Tél. client</TableCell>
-            <TableCell>{data.customer_phone_number}</TableCell>
+            <TableCell>{data.customer_phone_number} {data.status !== 'accepted_by_customer' ? '(masqué)' : ''}</TableCell>
           </TableRow>
         </TableBody>
       </Table>
