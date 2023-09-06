@@ -27,6 +27,25 @@ export function formatMonth(index) {
   return monthNames[index];
 }
 
+export async function reverseGeocode({ lon, lat }) {
+  if (!lon || !lat) {
+    return '';
+  }
+  const API_URL = 'https://api-adresse.data.gouv.fr/reverse/';
+  const url = new URL(`${API_URL}?type=housenumber&limit=1&lon=${lon}&lat=${lat}`);
+  try {
+    const resp = await fetch(url);
+    if (!resp.ok) {
+      return '';
+    }
+    const geoJSON = await resp.json();
+    const result = geoJSON.features[0].properties;
+    return `${result.name}, ${result.city}`;
+  } catch {
+    return '';
+  }
+}
+
 /* eslint quote-props: ["error", "consistent"] */
 export const departementNames = {
   '01': "Ain",

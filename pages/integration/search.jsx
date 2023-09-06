@@ -21,7 +21,7 @@ import Typography from '@mui/material/Typography';
 
 import APIErrorAlert from '@/components/APIErrorAlert';
 import APIListTable from '@/components/APIListTable';
-import { formatDate, formatLoc } from '@/src/utils';
+import { formatDate, formatLoc, reverseGeocode } from '@/src/utils';
 import { requestList, requestOne } from '@/src/api';
 import SearchAddressDialog from '@/components/SearchAddressDialog';
 import { TimeoutTextField, TimeoutContext } from '@/components/TimeoutForm';
@@ -384,17 +384,27 @@ HailDetail.propTypes = {
   onBackClicked: PropTypes.func.isRequired,
 };
 
-function HailRequestForm({ taxi, onRequest }) {
+function HailRequestForm({ customer, taxi, onRequest }) {
   const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
   const [hailRequest, setHailRequest] = React.useState({
-    lon: taxi.position?.lon, // FIXME this is the position of the taxi, not the customer
-    lat: taxi.position?.lat, // but carrying costumer position up here proved difficult
-    customer_address: '20 Avenue de Ségur, 75007 Paris',
+    lon: customer?.lon, // simpler to use the position from the taxi, not the customer
+    lat: customer?.lat, // but makes the customer always 0 meter from the taxi
+    customer_address: '',
     customer_phone_number: '0607080910',
     customer_id: (Math.random() * 100000000).toFixed(0).toString(),
   });
   const [error, setError] = React.useState();
+
+  // Probably not elegant, but that's the best I found for a one-time call at loading this component
+  // I don't prevent refreshing the data, but I prevent spamming the API
+  useSWR(
+    [hailRequest.lon, hailRequest.lat],
+    (lon, lat) => reverseGeocode({ lon, lat }).then((address) => {
+      setHailRequest({ ...hailRequest, customer_address: address });
+    }),
+    { refreshInterval: 0, revalidateOnFocus: false },
+  );
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -499,6 +509,10 @@ function HailRequestForm({ taxi, onRequest }) {
 }
 
 HailRequestForm.propTypes = {
+  customer: PropTypes.shape({
+    lon: PropTypes.number,
+    lat: PropTypes.number,
+  }).isRequired,
   taxi: PropTypes.shape({
     id: PropTypes.string,
     operator: PropTypes.string,
@@ -513,7 +527,7 @@ HailRequestForm.propTypes = {
 /*
  * Display form to send a hail, or details of the sent hail.
  */
-function TaxiHail({ taxi }) {
+function TaxiHail({ customer, taxi }) {
   const { classes } = useStyles();
   const [currentHail, setCurrentHail] = React.useState();
 
@@ -521,16 +535,20 @@ function TaxiHail({ taxi }) {
     <section className={classes.section}>
       {currentHail
         ? <HailDetail hailId={currentHail.id} onBackClicked={() => setCurrentHail(null)} />
-        : <HailRequestForm taxi={taxi} onRequest={setCurrentHail} />}
+        : <HailRequestForm customer={customer} taxi={taxi} onRequest={setCurrentHail} />}
     </section>
   );
 }
 
 TaxiHail.propTypes = {
+  customer: PropTypes.shape({
+    lon: PropTypes.number,
+    lat: PropTypes.number,
+  }).isRequired,
   taxi: PropTypes.shape({}).isRequired,
 };
 
-function Taxi({ taxi }) {
+function Taxi({ customer, taxi }) {
   const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
 
@@ -636,12 +654,16 @@ function Taxi({ taxi }) {
         </Box>
       </TaxiSection>
 
-      <TaxiHail key={data.id} taxi={data} />
+      <TaxiHail key={data.id} customer={customer} taxi={data} />
     </>
   );
 }
 
 Taxi.propTypes = {
+  customer: PropTypes.shape({
+    lon: PropTypes.number,
+    lat: PropTypes.number,
+  }).isRequired,
   taxi: PropTypes.shape({
     id: PropTypes.string,
     operator: PropTypes.string,
@@ -678,12 +700,15 @@ function AddressSearch() {
 export default function IntegrationSearchPage() {
   const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
+  const [customer, setCustomer] = React.useState({});
   const listTaxisAvailable = (page, filters) => useSWR(
     ['/taxis', userContext.user.apikey, page, JSON.stringify(filters)],
     (url, token) => {
       if (!filters?.lon || !filters?.lat) {
         return null;
       }
+      // Inelegant but way simpler than extracting the values from the components
+      setCustomer({ lon: filters.lon, lat: filters.lat });
       return requestList(url, page, {
         token,
         args: filters,
@@ -815,7 +840,7 @@ export default function IntegrationSearchPage() {
         />
       </section>
 
-      {selectedTaxi && <Taxi key={selectedTaxi.id} taxi={selectedTaxi} />}
+      {selectedTaxi && <Taxi key={selectedTaxi.id} customer={customer} taxi={selectedTaxi} />}
     </Layout>
   );
 }
