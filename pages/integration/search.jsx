@@ -388,9 +388,9 @@ function HailRequestForm({ customer, taxi, onRequest }) {
   const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
   const [hailRequest, setHailRequest] = React.useState({
-    lon: customer?.lon, // simpler to use the position from the taxi, not the customer
-    lat: customer?.lat, // but makes the customer always 0 meter from the taxi
-    customer_address: '',
+    lon: customer?.lon, // Not update when the textfields change
+    lat: customer?.lat,
+    customer_address: '', // Will be reversed geocoded
     customer_phone_number: '0607080910',
     customer_id: (Math.random() * 100000000).toFixed(0).toString(),
   });
@@ -672,35 +672,43 @@ Taxi.propTypes = {
   }).isRequired,
 };
 
-function AddressSearch() {
-  const updateValues = React.useContext(TimeoutContext);
+function AddressSearch({ onFound }) {
   const [searchDialog, setSearchDialog] = React.useState(false);
-  const [selectedCoords, setSelectedCoords] = React.useState([]);
+  // Put here because the context only exists after the APIListTable is rendered
+  const updateValues = React.useContext(TimeoutContext);
 
   const onSearch = (address) => {
-    if (address && address.geometry && address.geometry.coordinates) {
-      setSelectedCoords(address.geometry.coordinates);
-      updateValues({
-        lon: address.geometry.coordinates[0],
-        lat: address.geometry.coordinates[1],
-      });
+    if (address?.geometry?.coordinates) {
+      const lon = address.geometry.coordinates[0];
+      const lat = address.geometry.coordinates[1];
+      onFound({ lon, lat });
+      // Needed to submit the form as the onChange event didn't happen
+      updateValues({ lon, lat });
     }
     setSearchDialog(false);
   };
 
   return (
     <>
-      {selectedCoords && (<span>{selectedCoords.join(', ')}</span>)}
       <Button variant="contained" color="secondary" size="small" onClick={() => setSearchDialog(true)}>Chercher une adresse</Button>
       <SearchAddressDialog open={searchDialog} onClose={onSearch} dialogContentText="" />
     </>
   );
 }
 
+AddressSearch.propTypes = {
+  onFound: PropTypes.func.isRequired,
+};
+
 export default function IntegrationSearchPage() {
   const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
   const [customer, setCustomer] = React.useState({});
+  const [selectedTaxi, setSelectedTaxi] = React.useState();
+  // Access the textfields below
+  const lonFieldRef = React.useRef();
+  const latFieldRef = React.useRef();
+
   const listTaxisAvailable = (page, filters) => useSWR(
     ['/taxis', userContext.user.apikey, page, JSON.stringify(filters)],
     (url, token) => {
@@ -708,7 +716,11 @@ export default function IntegrationSearchPage() {
         return null;
       }
       // Inelegant but way simpler than extracting the values from the components
+      if (customer.lon !== filters.lon || customer.lat !== filters.lat) {
+        setSelectedTaxi();
+      }
       setCustomer({ lon: filters.lon, lat: filters.lat });
+
       return requestList(url, page, {
         token,
         args: filters,
@@ -719,7 +731,12 @@ export default function IntegrationSearchPage() {
     },
     { refreshInterval: 1000 },
   );
-  const [selectedTaxi, setSelectedTaxi] = React.useState();
+
+  const onAddressFound = ({ lon, lat }) => {
+    lonFieldRef.current.value = lon;
+    latFieldRef.current.value = lat;
+    setSelectedTaxi();
+  };
 
   const filters = (
     <>
@@ -731,6 +748,7 @@ export default function IntegrationSearchPage() {
         InputLabelProps={{ shrink: true }}
         type="number"
         inputProps={{ step: "any" }}
+        inputRef={lonFieldRef}
       />
       <TimeoutTextField
         label="Latitude"
@@ -740,8 +758,9 @@ export default function IntegrationSearchPage() {
         InputLabelProps={{ shrink: true }}
         type="number"
         inputProps={{ step: "any" }}
+        inputRef={latFieldRef}
       />
-      <AddressSearch />
+      <AddressSearch onFound={onAddressFound} />
     </>
   );
 
