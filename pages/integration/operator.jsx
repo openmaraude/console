@@ -21,6 +21,7 @@ import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import GpsFixedTwoTone from '@mui/icons-material/GpsFixedTwoTone';
 
 import faker from 'faker/locale/fr';
 
@@ -28,6 +29,7 @@ import {
   departementCode,
   formatDate,
   formatLoc,
+  reverseGeocode,
 } from '@/src/utils';
 import { request, requestOne, requestList } from '@/src/api';
 import { UserContext } from '@/src/auth';
@@ -780,6 +782,23 @@ TaxiHailsList.propTypes = {
   }).isRequired,
 };
 
+function TaxiAddress({ lon, lat }) {
+  const [address, setAddress] = React.useState("");
+
+  useSWR(
+    [lon, lat],
+    () => lon && lat && reverseGeocode({ lon, lat }).then(setAddress),
+    { refreshInterval: 0, revalidateOnFocus: false },
+  );
+
+  return address;
+}
+
+TaxiAddress.propTypes = {
+  lon: PropTypes.number.isRequired,
+  lat: PropTypes.number.isRequired,
+};
+
 function Taxi({ taxi }) {
   const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
@@ -853,7 +872,14 @@ function Taxi({ taxi }) {
             <TableRow>
               <TableCell variant="head">Géolocalisation</TableCell>
               <TableCell>
-                {data.position?.lon ? `${formatLoc(data.position.lon)}, ${formatLoc(data.position.lat)}` : <i>aucune géolocalisation</i>}
+                {data.position?.lon && (
+                <>
+                  {`${formatLoc(data.position?.lon)}, ${formatLoc(data.position?.lat)}`}
+                  <GpsFixedTwoTone color="primary" />
+                  <TaxiAddress lon={data.position.lon} lat={data.position.lat} />
+                </>
+                )}
+                {!data.position?.lon && <i>aucune géolocalisation</i>}
                 <TaxiSetNewLocation key={`location-${taxi.id}`} taxi={data} />
               </TableCell>
             </TableRow>
