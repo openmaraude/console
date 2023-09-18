@@ -40,7 +40,7 @@ export async function reverseGeocode({ lon, lat }) {
     }
     const geoJSON = await resp.json();
     const result = geoJSON.features[0].properties;
-    return `${result.name}, ${result.city}`;
+    return result.label;
   } catch {
     return '';
   }

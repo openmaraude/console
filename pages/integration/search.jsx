@@ -23,6 +23,7 @@ import APIErrorAlert from '@/components/APIErrorAlert';
 import APIListTable from '@/components/APIListTable';
 import { formatDate, formatLoc, reverseGeocode } from '@/src/utils';
 import { requestList, requestOne } from '@/src/api';
+import ReverseAddress from '@/components/ReverseAddress';
 import SearchAddressDialog from '@/components/SearchAddressDialog';
 import { TimeoutTextField, TimeoutContext } from '@/components/TimeoutForm';
 import { UserContext } from '@/src/auth';
@@ -760,6 +761,7 @@ export default function IntegrationSearchPage() {
         inputProps={{ step: "any" }}
         inputRef={latFieldRef}
       />
+      <ReverseAddress lon={customer.lon} lat={customer.lat} />
       <AddressSearch onFound={onAddressFound} />
     </>
   );
