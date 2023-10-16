@@ -87,7 +87,6 @@ export default function APIListTable({
           autoHeight
           disableColumnMenu
           disableSelectionOnClick
-          rowsPerPageOptions={[]}
           hideFooterSelectedRowCount
           columns={columns}
           rows={data?.data || []}
@@ -95,8 +94,8 @@ export default function APIListTable({
           // with the pagination information.
           // If there is no "meta" attribute, then assume the list endpoint is
           // not paginated and returns all the items (like GET /taxis).
-          pageSize={data ? (data.meta?.per_page || data.length) : undefined}
-          rowCount={data ? (data.meta?.total || data.length) : undefined}
+          pageSize={data ? (data.meta?.per_page || data.length) : 0}
+          rowCount={data ? (data.meta?.total || data.length) : 0}
           page={request.page}
           onPageChange={handlePageChange}
           paginationMode="server"
