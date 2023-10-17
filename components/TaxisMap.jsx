@@ -31,7 +31,7 @@ import {
 import 'leaflet/dist/leaflet.css';
 
 import APIErrorAlert from '@/components/APIErrorAlert';
-import { formatDate, formatLoc } from '@/src/utils';
+import { formatLoc } from '@/src/utils';
 import { requestList } from '@/src/api';
 import SearchAddressDialog from '@/components/SearchAddressDialog';
 import { UserContext } from '@/src/auth';
@@ -130,9 +130,6 @@ function Taxis({ lon, lat }) {
 
               <dt>Rayon</dt>
               <dd>{taxi.radius ? (<>{taxi.radius} mètres</>) : (<i>par défaut</i>)}</dd>
-
-              <dt>Dernière géolocalisation</dt>
-              <dd>{formatDate(new Date(taxi.last_update * 1000))}</dd>
 
               <dt>Longitude</dt>
               <dd>{formatLoc(taxi.position?.lon)}</dd>

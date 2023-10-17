@@ -46,7 +46,7 @@ export default function DashboardHails() {
       headerName: 'Date de création',
       flex: 2,
       sortable: false,
-      valueFormatter: ({ value }) => formatDate(value),
+      valueFormatter: ({ value }) => formatDate(`${value}Z`),
     },
     {
       field: 'vehicle',

@@ -36,7 +36,7 @@ const fleetDataColumns = [
     headerName: "Dernier taxi",
     type: 'date',
     width: 200,
-    valueFormatter: ({ value }) => formatDate(value),
+    valueFormatter: ({ value }) => (value ? formatDate(`${value}Z`) : null),
   },
 ];
 

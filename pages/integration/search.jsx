@@ -324,7 +324,7 @@ function HailDetail({ hailId, onBackClicked }) {
 
           <TableRow>
             <TableCell variant="head">Date</TableCell>
-            <TableCell>{formatDate(new Date(data.creation_datetime))}</TableCell>
+            <TableCell>{formatDate(`${data.creation_datetime}Z`)}</TableCell>
           </TableRow>
 
           <TableRow>

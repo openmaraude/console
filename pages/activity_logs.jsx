@@ -78,7 +78,7 @@ function ActivityLogs() {
       headerName: 'Heure',
       flex: 1,
       sortable: false,
-      valueFormatter: ({ value }) => formatDate(value),
+      valueFormatter: ({ value }) => formatDate(`${value}Z`),
     },
     {
       field: 'resource',

@@ -50,7 +50,7 @@ export default function DashboardHails() {
       headerName: 'Date',
       flex: 2,
       sortable: false,
-      valueFormatter: ({ value }) => formatDate(value),
+      valueFormatter: ({ value }) => formatDate(`${value}Z`),
     },
     {
       field: 'operateur',

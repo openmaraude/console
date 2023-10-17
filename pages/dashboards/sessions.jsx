@@ -61,7 +61,7 @@ function Session({ session }) {
             {open ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
           </IconButton>
         </TableCell>
-        <TableCell>{formatDate(new Date(session.added_at))}</TableCell>
+        <TableCell>{formatDate(`${session.added_at}Z`)}</TableCell>
         <TableCell>{session.session_id}</TableCell>
         <TableCell>{session.hails.length}</TableCell>
         <TableCell>{session.hails.slice(-1)?.[0].status}</TableCell>

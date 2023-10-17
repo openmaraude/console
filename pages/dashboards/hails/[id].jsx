@@ -27,7 +27,7 @@ function Hail({ hail }) {
         <TableBody>
           <TableRow>
             <TableCell variant="head">Date de création</TableCell>
-            <TableCell>{formatDate(new Date(hail.creation_datetime))}</TableCell>
+            <TableCell>{formatDate(`${hail.creation_datetime}Z`)}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell variant="head">Statut final</TableCell>
@@ -79,7 +79,7 @@ function Hail({ hail }) {
             <TableBody>
               {hail.transitions.map((transition) => (
                 <TableRow key={JSON.stringify(transition)}>
-                  <TableCell>{formatDate(new Date(transition.timestamp))}</TableCell>
+                  <TableCell>{formatDate(transition.timestamp)}</TableCell>
                   <TableCell>{transition.from_status}</TableCell>
                   <TableCell>{transition.to_status}</TableCell>
                   <TableCell>{transition.reason}</TableCell>
