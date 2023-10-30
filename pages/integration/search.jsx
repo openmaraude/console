@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 import useSWR from 'swr';
 
+import GpsFixedTwoTone from '@mui/icons-material/GpsFixedTwoTone';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -403,7 +404,7 @@ function HailRequestForm({ customer, taxi, onRequest }) {
     [hailRequest.lon, hailRequest.lat],
     (lon, lat) => reverseGeocode({ lon, lat }).then((address) => {
       setHailRequest({ ...hailRequest, customer_address: address });
-    }),
+    }).catch(),
     { refreshInterval: 0, revalidateOnFocus: false },
   );
 
@@ -761,6 +762,7 @@ export default function IntegrationSearchPage() {
         inputProps={{ step: "any" }}
         inputRef={latFieldRef}
       />
+      <GpsFixedTwoTone color="primary" sx={{ margin: '0 0.25em -0.5ex' }} />
       <ReverseAddress lon={customer.lon} lat={customer.lat} />
       <AddressSearch onFound={onAddressFound} />
     </>

@@ -29,21 +29,19 @@ export function formatMonth(index) {
 
 export async function reverseGeocode({ lon, lat }) {
   if (!lon || !lat) {
-    return '';
+    return '?';
   }
   const API_URL = 'https://api-adresse.data.gouv.fr/reverse/';
   const url = new URL(`${API_URL}?type=housenumber&limit=1&lon=${lon}&lat=${lat}`);
-  try {
-    const resp = await fetch(url);
+  return fetch(url).then((resp) => {
     if (!resp.ok) {
-      return '';
+      return resp.statusText;
     }
-    const geoJSON = await resp.json();
-    const result = geoJSON.features[0].properties;
-    return result.label;
-  } catch {
-    return '';
-  }
+    return resp.json().then((geoJSON) => {
+      const result = geoJSON.features[0].properties;
+      return result.label;
+    }).catch((e) => e.toString());
+  }).catch((e) => e.toString());
 }
 
 /* eslint quote-props: ["error", "consistent"] */

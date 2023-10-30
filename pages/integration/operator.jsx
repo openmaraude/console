@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 import useSWR from 'swr';
 
+import GpsFixedTwoTone from '@mui/icons-material/GpsFixedTwoTone';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -856,6 +857,7 @@ function Taxi({ taxi }) {
                 {data.position?.lon && (
                 <>
                   {`${formatLoc(data.position?.lon)}, ${formatLoc(data.position?.lat)}`}
+                  <GpsFixedTwoTone color="primary" sx={{ margin: '0 0.25em -0.5ex' }} />
                   <ReverseAddress lon={data.position.lon} lat={data.position.lat} />
                 </>
                 )}
