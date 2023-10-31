@@ -7,6 +7,7 @@ import { makeStyles } from 'tss-react/mui';
 import APIListTable from '@/components/APIListTable';
 import ReverseAddress from '@/components/ReverseAddress';
 import { requestList } from '@/src/api';
+import { TimeoutTextField } from '@/components/TimeoutForm';
 import { UserContext } from '@/src/auth';
 import { formatDate, formatPhoneNumber } from '@/src/utils';
 import { Layout } from './index';
@@ -63,6 +64,34 @@ export default function DashboardHails() {
 
   const filters = (
     <>
+      <TimeoutTextField
+        label="Hail"
+        variant="outlined"
+        margin="dense"
+        name="id"
+        InputLabelProps={{ shrink: true }}
+      />
+      <TimeoutTextField
+        label="Client"
+        variant="outlined"
+        margin="dense"
+        name="moteur"
+        InputLabelProps={{ shrink: true }}
+      />
+      <TimeoutTextField
+        label="Chauffeur"
+        variant="outlined"
+        margin="dense"
+        name="operateur"
+        InputLabelProps={{ shrink: true }}
+      />
+      <TimeoutTextField
+        label="Course"
+        variant="outlined"
+        margin="dense"
+        name="status"
+        InputLabelProps={{ shrink: true }}
+      />
     </>
   );
 
