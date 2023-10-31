@@ -27,6 +27,13 @@ export function formatMonth(index) {
   return monthNames[index];
 }
 
+export function formatPhoneNumber(number) {
+  if (!number) {
+    return "-";
+  }
+  return number.replace(/^\+/g, '').replace(/^33/g, '0').replace(/^(\d{2}) ?(\d{2}) ?(\d{2}) ?(\d{2}) ?(\d{2})$/, '$1 $2 $3 $4 $5');
+}
+
 export async function reverseGeocode({ lon, lat }) {
   if (!lon || !lat) {
     return '?';
@@ -40,8 +47,8 @@ export async function reverseGeocode({ lon, lat }) {
     return resp.json().then((geoJSON) => {
       const result = geoJSON.features[0].properties;
       return result.label;
-    }).catch((e) => e.toString());
-  }).catch((e) => e.toString());
+    });
+  });
 }
 
 /* eslint quote-props: ["error", "consistent"] */

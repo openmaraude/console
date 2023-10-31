@@ -6,15 +6,15 @@ import useSWR from 'swr';
 import { reverseGeocode } from '@/src/utils';
 
 export default function ReverseAddress({ lon, lat }) {
-  const [address, setAddress] = React.useState('""');
-
-  useSWR(
+  const { data, error, isLoading } = useSWR(
     [lon, lat],
-    () => lon && lat && reverseGeocode({ lon, lat }).then(setAddress).catch(setAddress),
+    () => lon && lat && reverseGeocode({ lon, lat }),
     { refreshInterval: 0, revalidateOnFocus: false },
   );
 
-  return <span>{address}</span>;
+  if (error) return <span>{JSON.stringify(error)}</span>;
+  if (isLoading) return <span>...</span>;
+  return <span>{data}</span>;
 }
 
 ReverseAddress.propTypes = {
