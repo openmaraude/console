@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 
 import useSWR from 'swr';
 import { makeStyles } from 'tss-react/mui';
+import MenuItem from '@mui/material/MenuItem';
 
 import APIListTable from '@/components/APIListTable';
 import ReverseAddress from '@/components/ReverseAddress';
 import { requestList } from '@/src/api';
-import { TimeoutTextField } from '@/components/TimeoutForm';
+import { TimeoutTextField, TimeoutSelectField } from '@/components/TimeoutForm';
 import { UserContext } from '@/src/auth';
-import { formatDate, formatPhoneNumber } from '@/src/utils';
+import { formatDate, formatPhoneNumber, hailTerminalStatus } from '@/src/utils';
 import { Layout } from './index';
 
 const useStyles = makeStyles()((theme) => ({
@@ -36,6 +37,7 @@ function HailStatus({ status }) {
   let outcome;
   switch (status) {
     case 'finished':
+    case 'customer_on_board':
       outcome = 'success';
       break;
     case 'failure':
@@ -85,13 +87,16 @@ export default function DashboardHails() {
         name="operateur"
         InputLabelProps={{ shrink: true }}
       />
-      <TimeoutTextField
+      <TimeoutSelectField
         label="Course"
         variant="outlined"
         margin="dense"
         name="status"
         InputLabelProps={{ shrink: true }}
-      />
+      >
+        <MenuItem value=""><em>Tous</em></MenuItem>
+        {hailTerminalStatus.map((st) => <MenuItem value={st}>{st}</MenuItem>)}
+      </TimeoutSelectField>
     </>
   );
 
