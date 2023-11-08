@@ -20,6 +20,7 @@
     "@sentry/nextjs": "^7.19.0",
     "@sentry/tracing": "^7.19.0",
     "@types/mdx": "^2.0.3",
+    "@vgrid/react-leaflet-heatmap-layer": "^4.0.3",
     "eslint-config-next": "^13.5.5",
     "eslint-import-resolver-alias": "^1.1.2",
     "faker": "^5.5.3",

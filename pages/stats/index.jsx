@@ -184,6 +184,7 @@ export function Layout({
             <MyMenuItem title="Groupements" href="/stats/groupements" />
             <MyMenuItem title="Carte des ADS" href="/stats/adsmap" />
             <MyMenuItem title="Suivi client" href="/stats/customers" />
+            <MyMenuItem title="Heatmap hails" href="/stats/heatmap" />
             {filters && (
               <Stack spacing={4} sx={{ mt: 4 }}>
                 <Typography variant="inherit">Rechercher par</Typography>
