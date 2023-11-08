@@ -38,7 +38,13 @@ const useStyles = makeStyles()((theme) => ({
   },
 }));
 
-export default function HeatMap({ points }) {
+export default function HeatMap({
+  points,
+  fitBoundsOnLoad,
+  intensity,
+  minOpacity,
+  radius,
+}) {
   const mapboxTileLayer = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}';
   const [mapInstance, setMapInstance] = React.useState();
   const [searchDialog, setSearchDialog] = React.useState(false);
@@ -75,12 +81,13 @@ export default function HeatMap({ points }) {
           id="mapbox/streets-v11"
         />
         <HeatmapLayer
+          fitBoundsOnLoad={fitBoundsOnLoad}
           points={points}
           latitudeExtractor={(m) => m[0]}
           longitudeExtractor={(m) => m[1]}
-          intensityExtractor={() => 3} // Hardcoded
-          minOpacity={0.8} // Hardcoded
-          radius={10} // Hardcoded
+          intensityExtractor={() => intensity}
+          minOpacity={minOpacity}
+          radius={radius}
         />
       </MapContainer>
       <SearchAddressDialog open={searchDialog} onClose={onSearch} />
@@ -90,4 +97,15 @@ export default function HeatMap({ points }) {
 
 HeatMap.propTypes = {
   points: PropTypes.arrayOf(PropTypes.arrayOf([PropTypes.number, PropTypes.number])).isRequired,
+  fitBoundsOnLoad: PropTypes.bool,
+  intensity: PropTypes.number,
+  minOpacity: PropTypes.number,
+  radius: PropTypes.number,
+};
+
+HeatMap.defaultProps = {
+  fitBoundsOnLoad: false,
+  intensity: 3,
+  minOpacity: 0.8,
+  radius: 10,
 };

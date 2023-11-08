@@ -12,7 +12,7 @@ import { Layout } from './index';
 export default function HeatMap() {
   const userContext = React.useContext(UserContext);
   const { data, error } = useSWR(
-    ['/stats/heatmap', userContext.user.apikey],
+    ['/stats/heatmap_hails', userContext.user.apikey],
     (url, token) => requestList(url, null, { token }),
     // { refreshInterval: 0 },
   );
@@ -24,7 +24,7 @@ export default function HeatMap() {
 
   return (
     <Layout maxWidth="xl">
-      <p>Cette carte affiche les points chauds de prise en charge.</p>
+      <p>Cette carte affiche les points chauds de demandes prise en charge (abouties ou non).</p>
       {error && <APIErrorAlert error={error} />}
       {!data && <LinearProgress />}
       {data && <Map points={data.data[0].points} />}
