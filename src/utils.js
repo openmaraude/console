@@ -401,3 +401,7 @@ export const hailTerminalStatus = [
   // Added as a successful outcome
   'customer_on_board',
 ];
+
+export const MIDDLE_FRANCE = [46.536, 2.4302]; // Center map on Metropolitan France
+export const PARIS = [48.8566, 2.3511];
+export const LYON = [45.7589, 4.8312];

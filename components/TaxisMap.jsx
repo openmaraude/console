@@ -31,12 +31,10 @@ import {
 import 'leaflet/dist/leaflet.css';
 
 import APIErrorAlert from '@/components/APIErrorAlert';
-import { formatLoc } from '@/src/utils';
+import { PARIS, formatLoc } from '@/src/utils';
 import { requestList } from '@/src/api';
 import SearchAddressDialog from '@/components/SearchAddressDialog';
 import { UserContext } from '@/src/auth';
-
-const PARIS = [48.86, 2.35];
 
 const useStyles = makeStyles()((theme) => ({
   taxiIcon: {

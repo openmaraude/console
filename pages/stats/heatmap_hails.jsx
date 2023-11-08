@@ -7,6 +7,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import APIErrorAlert from '@/components/APIErrorAlert';
 import { requestList } from '@/src/api';
 import { UserContext } from '@/src/auth';
+import { LYON } from '@/src/utils';
 import { Layout } from './index';
 
 export default function HeatMap() {
@@ -27,7 +28,7 @@ export default function HeatMap() {
       <p>Cette carte affiche les points chauds de demandes prise en charge (abouties ou non).</p>
       {error && <APIErrorAlert error={error} />}
       {!data && <LinearProgress />}
-      {data && <Map points={data.data[0].points} />}
+      {data && <Map points={data.data[0].points} center={LYON} zoom={12} />}
     </Layout>
   );
 }

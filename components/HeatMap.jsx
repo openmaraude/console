@@ -24,9 +24,7 @@ import 'leaflet/dist/leaflet.css';
 
 import SearchAddressDialog from '@/components/SearchAddressDialog';
 import HeatmapLayer from '@/components/HeatmapLayer.ts';
-
-// const PARIS = [48.86, 2.35];
-const LYON = [45.7589, 4.8312];
+import { MIDDLE_FRANCE } from '@/src/utils';
 
 const useStyles = makeStyles()((theme) => ({
   mapButtons: {
@@ -40,7 +38,8 @@ const useStyles = makeStyles()((theme) => ({
 
 export default function HeatMap({
   points,
-  fitBoundsOnLoad,
+  center,
+  zoom,
   intensity,
   minOpacity,
   radius,
@@ -67,10 +66,10 @@ export default function HeatMap({
       </Box>
 
       <MapContainer
-        center={LYON}
+        center={center}
         minZoom={5}
         maxZoom={18}
-        zoom={12}
+        zoom={zoom}
         style={{ height: 700, width: "100%" }}
         attributionControl={false}
         ref={setMapInstance}
@@ -81,7 +80,6 @@ export default function HeatMap({
           id="mapbox/streets-v11"
         />
         <HeatmapLayer
-          fitBoundsOnLoad={fitBoundsOnLoad}
           points={points}
           latitudeExtractor={(m) => m[0]}
           longitudeExtractor={(m) => m[1]}
@@ -97,14 +95,16 @@ export default function HeatMap({
 
 HeatMap.propTypes = {
   points: PropTypes.arrayOf(PropTypes.arrayOf([PropTypes.number, PropTypes.number])).isRequired,
-  fitBoundsOnLoad: PropTypes.bool,
+  center: PropTypes.arrayOf([PropTypes.number, PropTypes.number]),
+  zoom: PropTypes.number,
   intensity: PropTypes.number,
   minOpacity: PropTypes.number,
   radius: PropTypes.number,
 };
 
 HeatMap.defaultProps = {
-  fitBoundsOnLoad: false,
+  center: MIDDLE_FRANCE, // Metropolitan France center
+  zoom: 6,
   intensity: 3,
   minOpacity: 0.8,
   radius: 10,
