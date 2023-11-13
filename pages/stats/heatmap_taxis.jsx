@@ -27,7 +27,7 @@ export default function HeatMap() {
       <p>Cette carte affiche les points chauds de taxis en ligne disponibles.</p>
       {error && <APIErrorAlert error={error} />}
       {!data && <LinearProgress />}
-      {data && <Map points={data.data[0].points} minOpacity={0.6} />}
+      {data && <Map points={data.data[0].points} minOpacity={0.2} />}
     </Layout>
   );
 }
