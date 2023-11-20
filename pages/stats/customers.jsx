@@ -150,9 +150,15 @@ export default function DashboardHails() {
     {
       field: 'status',
       headerName: 'Course',
-      flex: 2,
+      flex: 1,
       sortable: false,
       renderCell: ({ value }) => <HailStatus status={value} />,
+    },
+    {
+      field: 'duration',
+      headerName: 'Durée',
+      flex: 1,
+      sortable: false,
     },
   ];
 
