@@ -5,14 +5,14 @@ import dynamic from 'next/dynamic';
 import { Layout } from './index';
 
 export default function DashboardMap() {
-  const Map = dynamic(
+  const TaxisMap = dynamic(
     () => import('@/components/TaxisMap'),
     { ssr: false },
   );
 
   return (
-    <Layout>
-      <Map />
+    <Layout maxWidth="xl">
+      <TaxisMap />
     </Layout>
   );
 }

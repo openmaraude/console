@@ -163,7 +163,7 @@ export default function DashboardHails() {
   ];
 
   return (
-    <Layout maxWidth="x2">
+    <Layout maxWidth="xxl">
       <APIListTable
         apiFunc={listHails}
         columns={columns}

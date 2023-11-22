@@ -9,7 +9,7 @@ import { requestList } from '@/src/api';
 import { UserContext } from '@/src/auth';
 import { Layout } from './index';
 
-export default function DashboardStations() {
+export default function DashboardADS() {
   const userContext = React.useContext(UserContext);
   const [filters, setFilters] = React.useState(
     () => JSON.parse(localStorage.getItem('statsFilters')) || {},
@@ -24,7 +24,7 @@ export default function DashboardStations() {
     { refreshInterval: 0 },
   );
 
-  const Map = dynamic(
+  const StatsADSMap = dynamic(
     () => import('@/components/StatsADSMap'),
     { ssr: false },
   );
@@ -37,7 +37,7 @@ export default function DashboardStations() {
       <p>Le positionnement correspond à leur ADS et non à leur zone de prise en charge.</p>
       {error && <APIErrorAlert error={error} />}
       {!data && <LinearProgress />}
-      {data && <Map departments={data.data} />}
+      {data && <StatsADSMap departments={data.data} />}
     </Layout>
   );
 }

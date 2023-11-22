@@ -150,7 +150,7 @@ export default function Menu() {
                     <Button color="inherit">Administration</Button>
                   </HighlightedLink>
                   <HighlightedLink href="/stats">
-                    <Button color="inherit">Statistiques</Button>
+                    <Button color="inherit">Analyse</Button>
                   </HighlightedLink>
                   <HighlightedLink href="/activity_logs">
                     <Button color="inherit">Journaux</Button>

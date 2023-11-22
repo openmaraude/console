@@ -14,20 +14,17 @@ import PropTypes from 'prop-types';
 
 import L from 'leaflet';
 import {
-  MapContainer,
   Marker,
   Polygon,
-  TileLayer,
   Tooltip,
 } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
+import BaseMap from '@/components/BaseMap';
 import MarkerClusterGroup from '@/components/ReactLeafletCluster';
 
 import StationIcon from '@/public/images/station.png';
 import StationShadow from '@/public/images/shadow.png';
-
-const MID_FRANCE = [46.536, 2.4302];
 
 function Station({ station }) {
   const stationIcon = new L.Icon({
@@ -91,28 +88,12 @@ Station.propTypes = {
 };
 
 export default function StationsMap({ stations }) {
-  const mapboxTileLayer = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}';
-
   return (
-    <div>
-      <MapContainer
-        center={MID_FRANCE}
-        minZoom={4}
-        maxZoom={16}
-        zoom={6}
-        style={{ height: 600, width: "100%" }}
-        attributionControl={false}
-      >
-        <TileLayer
-          url={mapboxTileLayer}
-          accessToken={process.env.MAPBOX_TOKEN}
-          id="mapbox/streets-v11"
-        />
-        <MarkerClusterGroup chunkedLoading removeOutsideVisibleBounds disableClusteringAtZoom={12}>
-          {stations.map((station) => <Station key={station.id} station={station} />)}
-        </MarkerClusterGroup>
-      </MapContainer>
-    </div>
+    <BaseMap>
+      <MarkerClusterGroup chunkedLoading removeOutsideVisibleBounds disableClusteringAtZoom={12}>
+        {stations.map((station) => <Station key={station.id} station={station} />)}
+      </MarkerClusterGroup>
+    </BaseMap>
   );
 }
 

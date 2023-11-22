@@ -16,18 +16,18 @@ export default function DashboardZUPC() {
     (url, token) => requestList(url, null, { token }),
   );
 
-  const Map = dynamic(
+  const StatsMap = dynamic(
     () => import('@/components/StatsMap'),
     { ssr: false },
   );
 
   return (
-    <Layout>
+    <Layout maxWidth="xl">
       <p>Cette carte affiche les <abbr title="Zone unique de prise en charge">ZUPC</abbr> actuellement connues et intégrées dans le.taxi.</p>
       <p>Elle ne couvre pas encore l'ensemble des ZUPC de France.</p>
       {error && <APIErrorAlert error={error} />}
       {!data && <LinearProgress />}
-      {data && <Map zupcs={data.data} />}
+      {data && <StatsMap zupcs={data.data} />}
     </Layout>
   );
 }

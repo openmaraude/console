@@ -15,16 +15,13 @@ import PropTypes from 'prop-types';
 import useSWR from 'swr';
 
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import { makeStyles } from 'tss-react/mui';
 
 import L from 'leaflet';
 import {
   Circle,
-  MapContainer,
   Marker,
   Popup,
-  TileLayer,
   useMap,
   useMapEvents,
 } from 'react-leaflet';
@@ -33,8 +30,8 @@ import 'leaflet/dist/leaflet.css';
 import APIErrorAlert from '@/components/APIErrorAlert';
 import { PARIS, formatLoc } from '@/src/utils';
 import { requestList } from '@/src/api';
-import SearchAddressDialog from '@/components/SearchAddressDialog';
 import { UserContext } from '@/src/auth';
+import BaseMap from './BaseMap';
 
 const useStyles = makeStyles()((theme) => ({
   taxiIcon: {
@@ -256,47 +253,9 @@ function MapWidgets() {
 }
 
 export default function TaxisMap() {
-  const { classes } = useStyles();
-  const [searchDialog, setSearchDialog] = React.useState(false);
-
-  const mapboxTileLayer = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}';
-  const [mapInstance, setMapInstance] = React.useState();
-
-  const onSearch = (address) => {
-    if (address) {
-      const [lon, lat] = address.geometry.coordinates;
-      mapInstance.flyTo([lat, lon], 15, { animate: true });
-    }
-    setSearchDialog(false);
-  };
-
   return (
-    <div>
-      <Box className={classes.mapButtons}>
-        <Button variant="contained" onClick={() => setSearchDialog(true)}>
-          Chercher une adresse
-        </Button>
-      </Box>
-
-      <MapContainer
-        center={PARIS}
-        minZoom={5}
-        maxZoom={16}
-        zoom={15}
-        style={{ height: 600, width: "100%" }}
-        attributionControl={false}
-        ref={setMapInstance}
-      >
-        <TileLayer
-          url={mapboxTileLayer}
-          accessToken={process.env.MAPBOX_TOKEN}
-          id="mapbox/streets-v11"
-        />
-        <MapWidgets />
-      </MapContainer>
-
-      {mapInstance && <AvailableTaxis map={mapInstance} />}
-      <SearchAddressDialog open={searchDialog} onClose={onSearch} />
-    </div>
+    <BaseMap center={PARIS} zoom={15}>
+      <MapWidgets />
+    </BaseMap>
   );
 }

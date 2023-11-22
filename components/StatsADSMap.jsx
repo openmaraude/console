@@ -15,16 +15,13 @@ import PropTypes from 'prop-types';
 import L from 'leaflet';
 import {
   Marker,
-  MapContainer,
-  TileLayer,
   Tooltip,
   CircleMarker,
 } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
 import { makeStyles } from 'tss-react/mui';
-
-const MID_FRANCE = [46.536, 2.4302];
+import BaseMap from './BaseMap';
 
 const useStyles = makeStyles()(() => ({
   markerIcon: {
@@ -79,26 +76,10 @@ ADS.propTypes = {
 };
 
 export default function StatsADSMap({ departments }) {
-  const mapboxTileLayer = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}';
-
   return (
-    <div>
-      <MapContainer
-        center={MID_FRANCE}
-        minZoom={4}
-        maxZoom={16}
-        zoom={6}
-        style={{ height: 700, width: "100%" }}
-        attributionControl={false}
-      >
-        <TileLayer
-          url={mapboxTileLayer}
-          accessToken={process.env.MAPBOX_TOKEN}
-          id="mapbox/streets-v11"
-        />
-        {departments.map((department) => <ADS key={department.insee} department={department} />)}
-      </MapContainer>
-    </div>
+    <BaseMap>
+      {departments.map((department) => <ADS key={department.insee} department={department} />)}
+    </BaseMap>
   );
 }
 

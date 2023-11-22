@@ -12,100 +12,57 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import { makeStyles } from 'tss-react/mui';
+import { FeatureGroup, LayersControl } from 'react-leaflet';
 
-import {
-  MapContainer,
-  TileLayer,
-} from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-
-import SearchAddressDialog from '@/components/SearchAddressDialog';
+import BaseMap from '@/components/BaseMap';
 import HeatmapLayer from '@/components/HeatmapLayer.ts';
-import { MIDDLE_FRANCE } from '@/src/utils';
-
-const useStyles = makeStyles()((theme) => ({
-  mapButtons: {
-    marginBottom: theme.spacing(1),
-
-    '& > *': {
-      marginRight: theme.spacing(1),
-    },
-  },
-}));
+import { LYON } from '@/src/utils';
 
 export default function HeatMap({
-  points,
-  center,
-  zoom,
-  intensity,
-  minOpacity,
-  radius,
+  hails,
+  taxis,
+  hailsMinOpacity,
+  taxisMinOpacity,
 }) {
-  const mapboxTileLayer = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}';
-  const [mapInstance, setMapInstance] = React.useState();
-  const [searchDialog, setSearchDialog] = React.useState(false);
-  const { classes } = useStyles();
-
-  const onSearch = (address) => {
-    if (address) {
-      const [lon, lat] = address.geometry.coordinates;
-      mapInstance.flyTo([lat, lon], 18, { animate: true });
-    }
-    setSearchDialog(false);
-  };
-
   return (
-    <div>
-      <Box className={classes.mapButtons}>
-        <Button variant="contained" onClick={() => setSearchDialog(true)}>
-          Chercher une adresse
-        </Button>
-      </Box>
-
-      <MapContainer
-        center={center}
-        minZoom={5}
-        maxZoom={18}
-        zoom={zoom}
-        style={{ height: 700, width: "100%" }}
-        attributionControl={false}
-        ref={setMapInstance}
-      >
-        <TileLayer
-          url={mapboxTileLayer}
-          accessToken={process.env.MAPBOX_TOKEN}
-          id="mapbox/streets-v11"
-        />
-        <HeatmapLayer
-          points={points}
-          latitudeExtractor={(m) => m[0]}
-          longitudeExtractor={(m) => m[1]}
-          intensityExtractor={() => intensity}
-          minOpacity={minOpacity}
-          radius={radius}
-        />
-      </MapContainer>
-      <SearchAddressDialog open={searchDialog} onClose={onSearch} />
-    </div>
+    <BaseMap center={LYON} zoom={12}>
+      <LayersControl.Overlay name="Taxis 🟣" checked>
+        <FeatureGroup color="purple">
+          <HeatmapLayer
+            points={taxis}
+            latitudeExtractor={(m) => m[0]}
+            longitudeExtractor={(m) => m[1]}
+            intensityExtractor={() => 3}
+            minOpacity={taxisMinOpacity}
+            radius={10}
+            gradient={{ [taxisMinOpacity]: 'pink', 1.0: 'purple' }}
+          />
+        </FeatureGroup>
+      </LayersControl.Overlay>
+      <LayersControl.Overlay name="Hails 🔵" checked>
+        <FeatureGroup color="blue">
+          <HeatmapLayer
+            points={hails}
+            latitudeExtractor={(m) => m[0]}
+            longitudeExtractor={(m) => m[1]}
+            intensityExtractor={() => 3}
+            minOpacity={hailsMinOpacity}
+            radius={10}
+          />
+        </FeatureGroup>
+      </LayersControl.Overlay>
+    </BaseMap>
   );
 }
 
 HeatMap.propTypes = {
-  points: PropTypes.arrayOf(PropTypes.arrayOf([PropTypes.number, PropTypes.number])).isRequired,
-  center: PropTypes.arrayOf([PropTypes.number, PropTypes.number]),
-  zoom: PropTypes.number,
-  intensity: PropTypes.number,
-  minOpacity: PropTypes.number,
-  radius: PropTypes.number,
+  hails: PropTypes.arrayOf(PropTypes.arrayOf([PropTypes.number, PropTypes.number])).isRequired,
+  taxis: PropTypes.arrayOf(PropTypes.arrayOf([PropTypes.number, PropTypes.number])).isRequired,
+  hailsMinOpacity: PropTypes.number,
+  taxisMinOpacity: PropTypes.number,
 };
 
 HeatMap.defaultProps = {
-  center: MIDDLE_FRANCE, // Metropolitan France center
-  zoom: 6,
-  intensity: 3,
-  minOpacity: 0.8,
-  radius: 10,
+  hailsMinOpacity: 0.8,
+  taxisMinOpacity: 0.2,
 };
