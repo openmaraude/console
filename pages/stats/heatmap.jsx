@@ -29,7 +29,7 @@ export default function StatsHeatMap() {
   return (
     <Layout maxWidth="xl">
       <p>
-        Cette carte affiche les points chauds de demandes prise en charge 🔵
+        Cette carte affiche les points chauds de demandes prise en charge 🌈
         (abouties ou non) et des taxis en ligne 🟣.
       </p>
       {hailsError && <APIErrorAlert error={hailsError} />}

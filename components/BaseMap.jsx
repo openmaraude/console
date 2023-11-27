@@ -96,7 +96,7 @@ export default function BaseMap({
 }
 
 BaseMap.propTypes = {
-  center: PropTypes.arrayOf([PropTypes.number, PropTypes.number]),
+  center: PropTypes.arrayOf(PropTypes.number),
   zoom: PropTypes.number,
   children: PropTypes.node.isRequired,
 };

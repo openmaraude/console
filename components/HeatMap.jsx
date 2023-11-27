@@ -13,17 +13,41 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { FeatureGroup, LayersControl } from 'react-leaflet';
+import Box from '@mui/material/Box';
+import Slider from '@mui/material/Slider';
+import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
 
 import BaseMap from '@/components/BaseMap';
 import HeatmapLayer from '@/components/HeatmapLayer.ts';
+import MapControl from '@/components/MapControl';
 import { LYON } from '@/src/utils';
+
+const TaxisSlider = styled(Slider)({
+  color: 'purple',
+});
 
 export default function HeatMap({
   hails,
   taxis,
-  hailsMinOpacity,
-  taxisMinOpacity,
+  hailsOpacity,
+  taxisOpacity,
 }) {
+  const [hailsMinOpacity, setHailsMinOpacity] = React.useState(hailsOpacity);
+  const [taxisMinOpacity, setTaxisMinOpacity] = React.useState(taxisOpacity);
+  const [hailsLayer, setHailsLayer] = React.useState();
+  const [taxisLayer, setTaxisLayer] = React.useState();
+
+  const handlehailsOpacityChange = (e, value) => {
+    setHailsMinOpacity(value / 100);
+    hailsLayer.options.minOpacity = value / 100;
+  };
+
+  const handleTaxisOpacityChange = (e, value) => {
+    setTaxisMinOpacity(value / 100);
+    taxisLayer.options.minOpacity = value / 100;
+  };
+
   return (
     <BaseMap center={LYON} zoom={12}>
       <LayersControl.Overlay name="Taxis 🟣" checked>
@@ -35,11 +59,12 @@ export default function HeatMap({
             intensityExtractor={() => 3}
             minOpacity={taxisMinOpacity}
             radius={10}
-            gradient={{ [taxisMinOpacity]: 'pink', 1.0: 'purple' }}
+            gradient={{ 0.0: 'pink', 1.0: 'purple' }}
+            ref={setTaxisLayer}
           />
         </FeatureGroup>
       </LayersControl.Overlay>
-      <LayersControl.Overlay name="Hails 🔵" checked>
+      <LayersControl.Overlay name="Hails 🌈" checked>
         <FeatureGroup color="blue">
           <HeatmapLayer
             points={hails}
@@ -48,21 +73,34 @@ export default function HeatMap({
             intensityExtractor={() => 3}
             minOpacity={hailsMinOpacity}
             radius={10}
+            ref={setHailsLayer}
           />
         </FeatureGroup>
       </LayersControl.Overlay>
+      <MapControl>
+        <Box sx={{ width: 200 }}>
+          <Typography id="input-slider" gutterBottom>
+            Hails
+          </Typography>
+          <Slider aria-label="hails" value={hailsMinOpacity * 100} onChange={handlehailsOpacityChange} />
+          <Typography id="input-slider" gutterBottom>
+            Taxis
+          </Typography>
+          <TaxisSlider aria-label="taxis" value={taxisMinOpacity * 100} onChange={handleTaxisOpacityChange} />
+        </Box>
+      </MapControl>
     </BaseMap>
   );
 }
 
 HeatMap.propTypes = {
-  hails: PropTypes.arrayOf(PropTypes.arrayOf([PropTypes.number, PropTypes.number])).isRequired,
-  taxis: PropTypes.arrayOf(PropTypes.arrayOf([PropTypes.number, PropTypes.number])).isRequired,
-  hailsMinOpacity: PropTypes.number,
-  taxisMinOpacity: PropTypes.number,
+  hails: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
+  taxis: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
+  hailsOpacity: PropTypes.number,
+  taxisOpacity: PropTypes.number,
 };
 
 HeatMap.defaultProps = {
-  hailsMinOpacity: 0.8,
-  taxisMinOpacity: 0.2,
+  hailsOpacity: 0.8,
+  taxisOpacity: 0.2,
 };
