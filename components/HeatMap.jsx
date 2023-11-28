@@ -39,13 +39,13 @@ export default function HeatMap({
   const [taxisLayer, setTaxisLayer] = React.useState();
 
   const handlehailsOpacityChange = (e, value) => {
-    setHailsMinOpacity(value / 100);
-    hailsLayer.options.minOpacity = value / 100;
+    setHailsMinOpacity(value);
+    hailsLayer.options.minOpacity = value;
   };
 
   const handleTaxisOpacityChange = (e, value) => {
-    setTaxisMinOpacity(value / 100);
-    taxisLayer.options.minOpacity = value / 100;
+    setTaxisMinOpacity(value);
+    taxisLayer.options.minOpacity = value;
   };
 
   return (
@@ -79,14 +79,14 @@ export default function HeatMap({
       </LayersControl.Overlay>
       <MapControl>
         <Box sx={{ width: 200 }}>
-          <Typography id="input-slider" gutterBottom>
+          <Typography id="input-slider">
             Hails
           </Typography>
-          <Slider aria-label="hails" value={hailsMinOpacity * 100} onChange={handlehailsOpacityChange} size="small" />
-          <Typography id="input-slider" gutterBottom>
+          <Slider aria-label="hails" value={hailsMinOpacity} onChange={handlehailsOpacityChange} min={0.0} max={1.0} step={0.1} size="small" />
+          <Typography id="input-slider">
             Taxis
           </Typography>
-          <TaxisSlider aria-label="taxis" value={taxisMinOpacity * 100} onChange={handleTaxisOpacityChange} size="small" />
+          <TaxisSlider aria-label="taxis" value={taxisMinOpacity} onChange={handleTaxisOpacityChange} min={0.0} max={1.0} step={0.1} size="small" />
         </Box>
       </MapControl>
     </BaseMap>
