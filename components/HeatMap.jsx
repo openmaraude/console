@@ -82,11 +82,11 @@ export default function HeatMap({
           <Typography id="input-slider" gutterBottom>
             Hails
           </Typography>
-          <Slider aria-label="hails" value={hailsMinOpacity * 100} onChange={handlehailsOpacityChange} />
+          <Slider aria-label="hails" value={hailsMinOpacity * 100} onChange={handlehailsOpacityChange} size="small" />
           <Typography id="input-slider" gutterBottom>
             Taxis
           </Typography>
-          <TaxisSlider aria-label="taxis" value={taxisMinOpacity * 100} onChange={handleTaxisOpacityChange} />
+          <TaxisSlider aria-label="taxis" value={taxisMinOpacity * 100} onChange={handleTaxisOpacityChange} size="small" />
         </Box>
       </MapControl>
     </BaseMap>

@@ -31,7 +31,12 @@ export default function MapControl({ position, children }) {
 
   return (
     <div className={POSITION_CLASSES[position]}>
-      <div className="leaflet-control-layers leaflet-control" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+      <div
+        className="leaflet-control-layers leaflet-control"
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        style={{ padding: '0 10px' }}
+      >
         {children}
       </div>
     </div>
