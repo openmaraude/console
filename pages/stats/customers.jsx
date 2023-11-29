@@ -1,63 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import useSWR from 'swr';
-import { makeStyles } from 'tss-react/mui';
 import MenuItem from '@mui/material/MenuItem';
 
 import APIListTable from '@/components/APIListTable';
+import HailStatus from '@/components/HailStatus';
 import ReverseAddress from '@/components/ReverseAddress';
-import { requestList } from '@/src/api';
 import { TimeoutTextField, TimeoutSelectField } from '@/components/TimeoutForm';
+import { requestList } from '@/src/api';
 import { UserContext } from '@/src/auth';
 import { formatDate, formatPhoneNumber, hailTerminalStatus } from '@/src/utils';
 import { Layout } from './index';
 
-const useStyles = makeStyles()((theme) => ({
-  status: {
-    padding: theme.spacing(1),
-    borderRadius: '1vh',
-  },
-  success: {
-    color: '#17774f',
-    backgroundColor: '#d4edbc',
-  },
-  failure: {
-    color: '#b10202',
-    backgroundColor: '#ffcfc9',
-  },
-  neutral: {
-    color: 'black',
-    backgroundColor: '#e8eaed',
-  },
-}));
-
-function HailStatus({ status }) {
-  const { classes, cx } = useStyles();
-  let outcome;
-  switch (status) {
-    case 'finished':
-    case 'customer_on_board':
-      outcome = 'success';
-      break;
-    case 'failure':
-    case 'timeout_taxi':
-    case 'incident_taxi':
-    case 'declined_by_taxi':
-      outcome = 'failure';
-      break;
-    default:
-      outcome = 'neutral';
-  }
-
-  return <span className={cx(classes.status, classes[outcome])}>{status}</span>;
-}
-
-HailStatus.propTypes = {
-  status: PropTypes.string.isRequired,
-};
-
-export default function DashboardHails() {
+export default function StatsCustomers() {
   const userContext = React.useContext(UserContext);
   const listHails = (page, filters) => useSWR(
     ['/internal/customers', userContext.user.apikey, page, JSON.stringify(filters)],

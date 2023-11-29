@@ -15,6 +15,7 @@ import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 
 import APIErrorAlert from '@/components/APIErrorAlert';
+import HailStatus from '@/components/HailStatus';
 import { formatDate, formatLoc } from '@/src/utils';
 import { requestOne } from '@/src/api';
 import { UserContext } from '@/src/auth';
@@ -31,7 +32,7 @@ function Hail({ hail }) {
           </TableRow>
           <TableRow>
             <TableCell variant="head">Statut final</TableCell>
-            <TableCell>{hail.status}</TableCell>
+            <TableCell><HailStatus status={hail.status} /></TableCell>
           </TableRow>
           <TableRow>
             <TableCell variant="head">Adresse du client</TableCell>

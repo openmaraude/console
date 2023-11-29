@@ -6,8 +6,9 @@ import useSWR from 'swr';
 import Button from '@mui/material/Button';
 
 import APIListTable from '@/components/APIListTable';
-import { requestList } from '@/src/api';
 import { TimeoutTextField } from '@/components/TimeoutForm';
+import HailStatus from '@/components/HailStatus';
+import { requestList } from '@/src/api';
 import { UserContext } from '@/src/auth';
 import { formatDate } from '@/src/utils';
 import { Layout } from './index';
@@ -71,6 +72,13 @@ export default function DashboardHails() {
       sortable: false,
     },
     {
+      field: 'status',
+      headerName: 'Statut',
+      flex: 2,
+      sortable: false,
+      renderCell: ({ value }) => <HailStatus status={value} />,
+    },
+    {
       field: 'details',
       headerName: 'Détails',
       flex: 1,
@@ -86,7 +94,7 @@ export default function DashboardHails() {
   ];
 
   return (
-    <Layout>
+    <Layout maxWidth="xl">
       <APIListTable
         apiFunc={listHails}
         columns={columns}

@@ -25,6 +25,11 @@ import Typography from '@mui/material/Typography';
 
 import faker from 'faker/locale/fr';
 
+import APIErrorAlert from '@/components/APIErrorAlert';
+import APIListTable from '@/components/APIListTable';
+import HailStatus from '@/components/HailStatus';
+import ReverseAddress from '@/components/ReverseAddress';
+import SearchAddressDialog from '@/components/SearchAddressDialog';
 import {
   departementCode,
   formatDate,
@@ -32,10 +37,6 @@ import {
 } from '@/src/utils';
 import { request, requestOne, requestList } from '@/src/api';
 import { UserContext } from '@/src/auth';
-import APIErrorAlert from '@/components/APIErrorAlert';
-import APIListTable from '@/components/APIListTable';
-import ReverseAddress from '@/components/ReverseAddress';
-import SearchAddressDialog from '@/components/SearchAddressDialog';
 import { Layout } from './index';
 
 const useStyles = makeStyles()((theme) => ({
@@ -744,6 +745,7 @@ function TaxiHailsList({ taxi }) {
       headerName: 'Statut final',
       flex: 2,
       sortable: false,
+      renderCell: ({ value }) => <HailStatus status={value} />,
     },
     {
       field: 'actions',

@@ -33,11 +33,11 @@ const useStyles = makeStyles()((theme) => ({
   },
 }));
 
-export function Layout({ loading, children }) {
+export function Layout({ loading, children, ...props }) {
   const { classes } = useStyles();
 
   return (
-    <MenuLayout className={classes.root}>
+    <MenuLayout className={classes.root} {...props}>
       <Menu>
         <MenuItem title="Introduction" href="/integration" />
         <MenuItem title="Simuler application opérateur" href="/integration/operator" />
