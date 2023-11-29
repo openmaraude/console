@@ -31,7 +31,9 @@ Les requêtes de modifications (POST, PUT, PATCH) nécessitent de fournir le hea
 | Content-Type  | *application/json* |
 
 
-Toutes les réponses de l'API sont contenues dans le champ data de type liste à un élément. Par exemple :
+Toutes les dates sont au format **UTC** et doivent être converties en heure locale pour afficher à l'utilisateur final (comme le fait la console).
+
+Toutes les réponses de l'API sont contenues dans le champ `data` de type liste à un élément. Par exemple :
 
 
 ```shell
