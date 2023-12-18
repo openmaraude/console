@@ -558,7 +558,7 @@ function Taxi({ customer, taxi }) {
   // specify X-Logas header because integration account doesn't have the
   // permissions to view the item.
   const headers = (
-    taxi.operator === process.env.INTEGRATION_ACCOUNT_EMAIL
+    taxi.driver.professional_licence === "integration"
       ? { 'X-Logas': process.env.INTEGRATION_ACCOUNT_EMAIL }
       : {}
   );
@@ -671,6 +671,9 @@ Taxi.propTypes = {
     operator: PropTypes.string,
     status: PropTypes.string,
     last_update: PropTypes.number,
+    driver: PropTypes.shape({
+      professional_licence: PropTypes.string,
+    }),
   }).isRequired,
 };
 
