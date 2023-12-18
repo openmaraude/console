@@ -18,6 +18,6 @@ export default function ReverseAddress({ lon, lat }) {
 }
 
 ReverseAddress.propTypes = {
-  lon: PropTypes.number.isRequired,
-  lat: PropTypes.number.isRequired,
+  lon: PropTypes.number,
+  lat: PropTypes.number,
 };

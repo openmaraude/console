@@ -717,11 +717,13 @@ export default function IntegrationSearchPage() {
       if (!filters?.lon || !filters?.lat) {
         return null;
       }
-      // Inelegant but way simpler than extracting the values from the components
-      if (customer.lon !== filters.lon || customer.lat !== filters.lat) {
+      const lon = Number(filters.lon);
+      const lat = Number(filters.lat);
+      if (customer.lon !== lon || customer.lat !== lat) {
         setSelectedTaxi();
       }
-      setCustomer({ lon: filters.lon, lat: filters.lat });
+      // Inelegant but way simpler than extracting the values from the components
+      setCustomer({ lon, lat });
 
       return requestList(url, page, {
         token,
