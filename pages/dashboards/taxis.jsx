@@ -65,10 +65,18 @@ export default function DashboardHails() {
     {
       field: 'driver',
       headerName: 'Chauffeur',
-      flex: 1,
+      flex: 2,
       sortable: false,
       valueFormatter: ({ value }) => `${value.first_name} ${value.last_name}`,
     },
+    {
+      field: 'characteristics',
+      headerName: 'PMR',
+      flex: 1,
+      sortable: false,
+      valueGetter: ({ row }) => row.vehicle.characteristics.indexOf('pmr'),
+      valueFormatter: ({ value }) => value !== -1 ? '✔' : '',
+    }
   ];
 
   return (
