@@ -75,8 +75,8 @@ export default function DashboardHails() {
       flex: 1,
       sortable: false,
       valueGetter: ({ row }) => row.vehicle.characteristics.indexOf('pmr'),
-      valueFormatter: ({ value }) => value !== -1 ? '✔' : '',
-    }
+      valueFormatter: ({ value }) => (value !== -1 ? '✔' : ''),
+    },
   ];
 
   return (
