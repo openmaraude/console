@@ -173,6 +173,13 @@ export default function StatsHails() {
                   <TableCell>{data.hails_timeout_customer.six_months_ago}</TableCell>
                   <TableCell>{data.hails_timeout_customer.twelve_months_ago}</TableCell>
                 </TableRow>
+                <TableRow>
+                  <TableCell>Distance moyenne entre le taxi et le client</TableCell>
+                  <TableCell>{Math.round(data.average_hail_distance.today)}</TableCell>
+                  <TableCell>{Math.round(data.average_hail_distance.three_months_ago)}</TableCell>
+                  <TableCell>{Math.round(data.average_hail_distance.six_months_ago)}</TableCell>
+                  <TableCell>{Math.round(data.average_hail_distance.twelve_months_ago)}</TableCell>
+                </TableRow>
               </TableBody>
             </Table>
           </CardContent>
@@ -208,7 +215,6 @@ export default function StatsHails() {
 
         <Card>
           <CardContent>
-
             <Typography variant="h5">Moyenne de courses distribuées</Typography>
             <Table>
               <TableHead>
