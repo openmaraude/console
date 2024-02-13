@@ -62,7 +62,7 @@ export default function StatsCustomers() {
       flex: 1,
       sortable: false,
       valueGetter: ({ row }) => `${row.added_at}Z`,
-      valueFormatter: ({ value }) => formatDate(value, 'date')
+      valueFormatter: ({ value }) => formatDate(value, 'date'),
     },
     {
       field: 'added_at_time',

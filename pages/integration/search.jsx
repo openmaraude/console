@@ -783,7 +783,7 @@ export default function IntegrationSearchPage() {
     {
       field: 'operator',
       headerName: 'Opérateur',
-      flex: 1,
+      flex: 2,
       sortable: false,
     },
     {
@@ -798,20 +798,15 @@ export default function IntegrationSearchPage() {
       headerName: 'Distance',
       flex: 1,
       sortable: false,
-      valueFormatter: ({ value }) => `${value.toFixed(0)} mètres`,
+      valueFormatter: ({ value }) => `${value.toFixed(0)} m.`,
     },
     {
-      field: 'vehicle',
-      headerName: 'Immat',
-      flex: 1,
+      field: 'vasp_handicap',
+      headerName: "VASP handicap",
+      flex: 2,
       sortable: false,
-      valueFormatter: ({ value }) => value.licence_plate,
-    },
-    {
-      field: 'status',
-      headerName: 'Statut',
-      flex: 1,
-      sortable: false,
+      valueGetter: ({ row }) => row.vehicle.characteristics.indexOf('vasp_handicap'),
+      valueFormatter: ({ value }) => (value !== -1 ? "oui" : ''),
     },
     {
       field: 'actions',

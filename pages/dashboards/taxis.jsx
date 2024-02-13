@@ -70,12 +70,12 @@ export default function DashboardHails() {
       valueFormatter: ({ value }) => `${value.first_name} ${value.last_name}`,
     },
     {
-      field: 'characteristics',
-      headerName: 'PMR',
-      flex: 1,
+      field: 'vasp_handicap',
+      headerName: "VASP handicap",
+      flex: 2,
       sortable: false,
-      valueGetter: ({ row }) => row.vehicle.characteristics.indexOf('pmr'),
-      valueFormatter: ({ value }) => (value !== -1 ? '✔' : ''),
+      valueGetter: ({ row }) => row.vehicle.characteristics.indexOf('vasp_handicap'),
+      valueFormatter: ({ value }) => (value !== -1 ? 'oui' : ''),
     },
   ];
 

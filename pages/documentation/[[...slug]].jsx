@@ -116,6 +116,7 @@ const ALL_PAGES = [
       { title: "Déclarer un incident", slug: 'declare_incident' },
       { title: "Bannir un client qui abuse du service", slug: 'ban' },
       { title: "Mettre à jour véhicule, chauffeur, ADS", slug: 'update' },
+      { title: "Prise en charge des passagers en fauteuil roulant", slug: 'vasp_handicap' },
       { title: "Mon taxi n'apparaît pas sur la carte !", slug: 'help_taxi_map' },
     ],
   },

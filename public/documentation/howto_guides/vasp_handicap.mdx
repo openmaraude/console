@@ -1,0 +1,60 @@
+import InfoBox from '@/components/InfoBox';
+
+#### Prise en charge des passagers utilisateurs de fauteuil roulant
+
+Les véhicules aménagés pour le transport des passagers en fauteuil roulant remplissent deux critères sur leur carte grise :
+
+- catégorie VASP (champ J1)
+- carrosserie "handicap" (champ J3)
+
+Cette caractéristique peut être inscrite dans le registre afin que les application client puissent afficher cette information, ou même ne lister que les taxis adaptés.
+
+<InfoBox>
+Les véhicules uniquement VASP (véhicule spécialisé) ne sont pas concernés.
+</InfoBox>
+
+Que vous inscriviez un nouveau véhicule ou souhaitiez mettre à jour l'information sur votre flotte existante, l'endpoint est le même :
+
+*PUT /vehicles*
+
+```json
+{
+  "data": [
+    {
+      "licence_plate": "AB-123-CD",
+      "vasp_handicap": true
+    }
+  ]
+}
+```
+
+L'API répondra HTTP 201 sur une création, et 200 sur une mise à jour.
+
+<InfoBox>
+Attention au champ `licence_plate` qui est l'identifiant unique. Si vous mettez à jour avec une immatriculation sous une forme différente (avec ou sans tirets, majuscules ou minuscules), un nouveau véhicule sera créé avec un `vehicle_id` différent.
+</InfoBox>
+
+
+##### Lister les taxis VASP handicap
+
+Les taxis disponibles autour du client auront ce champ `vasp_handicap` dans leurs caractéristiques :
+
+```json
+{
+  "data": [
+    {
+      "id": "JeSqYLp",
+      [...]
+      "vehicle": {
+        [...]
+        "characteristics": {
+            [...]
+            "vasp_handicap": true
+        }
+      }
+    }
+  ]
+}
+```
+
+L'absence de ce champ signifie que l'information n'est pas connue, mais la probabilité que le véhicule soit aménagé est évidemment faible.

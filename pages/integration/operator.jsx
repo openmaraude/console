@@ -948,6 +948,7 @@ export default function IntegrationOperatorPage() {
       const vehicle = await doPOSTRequest('/vehicles', {
         color: faker.vehicle.color(),
         licence_plate: faker.vehicle.vrm(),
+        vasp_handicap: true,
       });
 
       const ads = await doPOSTRequest('/ads', {

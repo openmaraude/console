@@ -1,5 +1,5 @@
 // Format date as a human readable string.
-export function formatDate(date, display=null) {
+export function formatDate(date, display = null) {
   if (!date) {
     return null;
   }
