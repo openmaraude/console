@@ -57,12 +57,20 @@ export default function StatsCustomers() {
 
   const columns = [
     {
-      field: 'added_at',
-      headerName: 'Date et heure locale',
+      field: 'added_at_date',
+      headerName: 'Date',
       flex: 1,
       sortable: false,
-      valueGetter: ({ value }) => `${value}Z`,
-      valueFormatter: ({ value }) => formatDate(value),
+      valueGetter: ({ row }) => `${row.added_at}Z`,
+      valueFormatter: ({ value }) => formatDate(value, 'date')
+    },
+    {
+      field: 'added_at_time',
+      headerName: 'Heure locale',
+      flex: 1,
+      sortable: false,
+      valueGetter: ({ row }) => `${row.added_at}Z`,
+      valueFormatter: ({ value }) => formatDate(value, 'time'),
     },
     {
       field: 'id',

@@ -1,7 +1,13 @@
 // Format date as a human readable string.
-export function formatDate(date) {
+export function formatDate(date, display=null) {
   if (!date) {
     return null;
+  }
+  if (display === 'date') {
+    return new Date(date).toLocaleDateString('fr');
+  }
+  if (display === 'time') {
+    return new Date(date).toLocaleTimeString('fr');
   }
   return new Date(date).toLocaleString('fr');
 }
