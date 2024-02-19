@@ -88,7 +88,9 @@ export default function StatsCustomers() {
       field: 'Adresse de prise en charge',
       flex: 2,
       sortable: false,
-      renderCell: ({ row }) => <ReverseAddress lon={row.customer_lon} lat={row.customer_lat} />,
+      valueGetter: ({ row }) => ({lon: row.customer_lon, lat: row.customer_lat}),
+      valueFormatter: ({ value }) => `${value.lon}, ${value.lat}`,
+      renderCell: ({ value }) => <ReverseAddress lon={value.lon} lat={value.lat} />,
     },
     {
       field: 'customer_phone_number',
@@ -131,6 +133,7 @@ export default function StatsCustomers() {
         apiFunc={listHails}
         columns={columns}
         filters={filters}
+        enableExport
       />
     </Layout>
   );

@@ -6,7 +6,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
-import { DataGrid, GridOverlay } from '@mui/x-data-grid';
+import { DataGrid, GridOverlay, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
 import LinearProgress from '@mui/material/LinearProgress';
 import { makeStyles } from 'tss-react/mui';
 
@@ -39,6 +39,14 @@ function LoadingOverlay() {
   );
 }
 
+function CustomToolbar () {
+  return (
+    <GridToolbarContainer>
+      <GridToolbarExport />
+    </GridToolbarContainer>
+  );
+}
+
 /*
  * Call /users and display a table to log as users.
  */
@@ -47,6 +55,7 @@ export default function APIListTable({
   filters,
   columns,
   hideUntilFiltersFilled,
+  enableExport,
 }) {
   const { classes } = useStyles();
   const [request, setRequest] = React.useState({});
@@ -101,8 +110,10 @@ export default function APIListTable({
           paginationMode="server"
           components={{
             LoadingOverlay,
+            Toolbar: enableExport ? CustomToolbar : null,
           }}
           loading={error || !data}
+          checkboxSelection={enableExport}
         />
       )}
     </>
@@ -112,6 +123,7 @@ export default function APIListTable({
 APIListTable.defaultProps = {
   filters: null,
   hideUntilFiltersFilled: false,
+  enableExport: false,
 };
 
 APIListTable.propTypes = {
@@ -122,4 +134,5 @@ APIListTable.propTypes = {
     headerName: PropTypes.string,
   })).isRequired,
   hideUntilFiltersFilled: PropTypes.bool,
+  enableExport: PropTypes.bool,
 };
