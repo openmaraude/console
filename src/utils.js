@@ -1,3 +1,44 @@
+export class CallQueue {
+  constructor(delay) {
+    this.queue = [];
+    this.delay = delay;
+    this.running = false;
+  }
+
+  add(func, args, callback) {
+    this.queue.push({ func, args, callback });
+    if (!this.running) {
+      this.running = true;
+      this.run();
+    }
+  }
+
+  async run() {
+    const processQueue = async () => {
+      if (!this.queue.length) {
+        this.running = false;
+        return;
+      }
+      const { func, args, callback } = this.queue.shift();
+      try {
+        const data = await func(args);
+        if (callback && typeof callback === 'function') {
+          callback(data);
+        }
+      } catch (error) {
+        if (callback && typeof callback === 'function') {
+          callback(error);
+        }
+      }
+
+      // Wait before recursively processing the next call in the queue
+      setTimeout(processQueue, this.delay);
+    };
+
+    processQueue();
+  }
+}
+
 // Format date as a human readable string.
 export function formatDate(date, display = null) {
   if (!date) {

@@ -6,7 +6,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
-import { DataGrid, GridOverlay, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridOverlay,
+  GridToolbarContainer,
+  GridToolbarExport,
+} from '@mui/x-data-grid';
 import LinearProgress from '@mui/material/LinearProgress';
 import { makeStyles } from 'tss-react/mui';
 
@@ -39,7 +44,7 @@ function LoadingOverlay() {
   );
 }
 
-function CustomToolbar () {
+function CustomToolbar() {
   return (
     <GridToolbarContainer>
       <GridToolbarExport />
@@ -56,6 +61,7 @@ export default function APIListTable({
   columns,
   hideUntilFiltersFilled,
   enableExport,
+  ...props
 }) {
   const { classes } = useStyles();
   const [request, setRequest] = React.useState({});
@@ -69,7 +75,7 @@ export default function APIListTable({
     (filter) => request.filters?.[filter.props.name],
   ).every((v) => v);
 
-  const handlePageChange = (page) => {
+  const handlePaginationModelChange = ({ page }) => {
     setRequest({ ...request, page });
   };
 
@@ -95,7 +101,7 @@ export default function APIListTable({
         <DataGrid
           autoHeight
           disableColumnMenu
-          disableSelectionOnClick
+          disableRowSelectionOnClick
           hideFooterSelectedRowCount
           columns={columns}
           rows={data?.data || []}
@@ -103,17 +109,25 @@ export default function APIListTable({
           // with the pagination information.
           // If there is no "meta" attribute, then assume the list endpoint is
           // not paginated and returns all the items (like GET /taxis).
-          pageSize={data ? (data.meta?.per_page || data.length) : 0}
           rowCount={data ? (data.meta?.total || data.length) : 0}
-          page={request.page}
-          onPageChange={handlePageChange}
+          pagination={request}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                page: 0,
+                pageSize: 30,
+              },
+            },
+          }}
+          onPaginationModelChange={handlePaginationModelChange}
           paginationMode="server"
-          components={{
-            LoadingOverlay,
-            Toolbar: enableExport ? CustomToolbar : null,
+          slots={{
+            loadingOverlay: LoadingOverlay,
+            toolbar: enableExport ? CustomToolbar : null,
           }}
           loading={error || !data}
           checkboxSelection={enableExport}
+          {...props}
         />
       )}
     </>
