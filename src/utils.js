@@ -51,8 +51,12 @@ export async function reverseGeocode({ lon, lat }) {
       return resp.statusText;
     }
     return resp.json().then((geoJSON) => {
-      const { label } = geoJSON.features[0].properties;
-      return label || "(adresse introuvable)";
+      const result = geoJSON.features[0];
+      if (!result) {
+        return "(adresse introuvable)";
+      }
+      const { properties: { label } } = result;
+      return label;
     });
   });
 }

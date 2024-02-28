@@ -145,8 +145,8 @@ export default function CreateIntegrationTaxi({ open, onClose }) {
       <Dialog onClose={onClose} open={open} PaperProps={{ component: 'form' }}>
         <DialogTitle>Créer un nouveau taxi</DialogTitle>
         <DialogContent>
-          <p>
-            <FormControl>
+          <FormControl>
+            <p>
               <FormLabel>Nombre de places</FormLabel>
               <Slider
                 name="nb_seats"
@@ -157,33 +157,31 @@ export default function CreateIntegrationTaxi({ open, onClose }) {
                 valueLabelDisplay="auto"
                 onChange={handleTaxiRequestChange}
               />
-            </FormControl>
-          </p>
-          <p>
-            <FormControl>
-              <FormLabel>Caractéristiques</FormLabel>
-              <FormGroup row>
-                <FormControlLabel label="Chèque accepté" control={<Checkbox name="bank_check_accepted" checked={taxiRequest.bank_check_accepted} onChange={handleTaxiRequestChange} />} />
-                <FormControlLabel label="Siège bébé" control={<Checkbox name="baby_seat" checked={taxiRequest.baby_seat} onChange={handleTaxiRequestChange} />} />
-                <FormControlLabel label="Vélo accepté" control={<Checkbox name="bike_accepted" checked={taxiRequest.bike_accepted} onChange={handleTaxiRequestChange} />} />
-                <FormControlLabel label="Animal de compagnie accepté" control={<Checkbox name="pet_accepted" checked={taxiRequest.pet_accepted} onChange={handleTaxiRequestChange} />} />
-                <FormControlLabel label="American Express acceptée" control={<Checkbox name="amex_accepted" checked={taxiRequest.amex_accepted} onChange={handleTaxiRequestChange} />} />
-                <FormControlLabel label="Wi-Fi à bord" control={<Checkbox name="wifi" checked={taxiRequest.wifi} onChange={handleTaxiRequestChange} />} />
-                <FormControlLabel label="VASP handicap*" control={<Checkbox name="vasp_handicap" checked={taxiRequest.vasp_handicap} onChange={handleTaxiRequestChange} />} />
-              </FormGroup>
-              <FormHelperText>
-                * Carte grise catégorie VASP (J1) carrosserie handicap (J3)
-              </FormHelperText>
-            </FormControl>
-          </p>
-          <p>
-            <FormControl>
+            </p>
+          </FormControl>
+          <FormControl>
+            <FormLabel>Caractéristiques</FormLabel>
+            <FormGroup row>
+              <FormControlLabel label="Chèque accepté" control={<Checkbox name="bank_check_accepted" checked={taxiRequest.bank_check_accepted} onChange={handleTaxiRequestChange} />} />
+              <FormControlLabel label="Siège bébé" control={<Checkbox name="baby_seat" checked={taxiRequest.baby_seat} onChange={handleTaxiRequestChange} />} />
+              <FormControlLabel label="Vélo accepté" control={<Checkbox name="bike_accepted" checked={taxiRequest.bike_accepted} onChange={handleTaxiRequestChange} />} />
+              <FormControlLabel label="Animal de compagnie accepté" control={<Checkbox name="pet_accepted" checked={taxiRequest.pet_accepted} onChange={handleTaxiRequestChange} />} />
+              <FormControlLabel label="American Express acceptée" control={<Checkbox name="amex_accepted" checked={taxiRequest.amex_accepted} onChange={handleTaxiRequestChange} />} />
+              <FormControlLabel label="Wi-Fi à bord" control={<Checkbox name="wifi" checked={taxiRequest.wifi} onChange={handleTaxiRequestChange} />} />
+              <FormControlLabel label="VASP handicap*" control={<Checkbox name="vasp_handicap" checked={taxiRequest.vasp_handicap} onChange={handleTaxiRequestChange} />} />
+            </FormGroup>
+            <FormHelperText>
+              * Carte grise catégorie VASP (J1) carrosserie handicap (J3)
+            </FormHelperText>
+          </FormControl>
+          <FormControl>
+            <p>
               <FormLabel>
                 Commune de délivrance de l'ADS qui détermine la zone de prise en charge
               </FormLabel>
-              <Button variant="contained" color="secondary" size="small" onClick={() => setSearchDialog(true)}>{taxiRequest.name}</Button>
-            </FormControl>
-          </p>
+              <Button fullWidth variant="contained" color="secondary" size="small" onClick={() => setSearchDialog(true)}>{taxiRequest.name}</Button>
+            </p>
+          </FormControl>
           {error && <APIErrorAlert error={error} />}
         </DialogContent>
         <DialogActions>
