@@ -2,18 +2,18 @@ import React from 'react';
 import PropTypes from "prop-types";
 
 import Link from 'next/link';
-
 import useSWR from 'swr';
+import { makeStyles } from 'tss-react/mui';
 
 import GpsFixedTwoTone from '@mui/icons-material/GpsFixedTwoTone';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import Chip from '@mui/material/Chip';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import LinearProgress from '@mui/material/LinearProgress';
-import { makeStyles } from 'tss-react/mui';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Table from '@mui/material/Table';
@@ -23,15 +23,13 @@ import TableRow from '@mui/material/TableRow';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-import faker from 'faker/locale/fr';
-
 import APIErrorAlert from '@/components/APIErrorAlert';
 import APIListTable from '@/components/APIListTable';
+import CreateIntegrationTaxi from '@/components/CreateIntegrationTaxi';
 import HailStatus from '@/components/HailStatus';
 import ReverseAddress from '@/components/ReverseAddress';
 import SearchAddressDialog from '@/components/SearchAddressDialog';
 import {
-  departementCode,
   formatDate,
   formatLoc,
 } from '@/src/utils';
@@ -79,6 +77,26 @@ const useStyles = makeStyles()((theme) => ({
     },
   },
 }));
+
+function VehicleCharacteristics({ vehicle }) {
+  const { characteristics } = vehicle;
+
+  return (
+    <>
+      {characteristics.indexOf('bank_check_accepted') >= 0 && <Chip label="Chèque accepté" />}
+      {characteristics.indexOf('baby_seat') >= 0 && <Chip label="Siège bébé" />}
+      {characteristics.indexOf('bike_accepted') >= 0 && <Chip label="Vélo accepté" />}
+      {characteristics.indexOf('pet_accepted') >= 0 && <Chip label="Animal de compagnie accepté" />}
+      {characteristics.indexOf('amex_accepted') >= 0 && <Chip label="American Express acceptée" />}
+      {characteristics.indexOf('wifi') >= 0 && <Chip label="Wi-Fi à bord" />}
+      {characteristics.indexOf('vasp_handicap') >= 0 && <Chip label="VASP handicap" />}
+    </>
+  );
+}
+
+VehicleCharacteristics.propTypes = {
+  vehicle: PropTypes.shape().isRequired,
+};
 
 // Section to change taxi status
 function TaxiSetNewStatus({ taxi }) {
@@ -783,6 +801,7 @@ TaxiHailsList.propTypes = {
     id: PropTypes.string,
   }).isRequired,
 };
+
 function Taxi({ taxi }) {
   const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
@@ -834,6 +853,14 @@ function Taxi({ taxi }) {
       <TaxiSection>
         <Table>
           <TableBody>
+            <TableRow>
+              <TableCell variant="head">Caractéristiques</TableCell>
+              <TableCell>
+                <Chip label={`${data.vehicle.nb_seats || '?'} places`} variant="outlined" />
+                <VehicleCharacteristics vehicle={data.vehicle} />
+              </TableCell>
+            </TableRow>
+
             <TableRow>
               <TableCell variant="head">Statut</TableCell>
               <TableCell>
@@ -896,83 +923,11 @@ export default function IntegrationOperatorPage() {
     }),
     { refreshInterval: 1000 },
   );
-  const [error, setError] = React.useState();
   const [selectedTaxi, setSelectedTaxi] = React.useState();
-  const [integrationTaxiRequest, setTaxiRequest] = React.useState({ insee: '75056', name: 'Paris (75)' });
-  const [searchDialog, setSearchDialog] = React.useState(false);
 
-  const onSearch = (address) => {
-    if (address && address.properties && address.properties.citycode) {
-      const depCode = departementCode(address.properties.citycode);
-      setTaxiRequest({
-        insee: address.properties.citycode,
-        name: `${address.properties.city} (${depCode})`,
-      });
-    }
-    setSearchDialog(false);
-  };
-
-  // Create new taxi: POST /ads, POST /drivers, POST /vehicles, POST /taxis.
-  // Let SWR refresh the table after refreshInterval seconds.
-  const createIntegrationTaxi = async () => {
-    // Helper to send POST request.
-    function doPOSTRequest(endpoint, data) {
-      return requestOne(endpoint, {
-        token: userContext.user.apikey,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Logas': process.env.INTEGRATION_ACCOUNT_EMAIL,
-        },
-        body: JSON.stringify({
-          data: [{
-            ...data,
-          }],
-        }),
-      });
-    }
-
-    const birthDate = new Date(faker.date.between(1950, 2001));
-
-    try {
-      const driver = await doPOSTRequest('/drivers', {
-        first_name: faker.name.firstName(),
-        last_name: faker.name.lastName(),
-        birth_date: `${birthDate.getFullYear()}-${birthDate.getMonth() + 1}-${birthDate.getDate()}`,
-        professional_licence: `fake-${(Math.random() * 10 ** 12).toFixed(0)}`,
-        departement: {
-          nom: 'Paris',
-        },
-      });
-
-      const vehicle = await doPOSTRequest('/vehicles', {
-        color: faker.vehicle.color(),
-        licence_plate: faker.vehicle.vrm(),
-        vasp_handicap: true,
-      });
-
-      const ads = await doPOSTRequest('/ads', {
-        insee: integrationTaxiRequest.insee,
-        numero: (Math.random() * 10 ** 9).toFixed(0).toString(),
-      });
-
-      await doPOSTRequest('/taxis', {
-        ads: {
-          insee: ads.insee,
-          numero: ads.numero,
-        },
-        driver: {
-          departement: driver.departement.numero,
-          professional_licence: driver.professional_licence,
-        },
-        vehicle: {
-          licence_plate: vehicle.licence_plate,
-        },
-      });
-      setError(null);
-    } catch (err) {
-      setError(err);
-    }
+  const [createTaxiDialog, setCreateTaxiDialog] = React.useState(false);
+  const handleCreateTaxiDialog = () => {
+    setCreateTaxiDialog(false);
   };
 
   const columns = [
@@ -1041,7 +996,8 @@ export default function IntegrationOperatorPage() {
       </p>
 
       <blockquote>
-        Attention ! notre opérateur de test neotaxi n'accepte plus automatiquement les courses.
+        <strong>Attention !</strong> Notre opérateur de test neotaxi n'accepte plus
+        automatiquement les courses.
         Dans la liste des courses du taxi à qui l'application client a envoyé sa demande,
         quand votre demande de course apparaît, il faut choisir manuellement "accepter" ou "refuser"
         quand la course est dans l'état <strong>received_by_taxi</strong>.
@@ -1054,6 +1010,8 @@ export default function IntegrationOperatorPage() {
       </p>
 
       <section className={classes.section}>
+        <Button variant="outlined" onClick={() => setCreateTaxiDialog(true)} sx={{ float: 'right' }}>Créer un taxi ?</Button>
+
         <Typography variant="h5">Lister les taxis de test disponibles</Typography>
 
         <p>
@@ -1064,18 +1022,6 @@ export default function IntegrationOperatorPage() {
           géolocalisation et le statut des courses reçues.
         </p>
 
-        <p>
-          Vous pouvez aussi&nbsp;
-          <Button variant="contained" size="small" onClick={createIntegrationTaxi}>
-            créer nouveau taxi
-          </Button>
-          &nbsp;dans la ville de&nbsp;
-          {integrationTaxiRequest.name} ou&nbsp;
-          <Button variant="contained" color="secondary" size="small" onClick={() => setSearchDialog(true)}>Changer la ville</Button>
-        </p>
-
-        {error && <APIErrorAlert error={error} />}
-
         <APIListTable
           apiFunc={listIntegrationTaxis}
           columns={columns}
@@ -1083,7 +1029,7 @@ export default function IntegrationOperatorPage() {
       </section>
 
       {selectedTaxi && <Taxi taxi={selectedTaxi} />}
-      <SearchAddressDialog open={searchDialog} onClose={onSearch} type="municipality" dialogContentText="" />
+      <CreateIntegrationTaxi open={createTaxiDialog} onClose={handleCreateTaxiDialog} />
     </Layout>
   );
 }
