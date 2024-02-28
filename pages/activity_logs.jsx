@@ -50,7 +50,7 @@ function ActivityLogs() {
         InputLabelProps={{ shrink: true }}
       >
         <MenuItem value=""><em>Toutes</em></MenuItem>
-        {Object.entries(resources).map(([v, label]) => <MenuItem value={v}>{label}</MenuItem>)}
+        {Object.entries(resources).map(([v, label]) => <MenuItem key={`resource-${v}`} value={v}>{label}</MenuItem>)}
       </TimeoutSelectField>
       <TimeoutTextField
         label="ID ressource"
@@ -68,7 +68,7 @@ function ActivityLogs() {
         sx={{ minWidth: 400 }}
       >
         <MenuItem value=""><em>Toutes</em></MenuItem>
-        {actions.map(({ name, label }) => <MenuItem value={name}>{label}</MenuItem>)}
+        {actions.map(({ name, label }) => <MenuItem key={`action-${name}`} value={name}>{label}</MenuItem>)}
       </TimeoutSelectField>
     </>
   );

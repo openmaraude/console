@@ -53,7 +53,7 @@ export default function StatsCustomers() {
         InputLabelProps={{ shrink: true }}
       >
         <MenuItem value=""><em>Tous</em></MenuItem>
-        {hailTerminalStatus.map((st) => <MenuItem value={st}>{st}</MenuItem>)}
+        {hailTerminalStatus.map((st) => <MenuItem key={`status-${st}`} value={st}>{st}</MenuItem>)}
       </TimeoutSelectField>
     </>
   );
