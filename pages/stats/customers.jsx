@@ -12,34 +12,8 @@ import {
   formatDate,
   formatPhoneNumber,
   hailTerminalStatus,
-  reverseGeocode,
-  CallQueue,
 } from '@/src/utils';
 import { Layout } from './index';
-
-function FillCustomerAddress({
-  row,
-  value,
-  queue,
-  customerAddresses,
-  setCustomerAddresses,
-}) {
-  const lon = row.customer_lon;
-  const lat = row.customer_lat;
-
-  React.useEffect(() => {
-    queue.add(reverseGeocode, { lon, lat }, (address) => {
-      // Ugly but I had to in order to get the whole table filled
-      // Might be a race condition or something, but just editing one by one
-      // only ended with a couple of addresses at best
-      customerAddresses[`${lon}, ${lat}`] = address;
-      // But still send the event to refresh the data grid
-      setCustomerAddresses({ ...customerAddresses });
-    });
-  }, [lon, lat]);
-
-  return value;
-}
 
 export default function StatsCustomers() {
   const userContext = React.useContext(UserContext);
@@ -84,9 +58,6 @@ export default function StatsCustomers() {
     </>
   );
 
-  const [customerAddresses, setCustomerAddresses] = React.useState({});
-  const queue = new CallQueue(100); // Wait 1/10 second between each BAN call
-
   const columns = [
     {
       field: 'added_at_date',
@@ -121,19 +92,6 @@ export default function StatsCustomers() {
       headerName: 'Adresse de prise en charge',
       flex: 2,
       sortable: false,
-      // Make this column "editable" by moving its state to an object
-      // So that once the coordinates are resolved to an address, we edit the source table.
-      // Anything from valueFormatter to renderCell is not part of the clipboard or CSV export.
-      valueGetter: ({ row }) => customerAddresses[`${row.customer_lon}, ${row.customer_lat}`],
-      // customerAddresses will be filled by the component below
-      renderCell: (params) => (
-        <FillCustomerAddress
-          {...params}
-          queue={queue}
-          customerAddresses={customerAddresses}
-          setCustomerAddresses={setCustomerAddresses}
-        />
-      ),
     },
     {
       field: 'customer_phone_number',
