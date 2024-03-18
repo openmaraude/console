@@ -174,6 +174,50 @@ export default function StatsHails() {
                   <TableCell>{data.hails_timeout_customer.twelve_months_ago}</TableCell>
                 </TableRow>
                 <TableRow>
+                  <TableCell>Nombre de courses en incident_taxi</TableCell>
+                  <TableCell>{data.hails_incident_taxi.today}</TableCell>
+                  <TableCell>{data.hails_incident_taxi.three_months_ago}</TableCell>
+                  <TableCell>{data.hails_incident_taxi.six_months_ago}</TableCell>
+                  <TableCell>{data.hails_incident_taxi.twelve_months_ago}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Nombre de courses en incident_customer</TableCell>
+                  <TableCell>{data.hails_incident_customer.today}</TableCell>
+                  <TableCell>{data.hails_incident_customer.three_months_ago}</TableCell>
+                  <TableCell>{data.hails_incident_customer.six_months_ago}</TableCell>
+                  <TableCell>{data.hails_incident_customer.twelve_months_ago}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>
+                    Nombre de courses en timeout_accepted_customer<br />
+                    <small>(client pas déclaré à bord après 30 min)</small>
+                  </TableCell>
+                  <TableCell>{data.hails_timeout_accepted_by_customer.today}</TableCell>
+                  <TableCell>{data.hails_timeout_accepted_by_customer.three_months_ago}</TableCell>
+                  <TableCell>{data.hails_timeout_accepted_by_customer.six_months_ago}</TableCell>
+                  <TableCell>{data.hails_timeout_accepted_by_customer.twelve_months_ago}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Nombre de courses en failure</TableCell>
+                  <TableCell>{data.hails_failure.today}</TableCell>
+                  <TableCell>{data.hails_failure.three_months_ago}</TableCell>
+                  <TableCell>{data.hails_failure.six_months_ago}</TableCell>
+                  <TableCell>{data.hails_failure.twelve_months_ago}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell />
+                  <TableCell>Auj.</TableCell>
+                  <TableCell>il y a 3 mois</TableCell>
+                  <TableCell>il y a 6 mois</TableCell>
+                  <TableCell>il y a 12 mois</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow>
                   <TableCell>Distance moyenne entre le taxi et le client</TableCell>
                   <TableCell>{Math.round(data.average_hail_distance.today)}</TableCell>
                   <TableCell>{Math.round(data.average_hail_distance.three_months_ago)}</TableCell>
