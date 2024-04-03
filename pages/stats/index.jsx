@@ -2,9 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { makeStyles } from 'tss-react/mui';
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
 import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
 import FormLabel from '@mui/material/FormLabel';
@@ -186,182 +190,215 @@ export function Layout({
             <MyMenuItem title="Suivi client" href="/stats/customers" />
             <MyMenuItem title="Heatmap" href="/stats/heatmap" />
             {filters && (
-              <Stack spacing={4} sx={{ mt: 4 }}>
-                <Typography variant="inherit">Rechercher par</Typography>
-                <FormGroup>
-                  <FormLabel>Métropole</FormLabel>
-                  <FormControl>
-                    <InputLabel>Grenoble, Lyon...</InputLabel>
-                    <Select
-                      variant="standard"
-                      value={metropole}
-                      onChange={({ target: { value } }) => {
-                        setMetropole(value);
-                        if (value) {
-                          setFilters({ ...filters, insee: metropoles[value].insee });
-                        } else {
-                          setFilters({ ...filters, insee: [] });
-                        }
-                      }}
-                    >
-                      <MenuItem value="">&nbsp;</MenuItem>
-                      {Object.entries(metropoles).map(([key, value]) => <MenuItem value={key} key={`metro-${key}`}>{value.name}</MenuItem>)}
-                    </Select>
-                  </FormControl>
-                </FormGroup>
-                <FormGroup>
-                  <FormLabel>Région ou collectivité</FormLabel>
-                  <FormControl>
-                    <InputLabel>Grand Est...</InputLabel>
-                    <Select
-                      variant="standard"
-                      value={region}
-                      onChange={({ target: { value } }) => {
-                        setRegion(value);
-                        if (value) {
+              <>
+                <Stack spacing={4} sx={{ mt: 4 }}>
+                  <Typography variant="inherit">Rechercher par...</Typography>
+                  <FormGroup>
+                    <FormLabel>Métropole</FormLabel>
+                    <FormControl>
+                      <InputLabel>Grenoble, Lyon...</InputLabel>
+                      <Select
+                        variant="standard"
+                        value={metropole}
+                        onChange={({ target: { value } }) => {
+                          setMetropole(value);
+                          setRegion('');
+                          setSelectedTowns([]);
+                          if (value) {
+                            setFilters({
+                              ...filters,
+                              insee: metropoles[value].insee,
+                              departements: [],
+                            });
+                          } else {
+                            setFilters({ ...filters, insee: [], departements: [] });
+                          }
+                        }}
+                      >
+                        <MenuItem value="">&nbsp;</MenuItem>
+                        {Object.entries(metropoles).map(([key, value]) => <MenuItem value={key} key={`metro-${key}`}>{value.name}</MenuItem>)}
+                      </Select>
+                    </FormControl>
+                  </FormGroup>
+                  <FormGroup>
+                    <FormLabel>Région ou collectivité</FormLabel>
+                    <FormControl>
+                      <InputLabel>Grand Est, Normandie...</InputLabel>
+                      <Select
+                        variant="standard"
+                        value={region}
+                        onChange={({ target: { value } }) => {
+                          setMetropole('');
+                          setRegion(value);
+                          setSelectedTowns([]);
+                          if (value) {
+                            setFilters({
+                              ...filters,
+                              insee: [],
+                              departements: regionDetails[value].departements,
+                            });
+                          } else {
+                            setFilters({
+                              ...filters,
+                              insee: [],
+                              departements: [],
+                            });
+                          }
+                        }}
+                      >
+                        <MenuItem value="">&nbsp;</MenuItem>
+                        {regions.map((id) => <MenuItem value={id} key={`region-${id}`}>{regionDetails[id].name}</MenuItem>)}
+                      </Select>
+                    </FormControl>
+                  </FormGroup>
+                  <FormGroup>
+                    <FormLabel>Département ou collectivité</FormLabel>
+                    <FormControl>
+                      <Autocomplete
+                        multiple
+                        variant="standard"
+                        freeSolo
+                        disableCloseOnSelect
+                        options={departements}
+                        getOptionLabel={(option) => departementNames[option]}
+                        value={filters.departements || []}
+                        onChange={(event, value) => {
+                          setMetropole('');
+                          setRegion('');
+                          setSelectedTowns([]);
+                          setFilters({ ...filters, insee: [], departements: value });
+                        }}
+                        renderInput={(params) => (
+                          <TextField {...params} variant="standard" label="Un ou plusieurs départements" fullWidth />
+                        )}
+                        renderOption={(renderProps, option, { selected }) => (
+                          <li {...renderProps}>
+                            <Checkbox checked={selected} />
+                            {departementNames[option]}
+                          </li>
+                        )}
+                        sx={{ width: 226 }}
+                      />
+                    </FormControl>
+                  </FormGroup>
+                  <FormGroup>
+                    <FormLabel>Commune</FormLabel>
+                    <FormControl>
+                      <Autocomplete
+                        multiple
+                        variant="standard"
+                        freeSolo
+                        disableCloseOnSelect
+                        options={availableTowns}
+                        getOptionLabel={renderTown}
+                        filterOptions={(x) => x}
+                        value={selectedTowns}
+                        onChange={(event, value) => {
+                          setMetropole('');
+                          setRegion('');
+                          setSelectedTowns(value);
                           setFilters({
                             ...filters,
-                            departements: regionDetails[value].departements,
-                          });
-                        } else {
-                          setFilters({
-                            ...filters,
+                            insee: (value.map((option) => option.insee)),
                             departements: [],
                           });
-                        }
-                      }}
-                    >
-                      <MenuItem value="">&nbsp;</MenuItem>
-                      {regions.map((id) => <MenuItem value={id} key={`region-${id}`}>{regionDetails[id].name}</MenuItem>)}
-                    </Select>
-                  </FormControl>
-                </FormGroup>
-                <FormGroup>
-                  <FormLabel>Département ou collectivité</FormLabel>
-                  <FormControl>
-                    <Autocomplete
-                      multiple
-                      variant="standard"
-                      freeSolo
-                      disableCloseOnSelect
-                      options={departements}
-                      getOptionLabel={(option) => departementNames[option]}
-                      value={filters.departements || []}
-                      onChange={(event, value) => {
-                        setFilters({ ...filters, departements: value });
-                        setMetropole('');
-                        setRegion('');
-                      }}
-                      renderInput={(params) => (
-                        <TextField {...params} variant="standard" label="Un ou plusieurs départements" fullWidth />
-                      )}
-                      renderOption={(renderProps, option, { selected }) => (
-                        <li {...renderProps}>
-                          <Checkbox checked={selected} />
-                          {departementNames[option]}
-                        </li>
-                      )}
-                      sx={{ width: 226 }}
-                    />
-                  </FormControl>
-                </FormGroup>
-                <FormGroup>
-                  <FormLabel>Commune</FormLabel>
-                  <FormControl>
-                    <Autocomplete
-                      multiple
-                      variant="standard"
-                      freeSolo
-                      disableCloseOnSelect
-                      options={availableTowns}
-                      getOptionLabel={renderTown}
-                      filterOptions={(x) => x}
-                      value={selectedTowns}
-                      onChange={(event, value) => {
-                        setSelectedTowns(value);
-                        setFilters({ ...filters, insee: value.map((option) => option.insee) });
-                      }}
-                      onInputChange={(event, newInputValue) => {
-                        setTownInput(newInputValue);
-                      }}
-                      renderInput={(params) => (
-                        <TextField {...params} variant="standard" label="Une ou plusieurs communes" fullWidth />
-                      )}
-                      renderOption={(renderProps, option, { selected }) => (
-                        <li {...renderProps}>
-                          <Checkbox checked={selected} />
-                          {renderTown(option)}
-                        </li>
-                      )}
-                      sx={{ width: 226 }}
-                    />
-                  </FormControl>
-                </FormGroup>
-                <FormGroup>
-                  <FormLabel>Groupement</FormLabel>
-                  <FormControl>
-                    <Autocomplete
-                      multiple
-                      variant="standard"
-                      freeSolo
-                      disableCloseOnSelect
-                      options={availableGroups}
-                      getOptionLabel={renderGroup}
-                      filterOptions={(x) => x}
-                      value={selectedGroups}
-                      onChange={(event, value) => {
-                        setSelectedGroups(value);
-                        setFilters({ ...filters, groups: value.map((option) => option.id) });
-                      }}
-                      onInputChange={(event, newInputValue) => {
-                        setGroupInput(newInputValue);
-                      }}
-                      renderInput={(params) => (
-                        <TextField {...params} variant="standard" label="Un ou plusieurs groupements" fullWidth />
-                      )}
-                      renderOption={(renderProps, option, { selected }) => (
-                        <li {...renderProps}>
-                          <Checkbox checked={selected} />
-                          {renderGroup(option)}
-                        </li>
-                      )}
-                      sx={{ width: 226 }}
-                    />
-                  </FormControl>
-                </FormGroup>
-                <FormGroup>
-                  <FormLabel>Éditeur</FormLabel>
-                  <FormControl>
-                    <InputLabel>Appsolu, Tessa...</InputLabel>
-                    <Select
-                      variant="standard"
-                      value={manager}
-                      onChange={({ target: { value } }) => {
-                        setManager(value);
-                        if (value) {
-                          setFilters({ ...filters, manager: value });
-                        } else {
-                          setFilters({ ...filters, manager: '' });
-                        }
-                      }}
-                    >
-                      <MenuItem value="">&nbsp;</MenuItem>
-                      {managers.map((option) => <MenuItem value={option.id} key={`manager-${option.id}`}>{renderGroup(option)}</MenuItem>)}
-                    </Select>
-                  </FormControl>
-                </FormGroup>
-                <FormGroup>
-                  <FormControl>
-                    <Button type="button" onClick={resetFilters}>Réinitialiser les filtres</Button>
-                  </FormControl>
-                </FormGroup>
-              </Stack>
+                        }}
+                        onInputChange={(event, newInputValue) => {
+                          setTownInput(newInputValue);
+                        }}
+                        renderInput={(params) => (
+                          <TextField {...params} variant="standard" label="Une ou plusieurs communes" fullWidth />
+                        )}
+                        renderOption={(renderProps, option, { selected }) => (
+                          <li {...renderProps}>
+                            <Checkbox checked={selected} />
+                            {renderTown(option)}
+                          </li>
+                        )}
+                        sx={{ width: 226 }}
+                      />
+                    </FormControl>
+                  </FormGroup>
+                </Stack>
+                <Stack spacing={4} sx={{ mt: 4 }}>
+                  <Typography variant="inherit">Afficher uniquement les taxis de...</Typography>
+                  <FormGroup>
+                    <FormLabel>Groupement</FormLabel>
+                    <FormControl>
+                      <Autocomplete
+                        multiple
+                        variant="standard"
+                        freeSolo
+                        disableCloseOnSelect
+                        options={availableGroups}
+                        getOptionLabel={renderGroup}
+                        filterOptions={(x) => x}
+                        value={selectedGroups}
+                        onChange={(event, value) => {
+                          setSelectedGroups(value);
+                          setFilters({ ...filters, groups: value.map((option) => option.id) });
+                        }}
+                        onInputChange={(event, newInputValue) => {
+                          setGroupInput(newInputValue);
+                        }}
+                        renderInput={(params) => (
+                          <TextField {...params} variant="standard" label="Un ou plusieurs groupements" fullWidth />
+                        )}
+                        renderOption={(renderProps, option, { selected }) => (
+                          <li {...renderProps}>
+                            <Checkbox checked={selected} />
+                            {renderGroup(option)}
+                          </li>
+                        )}
+                        sx={{ width: 226 }}
+                      />
+                    </FormControl>
+                  </FormGroup>
+                  <FormGroup>
+                    <FormLabel>Éditeur</FormLabel>
+                    <FormControl>
+                      <InputLabel>Appsolu, Tessa...</InputLabel>
+                      <Select
+                        variant="standard"
+                        value={manager}
+                        onChange={({ target: { value } }) => {
+                          setManager(value);
+                          if (value) {
+                            setFilters({ ...filters, manager: value });
+                          } else {
+                            setFilters({ ...filters, manager: '' });
+                          }
+                        }}
+                      >
+                        <MenuItem value="">&nbsp;</MenuItem>
+                        {managers.map((option) => <MenuItem value={option.id} key={`manager-${option.id}`}>{renderGroup(option)}</MenuItem>)}
+                      </Select>
+                    </FormControl>
+                  </FormGroup>
+                  <FormGroup>
+                    <FormControl>
+                      <Button type="button" onClick={resetFilters}>Réinitialiser les filtres</Button>
+                    </FormControl>
+                  </FormGroup>
+                </Stack>
+              </>
             )}
           </>
         )}
       </Menu>
       <Content>
         { children }
+        {filters !== null && (
+          <>
+            <hr />
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>debug filtres</AccordionSummary>
+              <AccordionDetails>
+                <pre>{JSON.stringify(filters, null, 4)}</pre>
+              </AccordionDetails>
+            </Accordion>
+          </>
+        )}
       </Content>
     </MenuLayout>
   );
