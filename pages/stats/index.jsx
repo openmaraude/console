@@ -189,6 +189,7 @@ export function Layout({
             <MyMenuItem title="Carte des ADS" href="/stats/adsmap" />
             <MyMenuItem title="Suivi client" href="/stats/customers" />
             <MyMenuItem title="Heatmap" href="/stats/heatmap" />
+            <MyMenuItem title="Héler un taxi" href="/stats/taxihail" />
             {filters && (
               <>
                 <Stack spacing={4} sx={{ mt: 4 }}>
@@ -387,7 +388,7 @@ export function Layout({
         )}
       </Menu>
       <Content>
-        { children }
+        {children}
         {filters !== null && (
           <>
             <hr />

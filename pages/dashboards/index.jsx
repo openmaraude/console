@@ -57,7 +57,7 @@ export function Layout({ children, ...props }) {
         }
       </Menu>
       <Content>
-        { children }
+        {children}
       </Content>
     </MenuLayout>
   );

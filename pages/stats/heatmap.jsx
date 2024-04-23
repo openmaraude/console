@@ -1,12 +1,37 @@
 import dynamic from 'next/dynamic';
 import React from 'react';
 
+import Box from '@mui/material/Box';
+import Slider from '@mui/material/Slider';
+import Typography from '@mui/material/Typography';
+import { styled } from '@mui/material/styles';
+
+import Map from '@/components/map/Map';
+import {
+  Overlay,
+  FeatureGroup,
+} from '@/components/map/MapComponents';
 import { LYON } from '@/src/utils';
 import { Layout } from './index';
 
+const TaxisSlider = styled(Slider)({
+  color: 'purple',
+});
+
 export default function StatsHeatMap() {
-  const HeatMaps = dynamic(
-    () => import('@/components/HeatMaps'),
+  const [hailsMinOpacity, setHailsMinOpacity] = React.useState(0.8);
+  const [taxisMinOpacity, setTaxisMinOpacity] = React.useState(0.2);
+
+  const TaxisHeatmap = dynamic(
+    () => import('@/components/map/TaxisHeatmap'),
+    { ssr: false },
+  );
+  const HailsHeatmap = dynamic(
+    () => import('@/components/map/HailsHeatmap'),
+    { ssr: false },
+  );
+  const MapControl = dynamic(
+    () => import('@/components/map/MapControl'),
     { ssr: false },
   );
 
@@ -16,7 +41,30 @@ export default function StatsHeatMap() {
         Cette carte affiche les points chauds de demandes prise en charge 🌈
         (abouties ou non) et des taxis en ligne 🟣.
       </p>
-      <HeatMaps center={LYON} zoom={12} />
+      <Map center={LYON} zoom={12}>
+        <Overlay name="Taxis 🟣" checked>
+          <FeatureGroup color="purple">
+            <TaxisHeatmap minOpacity={taxisMinOpacity} />
+          </FeatureGroup>
+        </Overlay>
+        <Overlay name="Hails 🌈" checked>
+          <FeatureGroup color="blue">
+            <HailsHeatmap minOpacity={hailsMinOpacity} />
+          </FeatureGroup>
+        </Overlay>
+        <MapControl position="bottomleft">
+          <Box sx={{ width: 200, padding: '0 10px' }}>
+            <Typography id="input-slider">
+              Hails
+            </Typography>
+            <Slider aria-label="hails" defaultValue={hailsMinOpacity} onChange={(e, v) => setHailsMinOpacity(v)} min={0.0} max={1.0} step={0.1} size="small" />
+            <Typography id="input-slider">
+              Taxis
+            </Typography>
+            <TaxisSlider aria-label="taxis" defaultValue={taxisMinOpacity} onChange={(e, v) => setTaxisMinOpacity(v)} min={0.0} max={1.0} step={0.1} size="small" />
+          </Box>
+        </MapControl>
+      </Map>
     </Layout>
   );
 }

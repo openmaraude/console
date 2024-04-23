@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import useSWR from 'swr';
 
-import HeatmapLayer from '@/components/HeatmapLayer.ts';
 import { requestList } from '@/src/api';
 import { UserContext } from '@/src/auth';
+import HeatmapLayer from './HeatmapLayer.ts';
 
-export default function HailsHeatmap({ minOpacity }) {
+export default function TaxisHeatmap({ minOpacity }) {
   const userContext = React.useContext(UserContext);
   const { data } = useSWR(
-    ['/stats/heatmap_hails', userContext.user.apikey],
+    ['/stats/heatmap_taxis', userContext.user.apikey],
     (url, token) => requestList(url, null, { token }),
   );
   const [layer, setLayer] = React.useState();
@@ -29,12 +29,13 @@ export default function HailsHeatmap({ minOpacity }) {
         intensityExtractor={() => 3}
         minOpacity={minOpacity}
         radius={10}
+        gradient={{ 0.0: 'pink', 1.0: 'purple' }}
         ref={setLayer}
       />
     );
   }
 }
 
-HailsHeatmap.propTypes = {
+TaxisHeatmap.propTypes = {
   minOpacity: PropTypes.number.isRequired,
 };

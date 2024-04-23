@@ -1,6 +1,7 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { useMap } from "react-leaflet";
+
+import { useMap } from 'react-leaflet';
 
 const POSITION_CLASSES = {
   bottomleft: 'leaflet-bottom leaflet-left',
@@ -14,19 +15,15 @@ export default function MapControl({ position, children }) {
 
   // Disable most mouse events while we hover the map control,
   // so we can interact with UI widgets appropriately
-  const onMouseEnter = useCallback(() => {
-    if (map) {
-      map.dragging.disable();
-      map.doubleClickZoom.disable();
-      map.scrollWheelZoom.disable();
-    }
+  const onMouseEnter = React.useCallback(() => {
+    map.dragging.disable();
+    map.doubleClickZoom.disable();
+    map.scrollWheelZoom.disable();
   }, [map]);
-  const onMouseLeave = useCallback(() => {
-    if (map) {
-      map.dragging.enable();
-      map.doubleClickZoom.enable();
-      map.scrollWheelZoom.enable();
-    }
+  const onMouseLeave = React.useCallback(() => {
+    map.dragging.enable();
+    map.doubleClickZoom.enable();
+    map.scrollWheelZoom.enable();
   }, [map]);
 
   return (
@@ -35,7 +32,6 @@ export default function MapControl({ position, children }) {
         className="leaflet-control-layers leaflet-control"
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
-        style={{ padding: '0 10px' }}
       >
         {children}
       </div>

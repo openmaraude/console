@@ -1,10 +1,12 @@
-import dynamic from 'next/dynamic';
 import React from 'react';
 import useSWR from 'swr';
 
 import LinearProgress from '@mui/material/LinearProgress';
 
 import APIErrorAlert from '@/components/APIErrorAlert';
+import Map from '@/components/map/Map';
+import Station from '@/components/map/Station';
+import { MarkerClusterGroup } from '@/components/map/MapComponents';
 import { requestList } from '@/src/api';
 import { UserContext } from '@/src/auth';
 import { Layout } from './index';
@@ -16,11 +18,6 @@ export default function DashboardStations() {
     (url, token) => requestList(url, null, { token }),
   );
 
-  const StationsMap = dynamic(
-    () => import('@/components/StationsMap'),
-    { ssr: false },
-  );
-
   return (
     <Layout maxWidth="xl">
       <p>
@@ -29,7 +26,11 @@ export default function DashboardStations() {
       <p>Elle ne couvre pas encore l'ensemble des stations de France.</p>
       {error && <APIErrorAlert error={error} />}
       {!data && <LinearProgress />}
-      {data && <StationsMap stations={data.data} />}
+      <Map>
+        <MarkerClusterGroup chunkedLoading removeOutsideVisibleBounds disableClusteringAtZoom={12}>
+          {data?.data.map((station) => <Station key={station.id} station={station} />)}
+        </MarkerClusterGroup>
+      </Map>
     </Layout>
   );
 }

@@ -13,12 +13,12 @@ export function formatDate(date, display = null) {
 }
 
 // Format longitude or latitude
-export function formatLoc(num) {
-  return num?.toFixed(5);
+export function formatLoc(num, places = 5) {
+  return num?.toFixed(places);
 }
 
-export function formatDecimal(float) {
-  return float?.toFixed(2).toString().replace('.', ',');
+export function formatDecimal(float, places = 2) {
+  return float?.toFixed(places).toString().replace('.', ',');
 }
 
 // Extract the departement code from the town INSEE code
