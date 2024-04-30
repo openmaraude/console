@@ -1,12 +1,12 @@
 import React from 'react';
 import useSWR from 'swr';
 
+import dynamic from 'next/dynamic';
 import LinearProgress from '@mui/material/LinearProgress';
 
 import APIErrorAlert from '@/components/APIErrorAlert';
 import Map from '@/components/map/Map';
 import Station from '@/components/map/Station';
-import { MarkerClusterGroup } from '@/components/map/MapComponents';
 import { requestList } from '@/src/api';
 import { UserContext } from '@/src/auth';
 import { Layout } from './index';
@@ -16,6 +16,12 @@ export default function DashboardStations() {
   const { data, error } = useSWR(
     ['/stations/all', userContext.user.apikey],
     (url, token) => requestList(url, null, { token }),
+  );
+
+  // Couldn't be imported, dynamically or not, from MapComponents
+  const MarkerClusterGroup = dynamic(
+    () => import('@/components/map/ReactLeafletCluster'),
+    { ssr: false },
   );
 
   return (

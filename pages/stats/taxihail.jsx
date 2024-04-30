@@ -237,7 +237,7 @@ export default function StatsTaxiHail() {
           <Map center={center} zoom={16}>
             <Circle center={center} radius={500} />
             <Circle center={center} radius={1} />
-            {currentHail && <TaxiMarker taxi={currentHail.taxi} taxiIcon={{ html: '🚖' }} />}
+            {currentHail && <TaxiMarker taxi={currentHail.taxi} iconProps={{ html: '🚖' }} />}
             {!currentHail && data?.data.map((taxi) => (
               <TaxiMarker
                 taxi={taxi}
