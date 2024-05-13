@@ -19,6 +19,7 @@ FROM node:lts AS builder
 ARG SENTRY_AUTH_TOKEN
 
 RUN mkdir /app
+RUN mkdir /builds
 WORKDIR /app
 
 COPY package.json package-lock.json /app/
@@ -31,7 +32,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 # Build for APITaxi_devel, using default values set in next.config.js.
 RUN npm run build
-RUN npm run export -- -o /builds/local
+RUN mv /app/out /builds/local
 
 # Build for https://dev.api.taxi
 ENV API_TAXI_PUBLIC_URL=https://dev.api.taxi
@@ -39,7 +40,7 @@ ENV REFERENCE_DOCUMENTATION_URL=${API_TAXI_PUBLIC_URL}/doc
 ENV INTEGRATION_ENABLED=true
 ENV INTEGRATION_ACCOUNT_EMAIL=neotaxi
 RUN npm run build
-RUN npm run export -- -o /builds/dev
+RUN mv /app/out /builds/dev
 
 # Build for https://api.taxi
 ENV API_TAXI_PUBLIC_URL=https://api.taxi
@@ -47,7 +48,7 @@ ENV REFERENCE_DOCUMENTATION_URL=${API_TAXI_PUBLIC_URL}/doc
 ENV INTEGRATION_ENABLED=false
 ENV INTEGRATION_ACCOUNT_EMAIL=
 RUN npm run build
-RUN npm run export -- -o /builds/prod
+RUN mv /app/out /builds/prod
 
 FROM nginx
 
