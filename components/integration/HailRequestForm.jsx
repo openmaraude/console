@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from "prop-types";
 
-import useSWR from 'swr';
-
 import Button from '@mui/material/Button';
 import { makeStyles } from 'tss-react/mui';
 import TextField from '@mui/material/TextField';
@@ -32,15 +30,11 @@ export default function HailRequestForm({ customer, taxi, onRequest }) {
   });
   const [error, setError] = React.useState();
 
-  // Probably not elegant, but that's the best I found for a one-time call at loading this component
-  // I don't prevent refreshing the data, but I prevent spamming the API
-  useSWR(
-    [hailRequest.lon, hailRequest.lat],
-    (lon, lat) => reverseGeocode({ lon, lat }).then((address) => {
+  React.useState(() => {
+    reverseGeocode(hailRequest).then((address) => {
       setHailRequest({ ...hailRequest, customer_address: address });
-    }).catch(),
-    { refreshInterval: 0, revalidateOnFocus: false },
-  );
+    }).catch();
+  }, [hailRequest]);
 
   async function onSubmit(e) {
     e.preventDefault();
