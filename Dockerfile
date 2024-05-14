@@ -1,68 +1,76 @@
-##### DEV IMAGE #####
+FROM node:20-alpine AS base
 
-FROM node:lts AS devenv
-
-WORKDIR /git/console
-
-ADD devenv/entrypoint.sh /
-ENTRYPOINT ["/entrypoint.sh"]
-
-CMD ["npm", "run", "dev"]
-
-
-##### PROD IMAGE #####
-
-FROM node:lts AS builder
-
-# Image must be built with --build-arg=<sentry token> to inform sentry of the
-# new release.
-ARG SENTRY_AUTH_TOKEN
-
-RUN mkdir /app
-RUN mkdir /builds
+# Install dependencies only when needed
+FROM base AS deps
+# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-COPY package.json package-lock.json /app/
+# Install dependencies based on the preferred package manager
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+RUN \
+  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+  elif [ -f package-lock.json ]; then npm ci; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
 
-RUN npm install --production
 
-COPY . /app/
+# Rebuild the source code only when needed
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
 
-ENV NEXT_TELEMETRY_DISABLED=1
+# Next.js collects completely anonymous telemetry data about general usage.
+# Learn more here: https://nextjs.org/telemetry
+# Uncomment the following line in case you want to disable telemetry during the build.
+ENV NEXT_TELEMETRY_DISABLED 1
 
-# Build for APITaxi_devel, using default values set in next.config.js.
-RUN npm run build
-RUN mv /app/out /builds/local
+# Image must be built with --build-arg=<sentry token> to inform sentry of the new release.
+ARG SENTRY_AUTH_TOKEN
+# Image must be built with --build-arg=<mapbox token> to inform sentry of the new release.
+ARG MAPBOX_TOKEN
+ARG API_TAXI_PUBLIC_URL
+ARG REFERENCE_DOCUMENTATION_URL
+ARG INTEGRATION_ENABLED
+ARG INTEGRATION_ACCOUNT_EMAIL
 
-# Build for https://dev.api.taxi
-ENV API_TAXI_PUBLIC_URL=https://dev.api.taxi
-ENV REFERENCE_DOCUMENTATION_URL=${API_TAXI_PUBLIC_URL}/doc
-ENV INTEGRATION_ENABLED=true
-ENV INTEGRATION_ACCOUNT_EMAIL=neotaxi
-RUN npm run build
-RUN mv /app/out /builds/dev
+RUN \
+  if [ -f yarn.lock ]; then yarn run build; \
+  elif [ -f package-lock.json ]; then npm run build; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
 
-# Build for https://api.taxi
-ENV API_TAXI_PUBLIC_URL=https://api.taxi
-ENV REFERENCE_DOCUMENTATION_URL=${API_TAXI_PUBLIC_URL}/doc
-ENV INTEGRATION_ENABLED=false
-ENV INTEGRATION_ACCOUNT_EMAIL=
-RUN npm run build
-RUN mv /app/out /builds/prod
+# Production image, copy all the files and run next
+FROM base AS runner
+WORKDIR /app
 
-FROM nginx
+ENV NODE_ENV production
+# Uncomment the following line in case you want to disable telemetry during runtime.
+ENV NEXT_TELEMETRY_DISABLED 1
 
-EXPOSE 80
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
-RUN mkdir -p /var/www
-WORKDIR /var/www
+COPY --from=builder /app/public ./public
 
-# Copy all builds in /builds
-COPY --from=builder /builds/ /builds/
+# Set the correct permission for prerender cache
+RUN mkdir .next
+RUN chown nextjs:nodejs .next
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Entrypoint reads the ${BUILD} environment variable to change the build to
-# serve.
-ENV BUILD=prod
-COPY docker-entrypoint.sh /docker-entrypoint.d/link-console.sh
+USER nextjs
+
+EXPOSE 3000
+
+ENV PORT 3000
+
+# server.js is created by next build from the standalone output
+# https://nextjs.org/docs/pages/api-reference/next-config-js/output
+CMD HOSTNAME="0.0.0.0" node server.js

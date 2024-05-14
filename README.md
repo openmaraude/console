@@ -8,15 +8,8 @@ This Next.js application is behind [https://console.api.taxi](console.api.taxi) 
 ### Run
 
 ```
-# Run using API at https://api.taxi
-$> make run_prod
-
-# Run using API at https://dev.api.taxi
-$> make run_dev
-
-# Run using API at https://localhost:5000
 $> make
-$> make run_local
+$> make run
 ```
 
 ### Development

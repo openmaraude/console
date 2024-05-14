@@ -37,7 +37,7 @@ const withMDX = createMDX({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  output: "standalone",
   
   env: {
     API_TAXI_PUBLIC_URL: readEnv('API_TAXI_PUBLIC_URL', 'http://localhost:5000'),
@@ -45,7 +45,7 @@ const nextConfig = {
     INTEGRATION_ENABLED: readEnvBool('INTEGRATION_ENABLED', 'true'),
     INTEGRATION_ACCOUNT_EMAIL: readEnv('INTEGRATION_ACCOUNT_EMAIL', 'neotaxi'),
     // Same token for dev and prod
-    MAPBOX_TOKEN: readEnv('MAPBOX_TOKEN', 'pk.eyJ1IjoibGUtdGF4aSIsImEiOiJjbGd1anFlZWsxNjNnM2ZxdjNva3Rzcnd0In0.lKJXey7A7Twd-PMg5Q2DCA'),
+    MAPBOX_TOKEN: readEnv('MAPBOX_TOKEN', ''),
   },
 
   async exportPathMap(defaultPathMap, { dev, dir, outDir, distDir, buildId, _nextDefaultLocale }) {
