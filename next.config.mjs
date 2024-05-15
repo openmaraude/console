@@ -48,12 +48,14 @@ const nextConfig = {
     MAPBOX_TOKEN: readEnv('MAPBOX_TOKEN', ''),
   },
 
-  async exportPathMap(defaultPathMap, { dev, dir, outDir, distDir, buildId, _nextDefaultLocale }) {
-    // Redirect / to /dashboards
-    defaultPathMap['/'] = {
-      page: '/dashboards',
-    };
-    return defaultPathMap;
+  redirects: async () => {
+    return [
+      {
+        source: '/',
+        destination: '/dashboards',
+        permanent: false,
+      },
+    ];
   },
 
   // Support MDX files as pages:
