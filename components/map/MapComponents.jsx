@@ -9,6 +9,7 @@ const LazyMapContainer = dynamic(
     loading: () => (<div style={{ height: '700px' }} />),
   },
 );
+// eslint-disable-next-line react/display-name
 export const MapContainer = forwardRef((props, ref) => (
   <LazyMapContainer {...props} forwardedRef={ref} />
 ));
@@ -17,6 +18,7 @@ const LazyMarker = dynamic(
   () => import('./MapLazyComponents').then((m) => m.Marker),
   { ssr: false },
 );
+// eslint-disable-next-line react/display-name
 export const Marker = forwardRef((props, ref) => (
   <LazyMarker {...props} forwardedRef={ref} />
 ));

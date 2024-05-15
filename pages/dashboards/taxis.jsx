@@ -11,7 +11,7 @@ import { Layout } from './index';
 
 export default function DashboardHails() {
   const userContext = React.useContext(UserContext);
-  const listTaxis = (page, filters) => useSWR(
+  const useListTaxis = (page, filters) => useSWR(
     ['/taxis/all', userContext.user.apikey, page, JSON.stringify(filters)],
     (url, token) => requestList(url, page, { token, args: filters }),
   );
@@ -82,7 +82,7 @@ export default function DashboardHails() {
   return (
     <Layout>
       <APIListTable
-        apiFunc={listTaxis}
+        apiFunc={useListTaxis}
         columns={columns}
         filters={filters}
       />

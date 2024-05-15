@@ -17,7 +17,7 @@ import { Layout } from './index';
 
 export default function StatsCustomers() {
   const userContext = React.useContext(UserContext);
-  const listHails = (page, filters) => useSWR(
+  const useListHails = (page, filters) => useSWR(
     ['/internal/customers', userContext.user.apikey, page, JSON.stringify(filters)],
     (url, token) => requestList(url, page, { token, args: filters }),
   );
@@ -131,7 +131,7 @@ export default function StatsCustomers() {
   return (
     <Layout maxWidth="xxl">
       <APIListTable
-        apiFunc={listHails}
+        apiFunc={useListHails}
         columns={columns}
         filters={filters}
         enableExport

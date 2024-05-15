@@ -15,7 +15,7 @@ import { Layout } from './index';
 
 export default function DashboardHails() {
   const userContext = React.useContext(UserContext);
-  const listHails = (page, filters) => useSWR(
+  const useListHails = (page, filters) => useSWR(
     ['/hails', userContext.user.apikey, page, JSON.stringify(filters)],
     (url, token) => requestList(url, page, { token, args: filters }),
   );
@@ -96,7 +96,7 @@ export default function DashboardHails() {
   return (
     <Layout maxWidth="xl">
       <APIListTable
-        apiFunc={listHails}
+        apiFunc={useListHails}
         columns={columns}
         filters={filters}
       />

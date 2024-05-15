@@ -717,7 +717,7 @@ HailDetail.propTypes = {
 function TaxiHailsList({ taxi }) {
   const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
-  const listHails = (page) => useSWR(
+  const useListHails = (page) => useSWR(
     ['/hails', userContext.user.apikey, page, taxi.id],
     (url, token) => requestList(url, page, {
       token,
@@ -786,7 +786,7 @@ function TaxiHailsList({ taxi }) {
       <section className={classes.section}>
         <Typography variant="h5">Liste des courses du taxi</Typography>
         <APIListTable
-          apiFunc={listHails}
+          apiFunc={useListHails}
           columns={columns}
         />
       </section>
@@ -913,7 +913,7 @@ Taxi.propTypes = {
 export default function IntegrationOperatorPage() {
   const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
-  const listIntegrationTaxis = (page) => useSWR(
+  const useListIntegrationTaxis = (page) => useSWR(
     ['/taxis/all', userContext.user.apikey, page],
     (url, token) => requestList(url, page, {
       token,
@@ -1023,7 +1023,7 @@ export default function IntegrationOperatorPage() {
         </p>
 
         <APIListTable
-          apiFunc={listIntegrationTaxis}
+          apiFunc={useListIntegrationTaxis}
           columns={columns}
         />
       </section>

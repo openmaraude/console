@@ -240,7 +240,7 @@ export default function IntegrationSearchPage() {
   const lonFieldRef = React.useRef();
   const latFieldRef = React.useRef();
 
-  const listTaxisAvailable = (page, filters) => useSWR(
+  const useListTaxisAvailable = (page, filters) => useSWR(
     ['/taxis', userContext.user.apikey, page, JSON.stringify(filters)],
     (url, token) => {
       if (!filters?.lon || !filters?.lat) {
@@ -381,7 +381,7 @@ export default function IntegrationSearchPage() {
         </p>
 
         <APIListTable
-          apiFunc={listTaxisAvailable}
+          apiFunc={useListTaxisAvailable}
           columns={columns}
           filters={filters}
           // Hide table unless lon and lat filters are filled

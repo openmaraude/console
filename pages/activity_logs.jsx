@@ -19,7 +19,7 @@ const useStyles = makeStyles()((theme) => ({
 
 function ActivityLogs() {
   const userContext = React.useContext(UserContext);
-  const listActivityLogs = (page, filters) => useSWR(
+  const useListActivityLogs = (page, filters) => useSWR(
     ['/activity_logs', userContext.user.apikey, page, JSON.stringify(filters)],
     (url, token) => requestList(url, page, { token, args: filters }),
     { refreshInterval: 0 },
@@ -122,7 +122,7 @@ function ActivityLogs() {
 
   return (
     <APIListTable
-      apiFunc={listActivityLogs}
+      apiFunc={useListActivityLogs}
       filters={filters}
       columns={columns}
     />

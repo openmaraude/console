@@ -51,7 +51,7 @@
     "build": "next build",
     "start": "next start",
     "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest",
-    "lint": "eslint \"./components/**\" \"./pages/**\" \"./src/**\""
+    "lint": "next lint"
   },
   "devDependencies": {
     "eslint": "^8.6.0",
