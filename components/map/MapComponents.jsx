@@ -77,7 +77,3 @@ export const GeoJSON = dynamic(
   () => import('react-leaflet').then((m) => m.GeoJSON),
   { ssr: false },
 );
-export const MarkerClusterGroup = dynamic(
-  () => import('./ReactLeafletCluster'),
-  { ssr: false },
-);

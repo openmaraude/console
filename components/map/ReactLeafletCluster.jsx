@@ -1,3 +1,4 @@
+/* eslint-disable */
 /*
 react-leaflet-cluster
 Upstream: https://github.com/akursat/react-leaflet-cluster
