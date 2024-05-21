@@ -42,18 +42,18 @@ export default function ConsoleApp({ Component, pageProps }) {
 
   const [user, setUser] = React.useState();
 
-  const authenticate = async (form) => setUser(await login(form));
-  const logout = () => setUser(doLogout());
-
   // If user is already login, reload view with it.
   React.useEffect(() => {
     const currentUser = getCurrentUser();
     setUser(currentUser);
   }, []);
 
-  const providerValue = React.useMemo(() => (
-    { user, authenticate, logout }
-  ), [user, authenticate, logout]);
+  const providerValue = React.useMemo(() => {
+    const authenticate = async (form) => setUser(await login(form));
+    const logout = () => setUser(doLogout());
+  
+    return { user, authenticate, logout }
+  }, [user]);
 
   return (
     <>

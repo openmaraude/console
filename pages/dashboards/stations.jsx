@@ -18,7 +18,6 @@ export default function DashboardStations() {
     (url, token) => requestList(url, null, { token }),
   );
 
-  // Couldn't be imported, dynamically or not, from MapComponents
   const MarkerClusterGroup = dynamic(
     () => import('@/components/map/ReactLeafletCluster'),
     { ssr: false },

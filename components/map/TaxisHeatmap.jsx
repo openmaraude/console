@@ -18,7 +18,7 @@ export default function TaxisHeatmap({ minOpacity }) {
     if (layer) {
       layer.options.minOpacity = minOpacity;
     }
-  }, [minOpacity]);
+  }, [layer, minOpacity]);
 
   if (data) {
     return (

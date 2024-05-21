@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -95,24 +96,6 @@ export function Layout({
     localStorage.setItem('statsManager', JSON.stringify(manager));
   }, [manager]);
 
-  // These towns are too costly to ask the server under three characters typed
-  const shortTownNames = [
-    { insee: '25104', name: "By" },
-    { insee: '28064', name: "Bû" },
-    { insee: '76255', name: "Eu" },
-    { insee: '70282', name: "Gy" },
-    { insee: '38289', name: "Oz" },
-    { insee: '31404', name: "Oô" },
-    { insee: '66155', name: "Py" },
-    { insee: '61349', name: "Ri" },
-    { insee: '76548', name: "Ry" },
-    { insee: '08434', name: "Sy" },
-    { insee: '66218', name: "Ur" },
-    { insee: '95625', name: "Us" },
-    { insee: '65458', name: "Uz" },
-    { insee: '80829', name: "Y" },
-  ];
-
   /*
    * Town autocomplete
    */
@@ -129,6 +112,24 @@ export function Layout({
     return `${name} (${departement})`;
   };
   React.useEffect(() => {
+    // These towns are too costly to ask the server under three characters typed
+    const shortTownNames = [
+      { insee: '25104', name: "By" },
+      { insee: '28064', name: "Bû" },
+      { insee: '76255', name: "Eu" },
+      { insee: '70282', name: "Gy" },
+      { insee: '38289', name: "Oz" },
+      { insee: '31404', name: "Oô" },
+      { insee: '66155', name: "Py" },
+      { insee: '61349', name: "Ri" },
+      { insee: '76548', name: "Ry" },
+      { insee: '08434', name: "Sy" },
+      { insee: '66218', name: "Ur" },
+      { insee: '95625', name: "Us" },
+      { insee: '65458', name: "Uz" },
+      { insee: '80829', name: "Y" },
+    ];
+
     if (!townInput) {
       // Leave current town list
     } else if (townInput.length < 3) {
