@@ -1,12 +1,12 @@
 version: 2.1
 
 orbs:
-  node: circleci/node@5.0.0
+  node: circleci/node@5.2.0
 
 jobs:
   lint:
     docker:
-      - image: cimg/node:16.13.2
+      - image: cimg/node:20.13.1
     steps:
       - checkout
       - node/install-packages
