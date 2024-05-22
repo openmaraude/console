@@ -10,6 +10,7 @@ import Map from '@/components/map/Map';
 import {
   Overlay,
   FeatureGroup,
+  LayersControl,
 } from '@/components/map/MapComponents';
 import { LYON } from '@/src/utils';
 import { Layout } from './index';
@@ -42,23 +43,25 @@ export default function StatsHeatMap() {
         (abouties ou non) et des taxis en ligne 🟣.
       </p>
       <Map center={LYON} zoom={12}>
-        <Overlay name="Taxis 🟣" checked>
-          <FeatureGroup color="purple">
-            <TaxisHeatmap minOpacity={taxisMinOpacity} />
-          </FeatureGroup>
-        </Overlay>
-        <Overlay name="Hails 🌈" checked>
-          <FeatureGroup color="blue">
-            <HailsHeatmap minOpacity={hailsMinOpacity} />
-          </FeatureGroup>
-        </Overlay>
+        <LayersControl>
+          <Overlay name="Taxis 🟣" checked>
+            <FeatureGroup color="purple">
+              <TaxisHeatmap minOpacity={taxisMinOpacity} />
+            </FeatureGroup>
+          </Overlay>
+          <Overlay name="Hails 🌈" checked>
+            <FeatureGroup color="blue">
+              <HailsHeatmap minOpacity={hailsMinOpacity} />
+            </FeatureGroup>
+          </Overlay>
+        </LayersControl>
         <MapControl position="bottomleft">
           <Box sx={{ width: 200, padding: '0 10px' }}>
-            <Typography id="input-slider">
+            <Typography id="input-slider-hails">
               Hails
             </Typography>
             <Slider aria-label="hails" defaultValue={hailsMinOpacity} onChange={(e, v) => setHailsMinOpacity(v)} min={0.0} max={1.0} step={0.1} size="small" />
-            <Typography id="input-slider">
+            <Typography id="input-slider-taxis">
               Taxis
             </Typography>
             <TaxisSlider aria-label="taxis" defaultValue={taxisMinOpacity} onChange={(e, v) => setTaxisMinOpacity(v)} min={0.0} max={1.0} step={0.1} size="small" />

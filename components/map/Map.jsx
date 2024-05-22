@@ -85,9 +85,9 @@ function Map({ children, ...props }) {
             </IconButton>
           </div>
         </div>
+        {children}
         <ZoomControl position="topright" style={{ zIndex: '10!important' }} />
         <MapConsumer eventsHandler={mapHandlers} />
-        {children}
       </MapContainer>
       <SearchAddressDialog open={searchDialog} onClose={onSearch} />
     </>
