@@ -35,9 +35,6 @@ function HailDetail({ hailId, onBackClicked }) {
     [`/hails/${hailId}`, userContext.user.apikey],
     (url, token) => requestOne(url, {
       token,
-      headers: {
-        'X-Logas': process.env.INTEGRATION_ACCOUNT_EMAIL,
-      },
     }),
     {
       refreshInterval: 1000,
@@ -48,7 +45,7 @@ function HailDetail({ hailId, onBackClicked }) {
     <>
       {error && <APIErrorAlert error={error} />}
       {!data && <LinearProgress />}
-      {data && <HailDetailActions hail={data} />}
+      {data && <HailDetailActions hail={data} integration={false} />}
 
       <Box marginTop={2}>
         <Button onClick={onBackClicked}>
@@ -81,7 +78,6 @@ function HailRequestForm({ customer, taxi, onRequest }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Logas': process.env.INTEGRATION_ACCOUNT_EMAIL,
         },
         body: JSON.stringify({
           data: [{

@@ -27,10 +27,16 @@ const useStyles = makeStyles()((theme) => ({
 }));
 
 // Change hail status
-export default function HailDetailActions({ hail }) {
+export default function HailDetailActions({ hail, integration = true }) {
   const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
   const [response, setApiResponse] = React.useState({});
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  if (integration) {
+    headers['X-Logas'] = process.env.INTEGRATION_ACCOUNT_EMAIL;
+  }
   let actions;
 
   function updateHailStatus(newStatus) {
@@ -39,10 +45,7 @@ export default function HailDetailActions({ hail }) {
         const resp = await requestOne(`/hails/${hail.id}`, {
           token: userContext.user.apikey,
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Logas': process.env.INTEGRATION_ACCOUNT_EMAIL,
-          },
+          headers,
           body: JSON.stringify({
             data: [{
               status: newStatus,
@@ -230,4 +233,5 @@ HailDetailActions.propTypes = {
     id: PropTypes.string,
     status: PropTypes.string,
   }).isRequired,
+  integration: PropTypes.bool,
 };
