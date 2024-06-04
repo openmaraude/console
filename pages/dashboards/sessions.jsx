@@ -65,7 +65,7 @@ function Session({ session }) {
         <TableCell>{formatDate(`${session.added_at}Z`)}</TableCell>
         <TableCell>{session.session_id}</TableCell>
         <TableCell>{session.hails.length}</TableCell>
-        <TableCell><HailStatus status={session.hails.slice(-1)?.[0].status} /></TableCell>
+        <TableCell><HailStatus>{session.hails.slice(-1)?.[0].status}</HailStatus></TableCell>
       </TableRow>
 
       <TableRow>

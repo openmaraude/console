@@ -34,6 +34,10 @@ export default function TaxiMarker({ taxi, iconProps, ...props }) {
     ...iconProps,
   };
 
+  if (!taxi.position?.lat || !taxi.position?.lon) {
+    return;
+  }
+
   return (
     <Marker
       position={[taxi.position?.lat, taxi.position?.lon]}
@@ -74,7 +78,7 @@ export default function TaxiMarker({ taxi, iconProps, ...props }) {
             </TableRow>
             <TableRow>
               <TableCell variant="head">Distance</TableCell>
-              <TableCell>{taxi.crowfly_distance.toFixed(0)} m.</TableCell>
+              <TableCell>{taxi.crowfly_distance?.toFixed(0)} m.</TableCell>
             </TableRow>
             {hasRole(user, 'admin') && (
               <TableRow>

@@ -76,7 +76,7 @@ export default function DashboardHails() {
       headerName: 'Statut',
       flex: 2,
       sortable: false,
-      renderCell: ({ value }) => <HailStatus status={value} />,
+      renderCell: ({ value }) => <HailStatus>{value}</HailStatus>,
     },
     {
       field: 'details',

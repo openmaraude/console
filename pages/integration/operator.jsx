@@ -393,7 +393,7 @@ function HailDetailActions({ hail }) {
   const incidentTaxiCard = (
     <Card>
       <CardContent>
-        <Button variant="contained" onClick={updateHailStatus('incident_taxi')}>Déclarer un incident</Button>
+        <Button variant="contained" onClick={updateHailStatus('incident_taxi')} color="error">Déclarer un incident</Button>
 
         <p>
           Mettre le statut en <strong>incident_taxi</strong> pour
@@ -407,16 +407,14 @@ function HailDetailActions({ hail }) {
     case 'received':
       actions = (
         <p>
-          La course a le statut <strong>{hail.status}</strong>. Elle a été reçue par
-          l'API le.taxi, qui va la transmettre à l'opérateur du taxi.
+          La course a été reçue par l'API le.taxi, qui va la transmettre à l'opérateur du taxi.
         </p>
       );
       break;
     case 'received_by_operator':
       actions = (
         <p>
-          La course a le statut <strong>{hail.status}</strong>. Elle a
-          été transmise à l'opérateur du taxi, qui va la transmettre au taxi.
+          La course a été transmise à l'opérateur du taxi, qui va la transmettre au taxi.
         </p>
       );
       break;
@@ -424,8 +422,7 @@ function HailDetailActions({ hail }) {
       actions = (
         <>
           <p>
-            La course a le statut <strong>{hail.status}</strong>. Le taxi
-            dispose de 30 secondes pour accepter ou refuser la course.
+            Le taxi dispose de 30 secondes pour accepter ou refuser la course.
             <br />
             Sans réponse de votre part, le statut sera mis à <strong>timeout_taxi</strong>,
             et le statut du taxi sera mis à <em>off</em>.
@@ -447,7 +444,7 @@ function HailDetailActions({ hail }) {
 
             <Card>
               <CardContent>
-                <Button variant="contained" onClick={updateHailStatus('declined_by_taxi')}>
+                <Button variant="contained" onClick={updateHailStatus('declined_by_taxi')} color="secondary">
                   Refuser la course
                 </Button>
 
@@ -466,8 +463,7 @@ function HailDetailActions({ hail }) {
     case 'accepted_by_taxi':
       actions = (
         <p>
-          La course a le statut <strong>{hail.status}</strong>. Le taxi a
-          accepté la course. La course est en attente de confirmation par le
+          Le taxi a accepté la course. La course est en attente de confirmation par le
           client.
         </p>
       );
@@ -476,8 +472,7 @@ function HailDetailActions({ hail }) {
       actions = (
         <>
           <p>
-            La course a actuellement le statut <strong>{hail.status}</strong> :
-            le client a confirmé sa demande. Le taxi se dirige vers le client.
+            Le client a confirmé sa demande. Le taxi se dirige vers le client.
           </p>
 
           <div className={classes.actionsCards}>
@@ -502,8 +497,7 @@ function HailDetailActions({ hail }) {
     case 'customer_on_board':
       actions = (
         <p>
-          La course a le statut <strong>{hail.status}</strong>. Le client est à
-          bord.
+          Le client est à bord.
 
           <div className={classes.actionsCards}>
             <Card>
@@ -526,24 +520,21 @@ function HailDetailActions({ hail }) {
     case 'timeout_customer':
       actions = (
         <p>
-          La course a le statut <strong>{hail.status}</strong> : le client n'a
-          pas répondu à temps. Il n'est pas possible de changer son statut.
+          Le client n'a pas répondu à temps. Il n'est pas possible de changer son statut.
         </p>
       );
       break;
     case 'timeout_taxi':
       actions = (
         <p>
-          La course a le statut <strong>{hail.status}</strong> : le taxi n'a
-          pas répondu à temps. Il n'est pas possible de changer son statut.
+          Le taxi n'a pas répondu à temps. Il n'est pas possible de changer son statut.
         </p>
       );
       break;
     case 'declined_by_customer':
       actions = (
         <p>
-          La course a le statut <strong>{hail.status}</strong> : le client a
-          effectué une demande de course, mais a explicitement refusé de
+          Le client a effectué une demande de course, mais a explicitement refusé de
           poursuivre. Il n'est pas possible de changer son statut.
         </p>
       );
@@ -551,39 +542,35 @@ function HailDetailActions({ hail }) {
     case 'incident_customer':
       actions = (
         <p>
-          La course a le statut <strong>{hail.status}</strong> : le client a
-          déclaré un incident. Il n'est pas possible de changer son statut.
+          Le client a déclaré un incident. Il n'est pas possible de changer son statut.
         </p>
       );
       break;
     case 'incident_taxi':
       actions = (
         <p>
-          La course a le statut <strong>{hail.status}</strong> : le taxi a
-          déclaré un incident. Il n'est pas possible de changer son statut.
+          Le taxi a déclaré un incident. Il n'est pas possible de changer son statut.
         </p>
       );
       break;
     case 'finished':
       actions = (
         <p>
-          La course a le statut <strong>{hail.status}</strong> : la course
-          s'est correctement effectuée. Il n'est pas possible de changer son
+          La course s'est correctement effectuée. Il n'est pas possible de changer son
           statut.
         </p>
       );
       break;
     default:
-      actions = (
-        <p>
-          La course a le statut <strong>{hail.status}</strong>.
-        </p>
-      );
+      actions = null;
       break;
   }
   return (
     <Box marginTop={2}>
       <Typography variant="h5">Changer le statut de la course</Typography>
+      <p>
+        La course a le statut <HailStatus>{hail.status}</HailStatus>
+      </p>
       {actions}
       {response.error && <APIErrorAlert error={response.error} />}
     </Box>
@@ -764,7 +751,7 @@ function TaxiHailsList({ taxi }) {
       headerName: 'Statut final',
       flex: 2,
       sortable: false,
-      renderCell: ({ value }) => <HailStatus status={value} />,
+      renderCell: ({ value }) => <HailStatus>{value}</HailStatus>,
     },
     {
       field: 'actions',

@@ -118,7 +118,7 @@ export default function StatsCustomers() {
       headerName: 'Course',
       flex: 1,
       sortable: false,
-      renderCell: ({ value }) => <HailStatus status={value} />,
+      renderCell: ({ value }) => <HailStatus>{value}</HailStatus>,
     },
     {
       field: 'duration',

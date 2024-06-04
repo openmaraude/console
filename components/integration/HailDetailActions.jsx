@@ -9,6 +9,7 @@ import { makeStyles } from 'tss-react/mui';
 import Typography from '@mui/material/Typography';
 
 import APIErrorAlert from '@/components/APIErrorAlert';
+import HailStatus from '@/components/HailStatus';
 import { requestOne } from '@/src/api';
 import { UserContext } from '@/src/auth';
 
@@ -62,7 +63,7 @@ export default function HailDetailActions({ hail, integration = true }) {
   const incidentCustomerCard = (
     <Card>
       <CardContent>
-        <Button variant="contained" onClick={updateHailStatus('incident_customer')}>Déclarer un incident</Button>
+        <Button variant="contained" onClick={updateHailStatus('incident_customer')} color="error">Déclarer un incident</Button>
 
         <p>
           Mettre le statut en <strong>incident_customer</strong> pour
@@ -76,24 +77,21 @@ export default function HailDetailActions({ hail, integration = true }) {
     case 'received':
       actions = (
         <p>
-          La course a le statut <strong>received</strong>. Elle a été reçue par
-          l'API le.taxi, qui va la transmettre à l'opérateur du taxi.
+          La course a été reçue par l'API le.taxi, qui va la transmettre à l'opérateur du taxi.
         </p>
       );
       break;
     case 'received_by_operator':
       actions = (
         <p>
-          La course a le statut <strong>received_by_operator</strong>. Elle a
-          été transmise à l'opérateur du taxi, qui va la transmettre au taxi.
+          La course a été transmise à l'opérateur du taxi, qui va la transmettre au taxi.
         </p>
       );
       break;
     case 'received_by_taxi':
       actions = (
         <p>
-          La course a le statut <strong>received_by_taxi</strong>. Le taxi
-          dispose de 30 secondes pour accepter ou refuser la course.
+          Le taxi dispose de 30 secondes pour accepter ou refuser la course.
         </p>
       );
       break;
@@ -101,8 +99,7 @@ export default function HailDetailActions({ hail, integration = true }) {
       actions = (
         <>
           <p>
-            La course a actuellement le statut <strong>{hail.status}</strong>: le
-            taxi a vu et accepté la course.
+            Le taxi a vu et accepté la course.
           </p>
 
           <div className={classes.actionsCards}>
@@ -123,7 +120,7 @@ export default function HailDetailActions({ hail, integration = true }) {
 
             <Card>
               <CardContent>
-                <Button variant="contained" onClick={updateHailStatus('declined_by_customer')}>Refuser la course</Button>
+                <Button variant="contained" onClick={updateHailStatus('declined_by_customer')} color="secondary">Refuser la course</Button>
 
                 <p>
                   Mettre le statut en <strong>declined_by_customer</strong> pour signaler
@@ -140,7 +137,9 @@ export default function HailDetailActions({ hail, integration = true }) {
     case 'accepted_by_customer':
       actions = (
         <>
-          <p>Le client a accepté la course. Le taxi est en route vers le client.</p>
+          <p>
+            Le client a accepté la course. Le taxi est en route vers le client.
+          </p>
 
           <div className={classes.actionsCards}>
             {incidentCustomerCard}
@@ -150,37 +149,35 @@ export default function HailDetailActions({ hail, integration = true }) {
       break;
     case 'customer_on_board':
       actions = (
-        <p>
-          La course a le statut <strong>{hail.status}</strong>. Le client est à
-          bord. Il peut déclarer à tout moment un incident.
-
+        <>
+          <p>
+            Le client est à bord. Il peut déclarer à tout moment un incident.
+          </p>
+          
           <div className={classes.actionsCards}>
             {incidentCustomerCard}
           </div>
-        </p>
+        </>
       );
       break;
     case 'timeout_customer':
       actions = (
         <p>
-          La course a le statut <strong>{hail.status}</strong> : le client n'a
-          pas répondu à temps. Il n'est pas possible de changer son statut.
+          Le client n'a pas répondu à temps. Il n'est pas possible de changer son statut.
         </p>
       );
       break;
     case 'timeout_taxi':
       actions = (
         <p>
-          La course a le statut <strong>{hail.status}</strong> : le taxi n'a
-          pas répondu à temps. Il n'est pas possible de changer son statut.
+          Le taxi n'a pas répondu à temps. Il n'est pas possible de changer son statut.
         </p>
       );
       break;
     case 'declined_by_customer':
       actions = (
         <p>
-          La course a le statut <strong>{hail.status}</strong> : le client a
-          effectué une demande de course, mais a explicitement refusé de
+          Le client a effectué une demande de course, mais a explicitement refusé de
           poursuivre. Il n'est pas possible de changer son statut.
         </p>
       );
@@ -188,40 +185,36 @@ export default function HailDetailActions({ hail, integration = true }) {
     case 'incident_customer':
       actions = (
         <p>
-          La course a le statut <strong>{hail.status}</strong> : le client a
-          déclaré un incident. Il n'est pas possible de changer son statut.
+          Le client a déclaré un incident. Il n'est pas possible de changer son statut.
         </p>
       );
       break;
     case 'incident_taxi':
       actions = (
         <p>
-          La course a le statut <strong>{hail.status}</strong> : le taxi a
-          déclaré un incident. Il n'est pas possible de changer son statut.
+          Le taxi a déclaré un incident. Il n'est pas possible de changer son statut.
         </p>
       );
       break;
     case 'finished':
       actions = (
         <p>
-          La course a le statut <strong>{hail.status}</strong> : la course
-          s'est correctement effectuée. Il n'est pas possible de changer son
+          La course s'est correctement effectuée. Il n'est pas possible de changer son
           statut.
         </p>
       );
       break;
     default:
-      actions = (
-        <p>
-          La course a le statut <strong>{hail.status}</strong>.
-        </p>
-      );
+      actions = null;
       break;
   }
 
   return (
     <Box marginTop={2}>
       <Typography variant="h5">Changer le statut de la course</Typography>
+      <p>
+        La course a le statut <HailStatus>{hail.status}</HailStatus>
+      </p>
       {actions}
       {response.error && <APIErrorAlert error={response.error} />}
     </Box>

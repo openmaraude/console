@@ -20,10 +20,10 @@ const useStyles = makeStyles()((theme) => ({
   },
 }));
 
-export default function HailStatus({ status }) {
+export default function HailStatus({ children }) {
   const { classes, cx } = useStyles();
   let outcome;
-  switch (status) {
+  switch (children) {
     case 'finished':
     case 'customer_on_board':
       outcome = 'success';
@@ -38,9 +38,9 @@ export default function HailStatus({ status }) {
       outcome = 'neutral';
   }
 
-  return <span className={cx(classes.status, classes[outcome])}>{status}</span>;
+  return <span className={cx(classes.status, classes[outcome])}>{children}</span>;
 }
 
 HailStatus.propTypes = {
-  status: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
 };

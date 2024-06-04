@@ -32,7 +32,7 @@ function Hail({ hail }) {
           </TableRow>
           <TableRow>
             <TableCell variant="head">Statut final</TableCell>
-            <TableCell><HailStatus status={hail.status} /></TableCell>
+            <TableCell><HailStatus>{hail.status}</HailStatus></TableCell>
           </TableRow>
           <TableRow>
             <TableCell variant="head">Adresse du client</TableCell>

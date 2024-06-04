@@ -29,18 +29,7 @@ const useStyles = makeStyles()(() => ({
   },
 }));
 
-function HailDetail({ hailId, onBackClicked }) {
-  const userContext = React.useContext(UserContext);
-  const { data, error } = useSWR(
-    [`/hails/${hailId}`, userContext.user.apikey],
-    (url, token) => requestOne(url, {
-      token,
-    }),
-    {
-      refreshInterval: 1000,
-    },
-  );
-
+function HailDetail({ data, error, onBackClicked }) {
   return (
     <>
       {error && <APIErrorAlert error={error} />}
@@ -57,16 +46,17 @@ function HailDetail({ hailId, onBackClicked }) {
 }
 
 HailDetail.propTypes = {
-  hailId: PropTypes.string.isRequired,
+  data: PropTypes.shape().isRequired,
+  error: PropTypes.shape().isRequired,
   onBackClicked: PropTypes.func.isRequired,
 };
 
-function HailRequestForm({ customer, taxi, onRequest }) {
+function HailRequestForm({ center, address, taxi, onRequest }) {
   const { classes } = useStyles();
-  const userContext = React.useContext(UserContext);
+  const { user } = React.useContext(UserContext);
   const [hailRequest, setHailRequest] = React.useState({
-    customer_phone_number: customer.phone_number,
-    customer_id: customer.id,
+    customer_id: user.email,
+    customer_phone_number: user.phone_number_technical,
   });
   const [error, setError] = React.useState();
 
@@ -74,16 +64,16 @@ function HailRequestForm({ customer, taxi, onRequest }) {
     e.preventDefault();
     try {
       const resp = await requestOne('/hails', {
-        token: userContext.user.apikey,
+        token: user.apikey,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           data: [{
-            customer_address: customer.address,
-            customer_lon: customer.lon,
-            customer_lat: customer.lat,
+            customer_address: address,
+            customer_lat: center[0],
+            customer_lon: center[1],
             customer_id: hailRequest.customer_id,
             customer_phone_number: hailRequest.customer_phone_number,
             taxi_id: taxi.id,
@@ -138,55 +128,54 @@ function HailRequestForm({ customer, taxi, onRequest }) {
 }
 
 HailRequestForm.propTypes = {
-  customer: PropTypes.shape().isRequired,
+  center: PropTypes.arrayOf(PropTypes.number).isRequired,
+  address: PropTypes.string.isRequired,
   taxi: PropTypes.shape().isRequired,
   onRequest: PropTypes.func.isRequired,
 };
 
 export default function StatsTaxiHail() {
-  const userContext = React.useContext(UserContext);
+  const { user } = React.useContext(UserContext);
   const [center, setCenter] = React.useState(PARIS);
-  const [customer, setCustomer] = React.useState({
-    lat: center[0],
-    lon: center[1],
-    phone_number: userContext.user.phone_number_technical || '',
-    id: userContext.user.email_technical || userContext.user.email,
-  });
+  const [address, setAddress] = React.useState('');
   const [selectedTaxi, setSelectedTaxi] = React.useState(null);
-  const [currentHail, setCurrentHail] = React.useState();
-
-  React.useEffect(() => {
-    reverseGeocode({ lon: customer.lon, lat: customer.lat }).then((address) => {
-      setCustomer({ ...customer, address });
-    }).catch();
-  }, [customer.lon, customer.lat]);
+  const [hailId, setHailId] = React.useState(null);
 
   const mapHandlers = React.useMemo(
     () => ({
       moveend(e) {
         const latlng = e.target.getCenter();
         setCenter([latlng.lat, latlng.lng]);
-        setCustomer({ ...customer, lat: latlng.lat, lon: latlng.lng });
       },
     }),
     [],
   );
 
-  const { data, error } = useSWR(
-    ['/taxis', userContext.user.apikey, center],
-    (url, token) => requestList(url, null, {
+  const { data: taxisData, error: taxisError } = useSWR(
+    ['/taxis', user.apikey, center],
+    (url, token) => !hailId ? requestList(url, null, {
       token,
       args: {
         lat: center[0],
         lon: center[1],
       },
-    }),
+    }) : null,
     { refreshInterval: 1000 },
   );
 
+  const { data: currentHail, error: hailError } = useSWR(
+    [`/hails/${hailId}`, user.apikey],
+    (url, token) => hailId ? requestOne(url, {
+      token,
+    }) : null,
+    {
+      refreshInterval: 1000,
+    },
+  );
+
   const wrapApiFunc = React.useCallback(
-    () => ({ data, error }),
-    [data, error],
+    () => ({ data: taxisData, error: taxisError }),
+    [taxisData, taxisError],
   );
 
   const columns = [
@@ -227,6 +216,12 @@ export default function StatsTaxiHail() {
     },
   ];
 
+  React.useEffect(() => {
+    reverseGeocode({ lat: center[0], lon: center[1] }).then(
+      setAddress
+    ).catch();
+  }, [center]);
+
   return (
     <Layout maxWidth="xl">
       <Grid container spacing={2}>
@@ -235,7 +230,7 @@ export default function StatsTaxiHail() {
             <Circle center={center} radius={500} />
             <Circle center={center} radius={1} />
             {currentHail && <TaxiMarker taxi={currentHail.taxi} iconProps={{ html: '🚖' }} />}
-            {!currentHail && data?.data.map((taxi) => (
+            {taxisData?.data.map((taxi) => (
               <TaxiMarker
                 taxi={taxi}
                 key={taxi.id}
@@ -250,22 +245,24 @@ export default function StatsTaxiHail() {
         </Grid>
         <Grid item xs>
           <p>
-            Adresse&nbsp;: {customer.address || "indéterminée"}
+            Adresse&nbsp;: {address || "indéterminée"}
           </p>
-          {error && <APIErrorAlert error={error} />}
-          {!currentHail && <APIListTable apiFunc={wrapApiFunc} columns={columns} />}
+          {taxisError && <APIErrorAlert error={taxisError} />}
+          {taxisData && <APIListTable apiFunc={wrapApiFunc} columns={columns} />}
           {selectedTaxi && (
             <Box marginBottom={2}>
               {currentHail ? (
                 <HailDetail
-                  hailId={currentHail.id}
-                  onBackClicked={() => { setCurrentHail(null); setSelectedTaxi(null); }}
+                  data={currentHail}
+                  error={hailError}
+                  onBackClicked={() => { setHailId(null); setSelectedTaxi(null); }}
                 />
               ) : (
                 <HailRequestForm
-                  customer={customer}
+                  center={center}
+                  address={address}
                   taxi={selectedTaxi}
-                  onRequest={setCurrentHail}
+                  onRequest={(hail) => setHailId(hail.id)}
                 />
               )}
             </Box>
