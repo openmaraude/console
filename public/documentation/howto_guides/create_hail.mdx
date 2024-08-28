@@ -8,7 +8,7 @@ La requête suivante permet d'effectuer une demande de course auprès d'un taxi 
 
 
 ```shell
-$> curl 'api.taxi/hails/'                         \
+$> curl 'dev.api.taxi/hails/'                         \
     -X POST                                       \
     -H "Content-Type: application/json"           \
     -H "X-API-KEY: <votre clé d'API>"             \
@@ -26,6 +26,8 @@ $> curl 'api.taxi/hails/'                         \
 }'
 ```
 
+Les informations du taxi proviennent du résultat de recherche.
+
 La réponse retourne un identifiant de course, ou **hail id**.
 
 ```json
@@ -39,6 +41,8 @@ La réponse retourne un identifiant de course, ou **hail id**.
   ]
 }
 ```
+
+Cet identifiant servira pendant toute la suite du parcours client.
 
 <SideNote>
 Les champs superflus ont été cachés dans cet exemple.
