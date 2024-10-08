@@ -60,16 +60,12 @@ const nextConfig = {
 
   // Support MDX files as pages:
   pageExtensions: ['js', 'jsx', 'md', 'mdx'],
-
-  sentry: {
-    hideSourceMaps: true,
-  },
 };
 
 let toExport = withMDX(nextConfig);
 
 if (process.env.SENTRY_AUTH_TOKEN) {
-  toExport = withSentryConfig(toExport, { silent: true });
+  toExport = withSentryConfig(toExport, { silent: true, hideSourceMaps: true });
 }
 
 export default toExport;
