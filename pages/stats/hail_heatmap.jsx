@@ -40,7 +40,7 @@ export default function StatsHeatMap() {
     <Layout maxWidth="xl">
       <p>
         Cette carte affiche les points chauds de demandes prise en charge 🌈
-        (abouties ou non) et des taxis en ligne 🟣.
+        (hails abouties ou non) et des taxis en ligne 🟣.
       </p>
       <Map center={LYON} zoom={12}>
         <LayersControl>

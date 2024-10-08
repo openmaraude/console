@@ -189,8 +189,10 @@ export function Layout({
             <MyMenuItem title="Groupements" href="/stats/groupements" />
             <MyMenuItem title="Carte des ADS" href="/stats/adsmap" />
             <MyMenuItem title="Suivi client" href="/stats/customers" />
-            <MyMenuItem title="Heatmap" href="/stats/heatmap" />
+            <MyMenuItem title="Heatmap hails" href="/stats/hail_heatmap" />
             <MyMenuItem title="Héler un taxi" href="/stats/taxihail" />
+            <MyMenuItem title="Stats recherches" href="/stats/searches" />
+            <MyMenuItem title="Heatmap recherches" href="/stats/search_heatmap" />
             {filters && (
               <>
                 <Stack spacing={4} sx={{ mt: 4 }}>
