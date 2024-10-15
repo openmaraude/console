@@ -392,7 +392,7 @@ export function Layout({
       </Menu>
       <Content>
         {children}
-        {filters !== null && (
+        {filters !== null && user.email.startsWith('herve.cauwelier') && (
           <>
             <hr />
             <Accordion>
