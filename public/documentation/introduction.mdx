@@ -1,23 +1,39 @@
+import Legend from '@/components/Legend';
+
 Bienvenue sur la documentation de l'API [le.taxi](https://le.taxi).
 
 L'API le.taxi permet aux **clients** d'utiliser une **application de mobilité partenaire** afin de **héler un artisan taxi disponible** situé à **proximité**.
 
 Notre documentation est organisée en quatre sections :
 
-* Les **tutoriels** expliquent étape par étape comment créer une application compatible avec le.taxi.
-* Les **guides thématiques** abordent des sujets clés et fournissent des explications de base utiles.
-* Les **guides de référence** contiennent la documentation technique de l'API. Elles supposent que vous avez une compréhension préalable du fonctionnement général de l'API.
-* Les **guides pratiques** sont des recettes que vous pouvez appliquer pour résoudre les problèmes que vous pourriez rencontrer en utilisant l'API. Ils supposent que vous avez une compréhension préalable du fonctionnement de l'API.
+* Les [tutoriels](/documentation/tutorials) expliquent étape par étape comment créer une application compatible avec le.taxi.
+* Les [guides thématiques](/documentation/topic_guides) abordent des sujets clés et fournissent des explications de base utiles.
+* Les [guides de référence](/documentation/reference_guides) contiennent la documentation technique de l'API. Elles supposent que vous avez une compréhension préalable du fonctionnement général de l'API.
+* Les [guides pratiques](/documentation/howto_guides) sont des recettes que vous pouvez appliquer pour résoudre les problèmes que vous pourriez rencontrer en utilisant l'API. Ils supposent que vous avez une compréhension préalable du fonctionnement de l'API.
 
 ##### Intégration
+
 Nous mettons à disposition un environnement de développement pour permettre de tester l'intégration de votre solution
 avec l'API. Cet environnement, disponible dans la section [Intégration](https://console.dev.api.taxi/integration/) de la console de développement,
 nécessite d'être authentifié. La création de compte se fait après validation de votre dossier.
 
+Parmi les outils, vous trouverez un [simulateur d'application client](/integration/search), mais aussi un [simulateur de taxi](/integration/operator)
+pour tester chaque partie d'une demande de prise en charge.
+
+##### Parcours
+
+Pour tout ce qui touche à l'API, que vous soyez côté client ou chauffeur, il est important de connaître le parcours d'une demande de prise en charge,
+y compris dans les cas d'erreur ou de timeout.
+
+<Legend/>
+
+![status de la course](/images/doc/trip-status.png)
+
+Ce parcours est expliqué plus en détail dans le tutoriel [Déroulement d'une course](/documentation/tutorials/hail_details).
+
 ##### Requêtes
 
 Tous les appels à l'API doivent se faire avec les headers HTTP suivants :
-
 
 | Nom du header | Valeur                                       |
 |---------------|----------------------------------------------|
@@ -34,7 +50,6 @@ Les requêtes de modifications (POST, PUT, PATCH) nécessitent de fournir le hea
 Toutes les dates sont au format **UTC** et doivent être converties en heure locale pour afficher à l'utilisateur final (comme le fait la console).
 
 Toutes les réponses de l'API sont contenues dans le champ `data` de type liste à un élément. Par exemple :
-
 
 ```shell
 
