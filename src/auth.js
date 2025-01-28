@@ -1,6 +1,6 @@
 import React from 'react';
 
-import nookies from 'nookies';
+import { getCookie, setCookie, deleteCookie } from 'cookies-next';
 
 import { request } from '@/src/api';
 
@@ -12,7 +12,7 @@ export const UserContext = React.createContext();
  * Retrieve the list of users stored in cookie by setAuthenticatedUsers().
  */
 export function getAuthenticatedUsers() {
-  const value = nookies.get()[COOKIE_NAME];
+  const value = getCookie(COOKIE_NAME);
   if (!value) {
     return [];
   }
@@ -29,7 +29,7 @@ function setAuthenticatedUsers(users) {
   if (users.length > 0) {
     const newCookieValue = JSON.stringify(users);
 
-    nookies.set(null, COOKIE_NAME, newCookieValue, {
+    setCookie(COOKIE_NAME, newCookieValue, {
       maxAge: 60 * 60 * 24 * 365, // 1 year
       sameSite: 'strict',
       path: '/',
@@ -38,10 +38,7 @@ function setAuthenticatedUsers(users) {
   }
 
   // No authenticated users, delete cookie.
-  nookies.destroy(null, COOKIE_NAME, {
-    sameSite: 'strict',
-    path: '/',
-  });
+  deleteCookie(COOKIE_NAME);
   return null;
 }
 
