@@ -68,8 +68,8 @@ export default function StatsGroupements() {
             <Table>
               <TableBody>
                 <TableRow>
-                  <TableCell>Nombre de groupements enregistrés</TableCell>
-                  <TableCell>{data.registered_groupements}</TableCell>
+                  <TableCell>Total des groupements après application du filtre</TableCell>
+                  <TableCell>{data.fleet_data.length}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
