@@ -15,7 +15,7 @@ import { TimeoutTextField, TimeoutSelectField } from '@/components/TimeoutForm';
 import { UserContext } from '@/src/auth';
 import { requestList } from '@/src/api';
 
-export default function LogasTable({ minimal }) {
+export default function LogasTable({ minimal = false }) {
   const userContext = React.useContext(UserContext);
   const useListUsers = (page, filters) => useSWR(
     { url: '/users', token: userContext.user.apikey, page, filters },
@@ -144,10 +144,6 @@ export default function LogasTable({ minimal }) {
     />
   );
 }
-
-LogasTable.defaultProps = {
-  minimal: false,
-};
 
 LogasTable.propTypes = {
   minimal: PropTypes.bool,

@@ -57,10 +57,10 @@ function CustomToolbar() {
  */
 export default function APIListTable({
   apiFunc,
-  filters,
+  filters = null,
   columns,
-  hideUntilFiltersFilled,
-  enableExport,
+  hideUntilFiltersFilled = false,
+  enableExport = false,
   ...props
 }) {
   const { classes } = useStyles();
@@ -133,12 +133,6 @@ export default function APIListTable({
     </>
   );
 }
-
-APIListTable.defaultProps = {
-  filters: null,
-  hideUntilFiltersFilled: false,
-  enableExport: false,
-};
 
 APIListTable.propTypes = {
   apiFunc: PropTypes.func.isRequired,

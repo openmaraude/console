@@ -33,7 +33,7 @@ const useStyles = makeStyles()((theme) => ({
   },
 }));
 
-export function Layout({ loading, children, ...props }) {
+export function Layout({ loading = false, children, ...props }) {
   const { classes } = useStyles();
 
   return (
@@ -49,10 +49,6 @@ export function Layout({ loading, children, ...props }) {
     </MenuLayout>
   );
 }
-
-Layout.defaultProps = {
-  loading: false,
-};
 
 Layout.propTypes = {
   loading: PropTypes.bool,

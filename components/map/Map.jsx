@@ -19,7 +19,7 @@ import {
   MapConsumer,
 } from './MapComponents';
 
-function Map({ children, ...props }) {
+function Map({ center = MIDDLE_FRANCE, zoom = 6, children, ...props }) {
   const mapRef = React.useRef(null);
   const [searchDialog, setSearchDialog] = React.useState(false);
 
@@ -46,6 +46,8 @@ function Map({ children, ...props }) {
   return (
     <>
       <MapContainer
+        center={center}
+        zoom={zoom}
         ref={mapRef}
         touchZoom={false}
         zoomControl={false}
@@ -98,11 +100,6 @@ Map.propTypes = {
   center: PropTypes.arrayOf(PropTypes.number),
   zoom: PropTypes.number,
   children: PropTypes.node.isRequired,
-};
-
-Map.defaultProps = {
-  center: MIDDLE_FRANCE, // Metropolitan France center
-  zoom: 6, // Enough to fit Metropolitan France
 };
 
 export default Map;

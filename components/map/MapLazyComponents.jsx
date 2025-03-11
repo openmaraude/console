@@ -7,7 +7,7 @@ import {
 } from 'react-leaflet';
 import { useMapEvents } from 'react-leaflet/hooks';
 
-export function MapContainer({ forwardedRef, ...props }) {
+export function MapContainer({ forwardedRef = null, ...props }) {
   return <LMapContainer {...props} ref={forwardedRef} />;
 }
 
@@ -18,11 +18,7 @@ MapContainer.propTypes = {
   ]),
 };
 
-MapContainer.defaultProps = {
-  forwardedRef: null,
-};
-
-export function Marker({ forwardedRef, icon: iconProps, ...props }) {
+export function Marker({ forwardedRef = null, icon: iconProps = null, ...props }) {
   const [icon, setIcon] = useState();
 
   useEffect(
@@ -54,11 +50,6 @@ Marker.propTypes = {
     PropTypes.shape(),
   ]),
   icon: PropTypes.shape(),
-};
-
-Marker.defaultProps = {
-  forwardedRef: null,
-  icon: null,
 };
 
 export function MapConsumer({ eventsHandler }) {

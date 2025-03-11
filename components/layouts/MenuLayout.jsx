@@ -66,7 +66,7 @@ Menu.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export function MenuItem({ title, href, secondary }) {
+export function MenuItem({ title, href, secondary = false }) {
   const { classes, cx } = useStyles();
   const router = useRouter();
 
@@ -86,17 +86,13 @@ export function MenuItem({ title, href, secondary }) {
   );
 }
 
-MenuItem.defaultProps = {
-  secondary: false,
-};
-
 MenuItem.propTypes = {
   title: PropTypes.string.isRequired,
   href: PropTypes.string.isRequired,
   secondary: PropTypes.bool,
 };
 
-export function Content({ loading, children }) {
+export function Content({ loading = false, children = null }) {
   const { classes } = useStyles();
   return (
     <div className={classes.content}>
@@ -104,11 +100,6 @@ export function Content({ loading, children }) {
     </div>
   );
 }
-
-Content.defaultProps = {
-  children: null,
-  loading: false,
-};
 
 Content.propTypes = {
   children: PropTypes.node,

@@ -21,8 +21,3 @@ ReverseAddress.propTypes = {
   lon: PropTypes.number,
   lat: PropTypes.number,
 };
-
-ReverseAddress.defaultProps = {
-  lon: undefined,
-  lat: undefined,
-};

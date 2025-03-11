@@ -18,7 +18,7 @@ const useStyles = makeStyles()((theme) => ({
   },
 }));
 
-export function Layout({ children, ...props }) {
+export function Layout({ children = null, ...props }) {
   const userContext = React.useContext(UserContext);
   const { user } = userContext;
   const { classes } = useStyles();
@@ -62,10 +62,6 @@ export function Layout({ children, ...props }) {
     </MenuLayout>
   );
 }
-
-Layout.defaultProps = {
-  children: null,
-};
 
 Layout.propTypes = {
   children: PropTypes.node,

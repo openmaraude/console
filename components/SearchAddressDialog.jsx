@@ -62,11 +62,13 @@ Address.propTypes = {
   onClick: PropTypes.func.isRequired,
 };
 
+const DEFAULT_CONTENT = "Entrez une adresse pour positionner la carte à l'endroit voulu.";
+
 export default function SearchAddressDialog({
   open,
   onClose,
-  type,
-  dialogContentText,
+  type = '', // Not the same as 'housenumber', but a bit of all types at once
+  dialogContentText = DEFAULT_CONTENT,
 }) {
   const API_URL = 'https://api-adresse.data.gouv.fr';
   const [searchAddress, setSearchAddress] = React.useState();
@@ -77,8 +79,8 @@ export default function SearchAddressDialog({
 
   // Use api-adresse.data.gouv.fr to search for address
   const { data, error } = useSWR(
-    { address: searchAddress, API_URL },
-    async ({ address, API_URL }) => {
+    { address: searchAddress },
+    async ({ address }) => {
       if (!address || address.length < 3) {
         return null;
       }
@@ -141,9 +143,4 @@ SearchAddressDialog.propTypes = {
   onClose: PropTypes.func.isRequired,
   type: PropTypes.oneOf(['', 'housenumber', 'street', 'locality', 'municipality']),
   dialogContentText: PropTypes.string,
-};
-
-SearchAddressDialog.defaultProps = {
-  type: '', // Not the same as 'housenumber', but a bit of all types at once
-  dialogContentText: "Entrez une adresse pour positionner la carte à l'endroit voulu.",
 };

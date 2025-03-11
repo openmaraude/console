@@ -23,7 +23,7 @@ const useStyles = makeStyles()(() => ({
   },
 }));
 
-export default function TaxiMarker({ taxi, iconProps, ...props }) {
+export default function TaxiMarker({ taxi, iconProps = null, ...props }) {
   const { user } = React.useContext(UserContext);
   const { classes } = useStyles();
   const taxiIcon = {
@@ -96,8 +96,4 @@ export default function TaxiMarker({ taxi, iconProps, ...props }) {
 TaxiMarker.propTypes = {
   taxi: PropTypes.shape().isRequired,
   iconProps: PropTypes.shape(),
-};
-
-TaxiMarker.defaultProps = {
-  iconProps: null,
 };

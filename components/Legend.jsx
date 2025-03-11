@@ -21,11 +21,3 @@ export default function Legend() {
     </div>
   );
 }
-
-/*
-Legend.defaultProps = {
-};
-
-Legend.propTypes = {
-};
-*/

@@ -44,9 +44,9 @@ const useStyles = makeStyles()((theme) => ({
 }));
 
 export function Layout({
-  filters,
-  setFilters,
-  children,
+  filters = null,
+  setFilters = null,
+  children = null,
   ...props
 }) {
   const userContext = React.useContext(UserContext);
@@ -407,12 +407,6 @@ export function Layout({
     </MenuLayout>
   );
 }
-
-Layout.defaultProps = {
-  filters: null,
-  setFilters: null,
-  children: null,
-};
 
 Layout.propTypes = {
   filters: PropTypes.shape({

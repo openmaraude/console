@@ -29,7 +29,7 @@ const useStyles = makeStyles()((theme) => ({
   },
 }));
 
-export default function InfoBox({ title, children, type }) {
+export default function InfoBox({ title = null, children = null, type = 'info' }) {
   const { classes, cx } = useStyles();
   const typeName = type.charAt(0).toUpperCase() + type.slice(1);
 
@@ -42,12 +42,6 @@ export default function InfoBox({ title, children, type }) {
     </div>
   );
 }
-
-InfoBox.defaultProps = {
-  title: null,
-  children: null,
-  type: 'info',
-};
 
 InfoBox.propTypes = {
   title: PropTypes.string,

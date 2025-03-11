@@ -16,7 +16,7 @@ const useStyles = makeStyles()((theme) => ({
 }));
 
 export default function BaseLayout({
-  loading,
+  loading = false,
   children,
   paperClassName,
   ...props
@@ -30,11 +30,6 @@ export default function BaseLayout({
     </Container>
   );
 }
-
-BaseLayout.defaultProps = {
-  paperClassName: undefined,
-  loading: false,
-};
 
 BaseLayout.propTypes = {
   children: PropTypes.node.isRequired,

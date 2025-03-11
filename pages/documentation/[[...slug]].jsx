@@ -151,7 +151,7 @@ SideNote.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-function CenteredImage({ src, alt }) {
+function CenteredImage({ src, alt = "" }) {
   const { classes } = useStyles();
   return (
     <div className={classes.centeredImage}>
@@ -159,10 +159,6 @@ function CenteredImage({ src, alt }) {
     </div>
   );
 }
-
-CenteredImage.defaultProps = {
-  alt: "",
-};
 
 CenteredImage.propTypes = {
   src: PropTypes.string.isRequired,

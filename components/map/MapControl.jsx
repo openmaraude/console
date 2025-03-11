@@ -10,7 +10,7 @@ const POSITION_CLASSES = {
   topright: 'leaflet-top leaflet-right',
 };
 
-export default function MapControl({ position, children }) {
+export default function MapControl({ position = 'bottomleft', children }) {
   const map = useMap();
 
   // Disable most mouse events while we hover the map control,
@@ -42,8 +42,4 @@ export default function MapControl({ position, children }) {
 MapControl.propTypes = {
   position: PropTypes.oneOf(Object.keys(POSITION_CLASSES)),
   children: PropTypes.node.isRequired,
-};
-
-MapControl.defaultProps = {
-  position: 'bottomleft',
 };
