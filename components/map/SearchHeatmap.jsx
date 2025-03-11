@@ -1,39 +1,38 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import useSWR from 'swr';
+import { useMap } from 'react-leaflet';
+import L from 'leaflet';
+import "leaflet.heat"
 
 import { requestList } from '@/src/api';
 import { UserContext } from '@/src/auth';
-import HeatmapLayer from './HeatmapLayer.ts';
 
-export default function SearchHeatmap({ minOpacity }) {
+export default function SearchHeatmap({ minOpacity, intensity = 1.0, radius = 10 }) {
   const userContext = React.useContext(UserContext);
+  const map = useMap();
   const { data } = useSWR(
     { url: '/stats/heatmap_searches', token: userContext.user.apikey },
     ({ url, token }) => requestList(url, null, { token }),
   );
-  const [layer, setLayer] = React.useState();
 
   React.useEffect(() => {
-    if (layer) {
-      layer.options.minOpacity = minOpacity;
-    }
-  }, [layer, minOpacity]);
+    if (data) {
+      const points = data.data[0].points.map((p) => [p[0], p[1], intensity]);
+      const heatmapLayer = L.heatLayer(
+        points,
+        {
+          minOpacity,
+          radius,
+          gradient: { 0.0: 'pink', 1.0: 'red' }
+        }
+      ).addTo(map);
 
-  if (data) {
-    return (
-      <HeatmapLayer
-        points={data.data[0].points}
-        latitudeExtractor={(m) => m[0]}
-        longitudeExtractor={(m) => m[1]}
-        intensityExtractor={() => 3}
-        minOpacity={minOpacity}
-        radius={10}
-        gradient={{ 0.0: 'pink', 1.0: 'red' }}
-        ref={setLayer}
-      />
-    );
-  }
+      return () => {
+        map.removeLayer(heatmapLayer);
+      }
+    }
+  }, [data]);
 }
 
 SearchHeatmap.propTypes = {
