@@ -18,8 +18,8 @@ import { requestList } from '@/src/api';
 export default function LogasTable({ minimal }) {
   const userContext = React.useContext(UserContext);
   const useListUsers = (page, filters) => useSWR(
-    ['/users', userContext.user.apikey, page, JSON.stringify(filters)],
-    (url, token) => requestList(url, page, { token, args: filters }),
+    { url: '/users', token: userContext.user.apikey, page, filters },
+    ({ url, token, page, filters }) => requestList(url, page, { token, args: filters }),
   );
 
   const router = useRouter();

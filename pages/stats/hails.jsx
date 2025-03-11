@@ -98,8 +98,8 @@ export default function StatsHails() {
   }, [filters]);
 
   const { data, error } = useSWR(
-    [filters, '/stats/hails', userContext.user.apikey],
-    (args, url, token) => requestOne(url, { args, token }),
+    { url: '/stats/hails', token: userContext.user.apikey, filters },
+    ({ url, token, filters }) => requestOne(url, { args: filters, token }),
     { refreshInterval: 0 },
   );
 

@@ -77,8 +77,8 @@ export default function SearchAddressDialog({
 
   // Use api-adresse.data.gouv.fr to search for address
   const { data, error } = useSWR(
-    [searchAddress, API_URL],
-    async (address) => {
+    { address: searchAddress, API_URL },
+    async ({ address, API_URL }) => {
       if (!address || address.length < 3) {
         return null;
       }

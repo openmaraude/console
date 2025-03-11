@@ -36,8 +36,8 @@ export default function DashboardMap() {
   };
 
   const { data, error } = useSWR(
-    ['/taxis', userContext.user.apikey, center],
-    (url, token) => requestList(url, null, {
+    { url: '/taxis', token: userContext.user.apikey, center },
+    ({ url, token, center }) => requestList(url, null, {
       token,
       args: {
         lat: center[0],

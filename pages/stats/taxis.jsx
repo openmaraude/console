@@ -25,8 +25,8 @@ export default function StatsTaxis() {
   }, [filters]);
 
   const { data, error } = useSWR(
-    [filters, '/stats/taxis', userContext.user.apikey],
-    (args, url, token) => requestOne(url, { args, token }),
+    { url: '/stats/taxis', token: userContext.user.apikey, filters },
+    ({ url, token, filters }) => requestOne(url, { args: filters, token }),
     { refreshInterval: 0 },
   );
 

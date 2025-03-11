@@ -95,8 +95,8 @@ export default function DashboardSession() {
   const userContext = React.useContext(UserContext);
   const [page, setPage] = React.useState(0);
   const { data, error } = useSWR(
-    [`/sessions`, userContext.user.apikey, page],
-    (url, token) => requestList(url, page, { token }),
+    { url: `/sessions`, token: userContext.user.apikey, page },
+    ({ url, token, page }) => requestList(url, page, { token }),
   );
 
   const handleChangePage = (event, newPage) => {

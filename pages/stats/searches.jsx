@@ -22,8 +22,8 @@ export default function StatsSearches() {
   );
 
   const { data, error } = useSWR(
-    [filters, '/stats/searches', userContext.user.apikey],
-    (args, url, token) => requestOne(url, { args, token }),
+    { url: '/stats/searches', token: userContext.user.apikey, filters },
+    ({ url, token, filters }) => requestOne(url, { args: filters, token }),
     { refreshInterval: 0 },
   );
 

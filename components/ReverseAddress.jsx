@@ -7,8 +7,8 @@ import { reverseGeocode } from '@/src/utils';
 
 export default function ReverseAddress({ lon, lat }) {
   const { data, error, isLoading } = useSWR(
-    [lon, lat],
-    () => lon && lat && reverseGeocode({ lon, lat }),
+    { lon, lat },
+    ({ lon, lat }) => lon && lat && reverseGeocode({ lon, lat }),
     { refreshInterval: 0, revalidateOnFocus: false },
   );
 

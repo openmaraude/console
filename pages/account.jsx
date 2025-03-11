@@ -46,8 +46,8 @@ export default function AccountPage() {
   const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
   const { data, error, mutate } = useSWR(
-    [`/users/${userContext.user.id}`, userContext.user.apikey],
-    (url, token) => requestOne(url, { token }),
+    { url: `/users/${userContext.user.id}`, token: userContext.user.apikey },
+    ({ url, token }) => requestOne(url, { token }),
     { revalidateOnFocus: false },
   );
 

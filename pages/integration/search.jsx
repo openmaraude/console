@@ -91,8 +91,8 @@ function Taxi({ customer, taxi }) {
   );
 
   const { data, error } = useSWR(
-    [`/taxis/${taxi.id}`, userContext.user.apikey],
-    (url, token) => requestOne(url, {
+    { url: `/taxis/${taxi.id}`, token: userContext.user.apikey },
+    ({ url, token }) => requestOne(url, {
       token,
       headers,
     }),
@@ -242,8 +242,8 @@ export default function IntegrationSearchPage() {
   const latFieldRef = React.useRef();
 
   const useListTaxisAvailable = (page, filters) => useSWR(
-    ['/taxis', userContext.user.apikey, page, JSON.stringify(filters)],
-    (url, token) => {
+    { url: '/taxis', token: userContext.user.apikey, page, filters },
+    ({ url, token, page, filters }) => {
       if (!filters?.lon || !filters?.lat) {
         return null;
       }

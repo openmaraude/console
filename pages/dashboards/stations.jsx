@@ -14,8 +14,8 @@ import { Layout } from './index';
 export default function DashboardStations() {
   const userContext = React.useContext(UserContext);
   const { data, error } = useSWR(
-    ['/stations/all', userContext.user.apikey],
-    (url, token) => requestList(url, null, { token }),
+    { url: '/stations/all', token: userContext.user.apikey },
+    ({ url, token }) => requestList(url, null, { token }),
   );
 
   const MarkerClusterGroup = dynamic(

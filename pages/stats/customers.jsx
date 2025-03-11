@@ -18,8 +18,8 @@ import { Layout } from './index';
 export default function StatsCustomers() {
   const userContext = React.useContext(UserContext);
   const useListHails = (page, filters) => useSWR(
-    ['/internal/customers', userContext.user.apikey, page, JSON.stringify(filters)],
-    (url, token) => requestList(url, page, { token, args: filters }),
+    { url: '/internal/customers', token: userContext.user.apikey, page, filters },
+    ({ url, token, page, filters }) => requestList(url, page, { token, args: filters }),
   );
 
   const filters = (

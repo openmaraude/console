@@ -152,8 +152,8 @@ export default function StatsTaxiHail() {
   );
 
   const { data: taxisData, error: taxisError } = useSWR(
-    ['/taxis', user.apikey, center],
-    (url, token) => !hailId ? requestList(url, null, {
+    { url: '/taxis', token: user.apikey, center },
+    ({ url, token, center }) => !hailId ? requestList(url, null, {
       token,
       args: {
         lat: center[0],
@@ -164,8 +164,8 @@ export default function StatsTaxiHail() {
   );
 
   const { data: currentHail, error: hailError } = useSWR(
-    [`/hails/${hailId}`, user.apikey],
-    (url, token) => hailId ? requestOne(url, {
+    { url: `/hails/${hailId}`, token: user.apikey },
+    ({ url, token }) => hailId ? requestOne(url, {
       token,
     }) : null,
     {

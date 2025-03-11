@@ -20,8 +20,8 @@ export default function DashboardADS() {
   }, [filters]);
 
   const { data, error } = useSWR(
-    [filters, '/stats/adsmap', userContext.user.apikey],
-    (args, url, token) => requestList(url, null, { args, token }),
+    { url: '/stats/adsmap', token: userContext.user.apikey, filters },
+    ({ url, token, filters }) => requestList(url, null, { args: filters, token }),
     { refreshInterval: 0 },
   );
 

@@ -19,8 +19,8 @@ export default function AvailableTaxis({ center }) {
   const userContext = React.useContext(UserContext);
 
   const { data, error } = useSWR(
-    ['/zupc', userContext.user.apikey, center[1], center[0]],
-    (url, token, lon, lat) => requestList(url, null, {
+    { url: '/zupc', token: userContext.user.apikey, lon: center[1], lat: center[0] },
+    ({ url, token, lon, lat }) => requestList(url, null, {
       token,
       args: {
         lon,

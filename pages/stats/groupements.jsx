@@ -50,8 +50,8 @@ export default function StatsGroupements() {
   }, [filters]);
 
   const { data, error } = useSWR(
-    [filters, '/stats/groupements', userContext.user.apikey],
-    (args, url, token) => requestOne(url, { args, token }),
+    { url: '/stats/groupements', token: userContext.user.apikey, filters },
+    ({ url, token, filters }) => requestOne(url, { args: filters, token }),
     { refreshInterval: 0 },
   );
 

@@ -9,8 +9,8 @@ import HeatmapLayer from './HeatmapLayer.ts';
 export default function TaxisHeatmap({ minOpacity }) {
   const userContext = React.useContext(UserContext);
   const { data } = useSWR(
-    ['/stats/heatmap_taxis', userContext.user.apikey],
-    (url, token) => requestList(url, null, { token }),
+    { url: '/stats/heatmap_taxis', token: userContext.user.apikey },
+    ({ url, token }) => requestList(url, null, { token }),
   );
   const [layer, setLayer] = React.useState();
 

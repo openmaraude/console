@@ -105,8 +105,8 @@ export default function DashboardHailsDetail() {
   const hailId = router.query.id;
   const userContext = React.useContext(UserContext);
   const { data, error } = useSWR(
-    [`/hails/${hailId}`, userContext.user.apikey],
-    (url, token) => requestOne(url, { token }),
+    { url: `/hails/${hailId}`, token: userContext.user.apikey },
+    ({ url, token }) => requestOne(url, { token }),
   );
 
   return (

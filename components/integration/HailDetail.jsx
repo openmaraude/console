@@ -32,8 +32,8 @@ export default function HailDetail({ hailId, onBackClicked }) {
   const userContext = React.useContext(UserContext);
 
   const { data, error } = useSWR(
-    [`/hails/${hailId}`, userContext.user.apikey],
-    (url, token) => requestOne(url, {
+    { url: `/hails/${hailId}`, token: userContext.user.apikey },
+    ({ url, token }) => requestOne(url, {
       token,
       headers: {
         'X-Logas': process.env.INTEGRATION_ACCOUNT_EMAIL,

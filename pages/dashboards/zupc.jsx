@@ -13,8 +13,8 @@ import { Layout } from './index';
 export default function DashboardZUPC() {
   const userContext = React.useContext(UserContext);
   const { data, error } = useSWR(
-    ['/zupc/live', userContext.user.apikey],
-    (url, token) => requestList(url, null, { token }),
+    { url: '/zupc/live', token: userContext.user.apikey },
+    ({ url, token }) => requestList(url, null, { token }),
   );
 
   return (

@@ -589,8 +589,8 @@ function HailDetail({ hailId, onBackClicked }) {
   const userContext = React.useContext(UserContext);
 
   const { data, error } = useSWR(
-    [`/hails/${hailId}`, userContext.user.apikey],
-    (url, token) => requestOne(url, {
+    { url: `/hails/${hailId}`, token: userContext.user.apikey },
+    ({ url, token }) => requestOne(url, {
       token,
       headers: {
         'X-Logas': process.env.INTEGRATION_ACCOUNT_EMAIL,
@@ -706,11 +706,11 @@ function TaxiHailsList({ taxi }) {
   const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
   const useListHails = (page) => useSWR(
-    ['/hails', userContext.user.apikey, page, taxi.id],
-    (url, token) => requestList(url, page, {
+    { url: '/hails', token: userContext.user.apikey, page, taxi_id: taxi.id },
+    ({ url, token, page, taxi_id }) => requestList(url, page, {
       token,
       args: {
-        taxi_id: taxi.id,
+        taxi_id,
       },
       headers: {
         'X-Logas': process.env.INTEGRATION_ACCOUNT_EMAIL,
@@ -794,8 +794,8 @@ function Taxi({ taxi }) {
   const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
   const { data, error } = useSWR(
-    [`/taxis/${taxi.id}`, userContext.user.apikey],
-    (url, token) => requestOne(url, {
+    { url: `/taxis/${taxi.id}`, token: userContext.user.apikey },
+    ({ url, token }) => requestOne(url, {
       token,
       headers: {
         'X-Logas': process.env.INTEGRATION_ACCOUNT_EMAIL,
@@ -902,8 +902,8 @@ export default function IntegrationOperatorPage() {
   const { classes } = useStyles();
   const userContext = React.useContext(UserContext);
   const useListIntegrationTaxis = (page) => useSWR(
-    ['/taxis/all', userContext.user.apikey, page],
-    (url, token) => requestList(url, page, {
+    { url: '/taxis/all', token: userContext.user.apikey, page },
+    ({ url, token, page }) => requestList(url, page, {
       token,
       headers: {
         'X-Logas': process.env.INTEGRATION_ACCOUNT_EMAIL,
