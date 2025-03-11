@@ -78,28 +78,28 @@ function ActivityLogs() {
       headerName: 'Heure',
       flex: 1,
       sortable: false,
-      valueFormatter: ({ value }) => formatDate(`${value}Z`),
+      valueFormatter: (value) => formatDate(`${value}Z`),
     },
     {
       field: 'resource',
       headerName: 'Ressource',
       flex: 1,
       sortable: false,
-      valueFormatter: ({ value }) => resources[value] || value,
+      valueFormatter: (value) => resources[value] || value,
     },
     {
       field: 'resource_id',
       headerName: 'ID ressource',
       flex: 1,
       sortable: false,
-      valueFormatter: ({ value }) => value,
+      valueFormatter: (value) => value,
     },
     {
       field: 'action',
       headerName: 'Action',
       flex: 2,
       sortable: false,
-      valueFormatter: ({ value }) => {
+      valueFormatter: (value) => {
         switch (value) {
           case 'login_password': return "Connexion avec mot de passe (console)";
           case 'login_apikey': return "Connexion avec clé d'API (console)";
@@ -116,7 +116,7 @@ function ActivityLogs() {
       headerName: 'Extra',
       flex: 3,
       sortable: false,
-      valueFormatter: ({ value }) => JSON.stringify(value),
+      valueFormatter: (value) => JSON.stringify(value),
     },
   ];
 

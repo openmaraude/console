@@ -64,16 +64,16 @@ export default function StatsCustomers() {
       headerName: 'Date',
       flex: 1,
       sortable: false,
-      valueGetter: ({ row }) => `${row.added_at}Z`,
-      valueFormatter: ({ value }) => formatDate(value, 'date'),
+      valueGetter: (value, row) => `${row.added_at}Z`,
+      valueFormatter: (value) => formatDate(value, 'date'),
     },
     {
       field: 'added_at_time',
       headerName: 'Heure locale',
       flex: 1,
       sortable: false,
-      valueGetter: ({ row }) => `${row.added_at}Z`,
-      valueFormatter: ({ value }) => formatDate(value, 'time'),
+      valueGetter: (value, row) => `${row.added_at}Z`,
+      valueFormatter: (value) => formatDate(value, 'time'),
     },
     {
       field: 'id',
@@ -98,7 +98,7 @@ export default function StatsCustomers() {
       headerName: 'Numéro client',
       flex: 1,
       sortable: false,
-      valueFormatter: ({ value }) => formatPhoneNumber(value),
+      valueFormatter: (value) => formatPhoneNumber(value),
     },
     {
       field: 'operateur',
@@ -111,7 +111,7 @@ export default function StatsCustomers() {
       headerName: 'Numéro chauffeur',
       flex: 1,
       sortable: false,
-      valueFormatter: ({ value }) => formatPhoneNumber(value),
+      valueFormatter: (value) => formatPhoneNumber(value),
     },
     {
       field: 'status',

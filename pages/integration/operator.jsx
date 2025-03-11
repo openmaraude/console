@@ -732,7 +732,7 @@ function TaxiHailsList({ taxi }) {
       headerName: 'Date',
       flex: 2,
       sortable: false,
-      valueFormatter: ({ value }) => formatDate(`${value}Z`),
+      valueFormatter: (value) => formatDate(`${value}Z`),
     },
     {
       field: 'operateur',
@@ -930,14 +930,14 @@ export default function IntegrationOperatorPage() {
       headerName: 'Code INSEE de l\'ADS',
       flex: 2,
       sortable: false,
-      valueFormatter: ({ value }) => value.insee,
+      valueFormatter: (value) => value.insee,
     },
     {
       field: 'driver',
       headerName: 'Chauffeur',
       flex: 2,
       sortable: false,
-      valueFormatter: ({ value }) => `${value.first_name || ""} ${value.last_name || ""}`,
+      valueFormatter: (value) => `${value.first_name || ""} ${value.last_name || ""}`,
     },
     {
       field: 'status',
@@ -950,7 +950,7 @@ export default function IntegrationOperatorPage() {
       headerName: 'Rayon',
       flex: 1,
       sortable: false,
-      valueFormatter: ({ value }) => value || "",
+      valueFormatter: (value) => value || "",
     },
     {
       field: 'actions',

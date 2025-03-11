@@ -30,13 +30,13 @@ const fleetDataColumns = [
     headerName: "Ratio",
     type: 'number',
     width: 150,
-    valueFormatter: ({ value }) => (value ? `${value.toFixed(0)} %` : ''),
+    valueFormatter: (value) => (value ? `${value.toFixed(0)} %` : ''),
   }, {
     field: 'last_taxi',
     headerName: "Dernier taxi",
     type: 'date',
     width: 200,
-    valueFormatter: ({ value }) => (value ? formatDate(`${value}Z`) : null),
+    valueFormatter: (value) => (value ? formatDate(`${value}Z`) : null),
   },
 ];
 

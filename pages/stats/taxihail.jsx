@@ -190,14 +190,14 @@ export default function StatsTaxiHail() {
       headerName: 'Plaque',
       flex: 1,
       sortable: false,
-      valueFormatter: ({ value }) => value.licence_plate,
+      valueFormatter: (value) => value.licence_plate,
     },
     {
       field: 'crowfly_distance',
       headerName: 'Distance',
       flex: 1,
       sortable: false,
-      valueFormatter: ({ value }) => `${value.toFixed(0)} m.`,
+      valueFormatter: (value) => `${value.toFixed(0)} m.`,
     },
     {
       field: 'actions',
